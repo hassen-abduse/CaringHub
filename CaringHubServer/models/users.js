@@ -17,14 +17,17 @@ var User = new Schema({
     },
     phoneNumber: {
         type: String,
+        unique: true,
         default: ''
     },
     emailAddress: {
         type: String,
+        unique: true,
         default: ''
     },
     username: {
         type: String,
+        unique: true,
         required: true
     },
     password: {
