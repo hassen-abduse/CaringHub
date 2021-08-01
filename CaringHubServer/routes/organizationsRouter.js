@@ -1,8 +1,7 @@
 const express = require('express');
 const Organizations = require('../models/organizations');
-var passport = require('passport');
 const organizationsRouter = express.Router();
-organizationsRouter.user(express.json());
+organizationsRouter.use(express.json());
 
 organizationsRouter.route('/')
     .get((req, res, next) => {
@@ -47,7 +46,7 @@ organizationsRouter.route('/:orgId')
             .then((org) => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
-                res.json(promotion);
+                res.json(org);
             }, (err) => next(err))
             .catch((err) => next(err))
     })
