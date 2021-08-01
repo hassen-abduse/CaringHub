@@ -26,6 +26,10 @@ var Organization = new Schema({
         type: String,
         required: true,
     },
+    isApproved: {
+        type: Boolean,
+        default: false
+    },
     adminPosition: {
         type: String,
         required: true
