@@ -15,13 +15,13 @@ volunteersRouter.route('/')
     })
 
     .post((req, res, next) => {
-        Volunteers.create(req.body)
-            .then((vol) => {
+        Organizations.create(req.body)
+            .then((org) => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
-                res.json(vol);
+                res.json(org);
             }, (err) => next(err))
-            .catch((err) => next(err));
+            .catch((err) => next(err));    })
     })
 
     .put((req, res, next) => {
@@ -37,7 +37,7 @@ volunteersRouter.route('/')
                 res.json(resp);
             }, (err) => next(err))
             .catch((err) => next(err));
-   
+
     });
 
 volunteersRouter.route('/:volId')
@@ -59,24 +59,25 @@ volunteersRouter.route('/:volId')
     .put((req, res, next) => {
         Volunteers.findByIdAndUpdate(req.params.volId, {
             $set: req.body
-        }, {new: true})
-        .then((vol) => {
-            res.statusCode = 200;
-            res.setHeader('Content-Type', 'application/json');
-            res.json(vol);
-        }, (err) => next(err))
-        .catch((err) => next(err));
+        }, { new: true })
+            .then((vol) => {
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.json(vol);
+            }, (err) => next(err))
+            .catch((err) => next(err));
     })
 
     .delete((req, res, next) => {
         Volunteers.findByIdAndRemove(req.params.volId)
-        .then((resp) => {
-            res.statusCode = 200;
-            res.setHeader('Content-Type', 'application/json');
-            res.json(resp);
-        }, (err) => next(err))
-        .catch((err) => next(err));
+            .then((resp) => {
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.json(resp);
+            }, (err) => next(err))
+            .catch((err) => next(err));
     });
+
 
 module.exports = volunteersRouter;
 
