@@ -12,6 +12,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Dashboard from "./volunteer/pages/dashboard/Dashboard";
+import FindProject from "./volunteer/pages/find-project/FindProject"
 function App() {
   return (
     <React.Fragment>
@@ -32,9 +33,9 @@ function App() {
               <Dashboard />
             </Route>
 
-            {/* <Route path="/volunteer/findProject">
+            <Route path="/volunteer/findProject">
               <FindProject />
-            </Route> */}
+            </Route>
           </Switch>
         </div>
       </Router>
