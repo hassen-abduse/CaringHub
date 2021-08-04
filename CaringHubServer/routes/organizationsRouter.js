@@ -21,8 +21,7 @@ organizationsRouter.route('/')
                 res.setHeader('Content-Type', 'application/json');
                 res.json(org);
             }, (err) => next(err))
-            .catch((err) => next(err));
-    })
+            .catch((err) => next(err));    })
 
     .put((req, res, next) => {
         res.statusCode = 403;
@@ -37,7 +36,7 @@ organizationsRouter.route('/')
                 res.json(resp);
             }, (err) => next(err))
             .catch((err) => next(err));
-   
+
     });
 
 organizationsRouter.route('/:orgId')
@@ -59,24 +58,25 @@ organizationsRouter.route('/:orgId')
     .put((req, res, next) => {
         Organizations.findByIdAndUpdate(req.params.orgId, {
             $set: req.body
-        }, {new: true})
-        .then((org) => {
-            res.statusCode = 200;
-            res.setHeader('Content-Type', 'application/json');
-            res.json(org);
-        }, (err) => next(err))
-        .catch((err) => next(err));
+        }, { new: true })
+            .then((org) => {
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.json(org);
+            }, (err) => next(err))
+            .catch((err) => next(err));
     })
 
     .delete((req, res, next) => {
         Organizations.findByIdAndRemove(req.params.orgId)
-        .then((resp) => {
-            res.statusCode = 200;
-            res.setHeader('Content-Type', 'application/json');
-            res.json(resp);
-        }, (err) => next(err))
-        .catch((err) => next(err));
+            .then((resp) => {
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.json(resp);
+            }, (err) => next(err))
+            .catch((err) => next(err));
     });
+
 
 module.exports = organizationsRouter;
 
