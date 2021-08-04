@@ -11,6 +11,10 @@ var Volunteer = new Schema({
         type: String,
         required: true,    
     },
+    role: {
+        type: String,
+        default: 'Vol'
+    },
     address: {
         type: Map,
         required: true

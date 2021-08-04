@@ -17,6 +17,10 @@ var Organization = new Schema({
         unique: true,
         default: ''
     },
+    role: {
+        type: String,
+        default: 'User'
+    },
     emailAddress: {
         type: String,
         unique: true,

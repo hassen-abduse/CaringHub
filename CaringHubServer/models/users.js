@@ -11,9 +11,9 @@ var User = new Schema({
         type: String,
         required: true
     },
-    admin: {
-        type: Boolean,
-        default: false
+    role: {
+        type: String,
+        default: 'User'
     },
     phoneNumber: {
         type: String,
@@ -33,6 +33,5 @@ var User = new Schema({
 }, {
     timestamps: true
 });
-
 User.plugin(passportLocalMongoose);
-module.exports = mongoose.Model('User', User);
+module.exports = mongoose.model('User', User);
