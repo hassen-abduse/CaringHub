@@ -6,7 +6,7 @@ var logger = require('morgan');
 var config = require('./config');
 var mongoose = require('mongoose');
 var passport = require('passport');
-
+var auth = require('./routes/auth');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -18,7 +18,7 @@ connect.then((db) => {
   console.log('Succesfully Connected to the DB Server.');
 }, (err) => console.log(err));
 
-require("./routes/auth");
+
 var app = express();
 
 // view engine setup
@@ -40,9 +40,10 @@ app.post('/login', (req, res, next) => {
     if (error) return res.json(401, error);
     req.logIn(user, (err) => {
       if (err) return res.send(err);
+      var token = auth.getToken({_id: req.user._id});
       res.statusCode = 200;
       res.setHeader('Content-Type', 'application/json');
-      res.json({ success: true, status: 'Login Success!' });
+      res.json({ success: true, token: token, role: req.user.role, status: 'Login Success!' });
     });
   })(req, res, next);
 });
