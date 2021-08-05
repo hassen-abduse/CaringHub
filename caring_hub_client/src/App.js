@@ -14,6 +14,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Dashboard from "./volunteer/pages/dashboard/Dashboard";
 import FindProject from "./volunteer/pages/find-project/FindProject";
 import ReviewApplication from "./volunteer/pages/review-application/ReviewApplication";
+import { DescriptionCard } from "./volunteer/components/JobDescriptionCard";
 function App() {
   return (
     <React.Fragment>
@@ -40,6 +41,9 @@ function App() {
             </Route>
             <Route path="/volunteer/reviewApplication">
               <ReviewApplication />
+            </Route>
+            <Route path="/volunteer/jobDescription">
+              <DescriptionCard />
             </Route>
           </Switch>
         </div>

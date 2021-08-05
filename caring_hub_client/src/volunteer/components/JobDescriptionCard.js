@@ -78,6 +78,7 @@ export const DescriptionCard = () => {
               <Button
                 variant="contained"
                 style={{ backgroundColor: "#FFDB15" }}
+                href="/volunteer/reviewApplication"
               >
                 Apply
               </Button>
