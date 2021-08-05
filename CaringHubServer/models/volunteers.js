@@ -22,12 +22,12 @@ var Volunteer = new Schema({
     phoneNumber: {
         type: String,
         unique: true,
-        default: ''
+        required: true
     },
     emailAddress: {
         type: String,
         unique: true,
-        default: ''
+        required: true
     },
     skillSets: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Skill' }],
 

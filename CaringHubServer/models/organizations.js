@@ -15,16 +15,16 @@ var Organization = new Schema({
     phoneNumber: {
         type: String,
         unique: true,
-        default: ''
+        required: true
     },
     role: {
         type: String,
-        default: 'User'
+        default: 'Org'
     },
     emailAddress: {
         type: String,
         unique: true,
-        default: ''
+        required: true
     },
     adminName: {
         type: String,

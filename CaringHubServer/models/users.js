@@ -18,12 +18,12 @@ var User = new Schema({
     phoneNumber: {
         type: String,
         unique: true,
-        default: ''
+        required: true
     },
     emailAddress: {
         type: String,
         unique: true,
-        default: ''
+        required: true
     },
     address: {
         type: Map,
