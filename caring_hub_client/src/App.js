@@ -12,17 +12,20 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Dashboard from "./volunteer/pages/dashboard/Dashboard";
-import FindProject from "./volunteer/pages/find-project/FindProject"
+import FindProject from "./volunteer/pages/find-project/FindProject";
+import { DescriptionCard } from "./volunteer/components/JobDescriptionCard";
+
 function App() {
   return (
     <React.Fragment>
       <CssBaseline />
+
       {/* <Landing maxWidth="sm">
         <Typography
           component="div"
           style={{ backgroundColor: "#cfe8fc", height: "100vh" }}
         />
-      </Landing> */}
+      </Landing>  */}
 
       <Router>
         <Header />
@@ -35,6 +38,9 @@ function App() {
 
             <Route path="/volunteer/findProject">
               <FindProject />
+            </Route>
+            <Route path="/volunteer/jobDescription">
+              <DescriptionCard />
             </Route>
           </Switch>
         </div>
