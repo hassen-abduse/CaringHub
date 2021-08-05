@@ -18,12 +18,13 @@ function App() {
   return (
     <React.Fragment>
       <CssBaseline />
+
       {/* <Landing maxWidth="sm">
         <Typography
           component="div"
           style={{ backgroundColor: "#cfe8fc", height: "100vh" }}
         />
-      </Landing> */}
+      </Landing>  */}
 
       <Router>
         <Header />
