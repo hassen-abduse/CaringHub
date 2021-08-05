@@ -4,120 +4,118 @@ var User = require('../models/users');
 var Volunteer = require('../models/volunteers');
 var Organization = require('../models/organizations');
 
-passport.use('user-local', new LocalStrategy({
-    usernameField: 'username',
-    passwordField: 'password'
-    },
-    function(username, password, done) {
-        User.findOne({
-            username: username
-        }, function(err, user) {
-            if (err) return done(err);
-            
-            if (!user) {
-                return done(null, false, {
-                    message: 'username not found!'
-                });
-            }
-            if(!user.authenticate(password)) {
-                return done(null, false, {
-                    message: 'incorrect password!'
-                });
-            }
-            return done(null, user);
-        });
-    }
-));
+var JwtStrategy = require('passport-jwt').Strategy;
+var ExtractJwt = require('passport-jwt').ExtractJwt;
+var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
+var config = require('../config');
 
-passport.use('org-local', new LocalStrategy({
-    usernameField: 'username',
-    passwordField: 'password'
-    },
-    function(username, password, done) {
-        Organization.findOne({
-            username: username
-        }, function(err, user) {
-            if (err) return done(err);
-            
-            if (!user) {
-                return done(null, false, {
-                    message: 'username not found!'
-                });
-            }
-            if(!user.authenticate(password)) {
-                return done(null, false, {
-                    message: 'incorrect password!'
-                });
-            }
-            return done(null, user);
-        });
-    }
-));
+exports.getToken = function (user) {
+    return jwt.sign(user, config.secretKey,
+        { expiresIn: 3600 });
+};
 
-passport.use('vol-local', new LocalStrategy({
-    usernameField: 'username',
-    passwordField: 'password'
-    },
-    function(username, password, done) {
-        Volunteer.findOne({
-            username: username
-        }, function(err, user) {
-            if (err) return done(err);
-            
-            if (!user) {
-                return done(null, false, {
-                    message: 'username not found!'
-                });
-            }
-            if(!user.authenticate(password)) {
-                return done(null, false, {
-                    message: 'incorrect password!'
-                });
-            }
+
+var opts = {};
+opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
+opts.secretOrKey = config.secretKey;
+
+passport.use('user-jwt', new JwtStrategy(opts, (jwt_payload, done) => {
+    console.log('jwt-payload: ', jwt_payload);
+    User.findOne({ _id: jwt_payload._id }, (err, user) => {
+        if (err) {
+            return done(err, false);
+        }
+        else if (user) {
             return done(null, user);
-        });
-    }
-));
+        }
+        else {
+            return done(null, false);
+        }
+    });
+}));
+
+passport.use('org-jwt', new JwtStrategy(opts, (jwt_payload, done) => {
+    console.log('jwt-payload: ', jwt_payload);
+    Organization.findOne({ _id: jwt_payload._id }, (err, user) => {
+        if (err) {
+            return done(err, false);
+        }
+        else if (user) {
+            return done(null, user);
+        }
+        else {
+            return done(null, false);
+        }
+    });
+}));
+
+passport.use('vol-jwt', new JwtStrategy(opts, (jwt_payload, done) => {
+    console.log('jwt-payload: ', jwt_payload);
+    Volunteer.findOne({ _id: jwt_payload._id }, (err, user) => {
+        if (err) {
+            return done(err, false);
+        }
+        else if (user) {
+            return done(null, user);
+        }
+        else {
+            return done(null, false);
+        }
+    });
+}));
+passport.use('user-local', new LocalStrategy(User.authenticate()));
+
+passport.use('org-local', new LocalStrategy(Organization.authenticate()));
+
+passport.use('vol-local', new LocalStrategy(Volunteer.authenticate()));
 
 passport.serializeUser((user, done) => {
-    done(null, { _id: user._id, role: user.role });
+    done(null, user);
 });
 
 passport.deserializeUser((login, done) => {
     if (login.role === 'User') {
-        User.findById(login, function (err, user) {
-            if (user)
-                done(null, user);
-            else
-                done(err, { message: 'User Not Found!' })
-        });
+        User.deserializeUser();
     }
     else if (login.role === 'Admin') {
-        User.findById(login, (err, admin) => {
-            if (admin)
-                done(null, admin);
-            else
-                done(err, { message: 'Admin not found' })
-        });
+        User.deserializeUser();
     }
 
     else if (login.role === 'Org') {
-        Organization.findById(login, (err, org) => {
-            if (org)
-                done(null, onprogress);
-            else
-                done(err, { message: 'Org Not Found!' })
-        });
+        Organization.deserializeUser();
     }
     else if (login.role === 'Vol') {
-        Volunteer.findById(login, (err, vol) => {
-            if (vol)
-                done(null, vol);
-            else
-                done(err, { message: 'Vol Not Found!' })
-        });
+        Volunteer.deserializeUser();
     }
     else {
         done({ message: 'No Entity Found!' }, null);
     }
 });
+
+exports.verifyUser = passport.authenticate('user-jwt', { session: false });
+
+exports.verifyOrg = passport.authenticate('org-jwt', { session: false });
+
+exports.verifyVol = passport.authenticate('vol-jwt', { session: false });
+
+exports.verifyAdmin = (req, res, next) => {
+    if (req.user.role === 'Admin') {
+        next();
+    }
+    else {
+        var err = new Error('Unauthorized!');
+        err.status = 401;
+        next(err);
+    }
+}
+
+exports.verifyIsOrgApproved = (req, res, next) => {
+    if (req.user.isApproved === true) {
+        next();
+    }
+    else {
+        var err = new Error('Unauthorized!');
+        err.status = 401;
+        next(err);
+    }
+}
