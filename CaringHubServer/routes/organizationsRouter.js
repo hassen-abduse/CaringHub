@@ -15,13 +15,9 @@ organizationsRouter.route('/')
     })
 
     .post((req, res, next) => {
-        Organizations.create(req.body)
-            .then((org) => {
-                res.statusCode = 200;
-                res.setHeader('Content-Type', 'application/json');
-                res.json(org);
-            }, (err) => next(err))
-            .catch((err) => next(err));    })
+        res.statusCode = 403;
+        res.end('Error! Operation Not Supported!');
+    })
 
     .put((req, res, next) => {
         res.statusCode = 403;
@@ -77,6 +73,9 @@ organizationsRouter.route('/:orgId')
             .catch((err) => next(err));
     });
 
+organizationsRouter.post('/register', (req, res, next) => {
+    // Organization Registration
+});
 
 module.exports = organizationsRouter;
 

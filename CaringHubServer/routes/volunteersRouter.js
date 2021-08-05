@@ -15,14 +15,10 @@ volunteersRouter.route('/')
     })
 
     .post((req, res, next) => {
-        Organizations.create(req.body)
-            .then((org) => {
-                res.statusCode = 200;
-                res.setHeader('Content-Type', 'application/json');
-                res.json(org);
-            }, (err) => next(err))
-            .catch((err) => next(err));    })
+        res.statusCode = 403;
+        res.end('Error! Operation Not Supported!');
     })
+
 
     .put((req, res, next) => {
         res.statusCode = 403;
@@ -78,6 +74,8 @@ volunteersRouter.route('/:volId')
             .catch((err) => next(err));
     });
 
-
+volunteersRouter.post('/register', (req, res, next) => {
+    
+})
 module.exports = volunteersRouter;
 
