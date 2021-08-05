@@ -17,6 +17,10 @@ const useStyles = makeStyles((theme) => ({
     width: theme.spacing(9),
     height: theme.spacing(9),
   },
+  xlarge: {
+    width: theme.spacing(15),
+    height: theme.spacing(15),
+  },
 }));
 
 export default function ImageAvatars() {
