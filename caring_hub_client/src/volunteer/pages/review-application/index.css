@@ -1,0 +1,73 @@
+.project-application {
+  width: 100%;
+  height: 100%;
+}
+.project-application > .container-fluid {
+  height: 8.125rem;
+
+  color: #fff;
+}
+.container {
+  margin-top: 100px;
+  width: 100%;
+  max-width: 100%;
+}
+
+.text-center {
+  text-align: center !important;
+}
+
+.application-title {
+  color: #777;
+  font-weight: 300;
+  font-size: 1.5rem;
+  margin-bottom: 0px !important;
+}
+.application-subtitle {
+  color: #0e1630;
+  font-family: proxima-nova, Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  font-size: 1.25rem;
+  margin-top: 10px;
+}
+
+.light-bg {
+  background-color: #f2f2f2;
+}
+.application-desc {
+  display: flex;
+  justify-content: center;
+}
+.project-application-desc {
+  width: 960px;
+  max-width: 100%;
+}
+.application-desc-container {
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+}
+.app-desc-about-text {
+  font-family: museo-slab, Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  font-size: 2em;
+}
+.project-application h5 {
+  font-family: proxima-nova, Helvetica, Arial, sans-serif;
+  color: #0e1630;
+  font-weight: 700;
+  font-size: 1.25em;
+}
+.project-application p {
+  font-family: proxima-nova, Helvetica, Arial, sans-serif;
+  font-weight: 500;
+  color: #0e1630;
+  line-height: 1.8;
+}
+
+.caf-my-10 {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  border: 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
