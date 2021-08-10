@@ -52,6 +52,7 @@ organizationsRouter.route('/:orgId')
     })
 
     .put((req, res, next) => {
+        // Update an org's Account
         Organizations.findByIdAndUpdate(req.params.orgId, {
             $set: req.body
         }, { new: true })
@@ -64,6 +65,7 @@ organizationsRouter.route('/:orgId')
     })
 
     .delete((req, res, next) => {
+        // Delete an org's Account
         Organizations.findByIdAndRemove(req.params.orgId)
             .then((resp) => {
                 res.statusCode = 200;
@@ -74,7 +76,32 @@ organizationsRouter.route('/:orgId')
     });
 
 organizationsRouter.post('/register', (req, res, next) => {
-    // Organization Registration
+    // Register a new Organization
+    Organizations.register(new User({
+        username: req.body.username,
+        name: req.body.name,
+        adminName: req.body.adminName,
+        phoneNumber: req.body.phoneNumber,
+        emailAddress: req.body.emailAddress,
+        adminPosition: req.body.adminPosition,
+        address: req.body.address,
+        mission: req.body.mission
+
+    }),
+        req.body.password, (err, user) => {
+            if (err) {
+                res.statusCode = 500;
+                res.setHeader('Content-Type', 'application/json');
+                res.json({ err: err });
+            }
+            else {
+                passport.authenticate('org-local')(req, res, () => {
+                    res.statusCode = 200;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.json({ success: true, status: 'Registration Successful!' });
+                });
+            }
+        });
 });
 
 module.exports = organizationsRouter;
