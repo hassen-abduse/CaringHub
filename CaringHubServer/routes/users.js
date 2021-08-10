@@ -6,27 +6,9 @@ const auth = require('./auth');
 
 
 usersRouter.use(express.json());
-usersRouter.get('/', auth.verifyUser || auth.verifyAdmin, (req, res, next) => {
-  User.find({})
-    .then((users) => {
-      res.statusCode = 200;
-      res.setHeader('Content-Type', 'application/json');
-      res.json(users);
-    }, (err) => next(err))
-    .catch((err) => next(err));
-});
 
-usersRouter.delete('/', (req, res, next) => {
-  User.remove({})
-    .then((resp) => {
-      res.statusCode = 200;
-      res.setHeader('Content-Type', 'application/json');
-      res.json(resp);
-    }, (err) => next(err))
-    .catch((err) => next(err));
-});
-
-usersRouter.post('/signup', (req, res) => {
+usersRouter.post('/register', (req, res) => {
+  // Register a User
   User.register(new User({
     username: req.body.username,
     firstName: req.body.firstName,
@@ -50,6 +32,30 @@ usersRouter.post('/signup', (req, res) => {
         });
       }
     });
+});
+
+usersRouter.put('/:userId', (req, res) => {
+  // Update a User's Account
+  User.findByIdAndUpdate(req.params.userId, {
+    $set: req.body
+}, { new: true })
+    .then((user) => {
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.json(user);
+    }, (err) => next(err))
+    .catch((err) => next(err));
+});
+
+usersRouter.delete('/:userId', (req, res) => {
+  // Delete a User's Account
+  User.findByIdAndRemove(req.params.userId)
+  .then((resp) => {
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'application/json');
+      res.json(resp);
+  }, (err) => next(err))
+  .catch((err) => next(err));
 });
 
 
