@@ -49,10 +49,10 @@ export default function Header() {
                 <ListItem>
                   <Link
                     style={{ textDecoration: "none", color: "#3c3c3c" }}
-                    href="/"
+                    href="/volunteer"
                     // onClick={(e) => e.preventDefault()}
                   >
-                    Discover
+                    Home
                   </Link>
                 </ListItem>
                 <ListItem>

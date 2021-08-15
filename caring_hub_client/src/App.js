@@ -5,7 +5,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 
-import Landing from "./Landing/Landing";
+// import Landing from "./Landing/Landing";
 //import SignIn from "./Roles/common/SignIn";
 import SignUp from "./Roles/common/SignUp";
 import Header from "./components/Header";
@@ -15,6 +15,7 @@ import Dashboard from "./volunteer/pages/dashboard/Dashboard";
 import FindProject from "./volunteer/pages/find-project/FindProject";
 import ReviewApplication from "./volunteer/pages/review-application/ReviewApplication";
 import { DescriptionCard } from "./volunteer/components/JobDescriptionCard";
+import Landing from "./volunteer/pages/landing/Landing";
 function App() {
   return (
     <React.Fragment>
@@ -32,17 +33,20 @@ function App() {
 
         <div>
           <Switch>
-            <Route path="/volunteer/dashboard">
+            <Route exact path="/volunteer">
+              <Landing />
+            </Route>
+            <Route exact path="/volunteer/dashboard">
               <Dashboard />
             </Route>
 
-            <Route path="/volunteer/findProject">
+            <Route exact path="/volunteer/findProject">
               <FindProject />
             </Route>
-            <Route path="/volunteer/reviewApplication">
+            <Route exact path="/volunteer/reviewApplication">
               <ReviewApplication />
             </Route>
-            <Route path="/volunteer/jobDescription">
+            <Route exact path="/volunteer/jobDescription">
               <DescriptionCard />
             </Route>
           </Switch>
