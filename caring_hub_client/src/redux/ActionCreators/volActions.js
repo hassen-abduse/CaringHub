@@ -35,3 +35,27 @@ export const fetchVolunteers = () => (dispatch) => {
         .then(volunteers => dispatch(addVols(volunteers)))
         .catch(error => dispatch(volsFailed(error.message)))
 }
+
+export const deleteVolunteer = (volId) => (dispatch) => {
+    const bearer = 'Bearer ' + localStorage.getItem('token')
+    return fetch(baseUrl + 'volunteers/' + volId, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': bearer
+        }
+    })
+        .then(response => {
+            if (response.ok) {
+                return response
+            } else {
+                const error = new Error('Error ' + response.status + ': ' + response.statusText)
+                error.response = response
+                throw error
+            }
+        }, error => {
+            throw error
+        })
+        .then(response => response.json())
+        .then(response => dispatch(addVols(response)))
+        .catch(error => dispatch(volsFailed(error)))
+}
