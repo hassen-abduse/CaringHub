@@ -40,3 +40,56 @@ export const fetchCauses = () => (dispatch) => {
         .then(causes => dispatch(addCauses(causes)))
         .catch(error => dispatch(causesFailed(error.message)))
 }
+
+export const postCause = (formData) => (dispatch) => {
+    const bearer = 'Bearer ' + localStorage.getItem('token')
+    return fetch(baseUrl + 'causes', {
+        method: 'POST',
+        body: JSON.stringify(formData),
+        headers: {
+            'Authorization': bearer
+        }
+
+    })
+        .then(response => {
+            if (response.ok) {
+                return response
+            }
+            else {
+                const error = new Error('Error ' + response.status + ': ' + response.statusText)
+                error.response = response
+                throw error
+            }
+        },
+            error => {
+                const errMess = new Error(error.message)
+                throw errMess
+            })
+        .then(response => response.json())
+        .then(response => dispatch(addCauseItem(response)))
+        .catch(error => alert('CAUSE COULD NOT BE POSTED: ' + error))
+}
+
+export const deleteCause = (causeId) => (dispatch) => {
+    const bearer = 'Bearer ' + localStorage.getItem('token')
+    return fetch(baseUrl + 'causes/' + causeId, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': bearer
+        }
+    })
+        .then(response => {
+            if (response.ok) {
+                return response
+            } else {
+                const error = new Error('Error ' + response.status + ': ' + response.statusText)
+                error.response = response
+                throw error
+            }
+        }, error => {
+            throw error
+        })
+        .then(response => response.json())
+        .then(response => dispatch(addCauses(response)))
+        .catch(error => dispatch(causesFailed(error)))
+}
