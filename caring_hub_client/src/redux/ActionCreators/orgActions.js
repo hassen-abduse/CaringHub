@@ -35,3 +35,27 @@ export const fetchOrgs = () => (dispatch) => {
         .then(orgs => dispatch(addOrgs(orgs)))
         .catch(error => dispatch(orgsFailed(error.message)))
 }
+
+export const deleteOrg = (orgId) => (dispatch) => {
+    const bearer = 'Bearer ' + localStorage.getItem('token')
+    return fetch(baseUrl + 'orgs/' + orgId, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': bearer
+        }
+    })
+        .then(response => {
+            if (response.ok) {
+                return response
+            } else {
+                const error = new Error('Error ' + response.status + ': ' + response.statusText)
+                error.response = response
+                throw error
+            }
+        }, error => {
+            throw error
+        })
+        .then(response => response.json())
+        .then(response => dispatch(addOrgs(response)))
+        .catch(error => dispatch(orgsFailed(error)))
+}
