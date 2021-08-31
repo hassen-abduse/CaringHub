@@ -8,6 +8,7 @@ class Dashboard extends Component {
   render() {
     return (
       <div>
+      
         <ProfileCard />
         <Container>
           <div
@@ -28,7 +29,7 @@ class Dashboard extends Component {
               }}
             >
               Find Project
-            </Button>
+            </Button> 
             <Button
               style={{
                 backgroundColor: "#e3e3e3",
