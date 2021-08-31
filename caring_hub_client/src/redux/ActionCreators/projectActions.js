@@ -40,3 +40,56 @@ export const fetchProjects = () => (dispatch) => {
         .then(projects => dispatch(addProjects(projects)))
         .catch(error => dispatch(projectsFailed(error.message)))
 }
+
+export const postProject = (formData) => (dispatch) => {
+    const bearer = 'Bearer ' + localStorage.getItem('token')
+    return fetch(baseUrl + 'projects', {
+        method: 'POST',
+        body: JSON.stringify(formData),
+        headers: {
+            'Authorization': bearer
+        }
+
+    })
+        .then(response => {
+            if (response.ok) {
+                return response
+            }
+            else {
+                const error = new Error('Error ' + response.status + ': ' + response.statusText)
+                error.response = response
+                throw error
+            }
+        },
+            error => {
+                const errMess = new Error(error.message)
+                throw errMess
+            })
+        .then(response => response.json())
+        .then(response => dispatch(addProjectItem(response)))
+        .catch(error => alert('PROJECT COULD NOT BE POSTED: ' + error))
+}
+
+export const deleteProject = (projectId) => (dispatch) => {
+    const bearer = 'Bearer ' + localStorage.getItem('token')
+    return fetch(baseUrl + 'projects/' + projectId, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': bearer
+        }
+    })
+        .then(response => {
+            if (response.ok) {
+                return response
+            } else {
+                const error = new Error('Error ' + response.status + ': ' + response.statusText)
+                error.response = response
+                throw error
+            }
+        }, error => {
+            throw error
+        })
+        .then(response => response.json())
+        .then(response => dispatch(addProjects(response)))
+        .catch(error => dispatch(projectsFailed(error)))
+}

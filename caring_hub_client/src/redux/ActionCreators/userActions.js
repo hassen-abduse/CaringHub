@@ -35,3 +35,27 @@ export const fetchUsers = () => (dispatch) => {
         .then(users => dispatch(addUsers(users)))
         .catch(error => dispatch(usersFailed(error.message)))
 }
+
+export const deleteUser = (userId) => (dispatch) => {
+    const bearer = 'Bearer ' + localStorage.getItem('token')
+    return fetch(baseUrl + 'users/' + userId, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': bearer
+        }
+    })
+        .then(response => {
+            if (response.ok) {
+                return response
+            } else {
+                const error = new Error('Error ' + response.status + ': ' + response.statusText)
+                error.response = response
+                throw error
+            }
+        }, error => {
+            throw error
+        })
+        .then(response => response.json())
+        .then(response => dispatch(addUsers(response)))
+        .catch(error => dispatch(usersFailed(error)))
+}
