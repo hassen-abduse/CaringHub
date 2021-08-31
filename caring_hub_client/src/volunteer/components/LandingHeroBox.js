@@ -9,7 +9,7 @@ import LandingCardHolder from "./LandingCardHolder";
 export default function HeroBox() {
   return (
     <Box mb={3} mt={5}>
-      <div style={{ position: "relative" }}>
+      <div style={{ position: "relative", display: "flex" }}>
         <img
           src={Imge}
           width="100%"

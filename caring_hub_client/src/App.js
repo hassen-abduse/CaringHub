@@ -1,5 +1,7 @@
 import "./App.css";
-import React from "react";
+import "antd/dist/antd.css";
+import React, { useState } from "react";
+import { MultiSelect } from "multiselect-react-dropdown";
 //material ui imports
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Typography from "@material-ui/core/Typography";
@@ -16,44 +18,51 @@ import FindProject from "./volunteer/pages/find-project/FindProject";
 import ReviewApplication from "./volunteer/pages/review-application/ReviewApplication";
 import { DescriptionCard } from "./volunteer/components/JobDescriptionCard";
 import Landing from "./volunteer/pages/landing/Landing";
+import Demo from "./organization/components/ImageUploadComponent";
+import PostProject from "./organization/pages/post-project/PostProject";
+
+import EditJobPost from "./organization/pages/post-project/EditJobPost";
+// import Demo from "./organization/components/ImageUploadComponent";
 function App() {
   return (
     <React.Fragment>
       <CssBaseline />
 
       {/* <Landing maxWidth="sm">
-        <Typography
-          component="div"
-          style={{ backgroundColor: "#cfe8fc", height: "100vh" }}
-        />
-      </Landing>  */}
+      <Typography
+        component="div"
+        style={{ backgroundColor: "#cfe8fc", height: "100vh" }}
+      />
+    </Landing>  */}
+      {/* <PostProject /> */}
+      <EditJobPost />
+      {/* <CompanyProfile /> */}
+      {/* <Router>
+      <Header />
+        
+      <div>
+        <Switch>
+          <Route exact path="/volunteer">
+            <Landing />
+          </Route>
+          <Route exact path="/volunteer/dashboard">
+            <Dashboard />
+          </Route>
 
-      <Router>
-        <Header />
+          <Route exact path="/volunteer/findProject">
+            <FindProject />
+          </Route>
+          <Route exact path="/volunteer/reviewApplication">
+            <ReviewApplication />
+          </Route>
+          <Route exact path="/volunteer/jobDescription">
+            <DescriptionCard />
+          </Route>
+        </Switch>
+      </div>
+    </Router>
 
-        <div>
-          <Switch>
-            <Route exact path="/volunteer">
-              <Landing />
-            </Route>
-            <Route exact path="/volunteer/dashboard">
-              <Dashboard />
-            </Route>
-
-            <Route exact path="/volunteer/findProject">
-              <FindProject />
-            </Route>
-            <Route exact path="/volunteer/reviewApplication">
-              <ReviewApplication />
-            </Route>
-            <Route exact path="/volunteer/jobDescription">
-              <DescriptionCard />
-            </Route>
-          </Switch>
-        </div>
-      </Router>
-
-      <Footer />
+    <Footer /> */}
     </React.Fragment>
   );
 }
