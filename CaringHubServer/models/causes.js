@@ -1,19 +1,19 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
 const causeSchema = new Schema({
-    name: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    description: {
-        type: String,
-        required: true
-    },
+  name: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  description: {
+    type: String,
+    required: true
+  }
 }, {
-    timestamps: true
-});
+  timestamps: true
+})
 
-var Causes = mongoose.model('Cause', causeSchema);
-module.exports = Causes;
+const Causes = mongoose.model('Cause', causeSchema)
+module.exports = Causes

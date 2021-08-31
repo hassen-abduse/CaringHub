@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import Container from "@material-ui/core/Container";
-import TextField from "@material-ui/core/TextField";
 
-import { Multiselect } from "multiselect-react-dropdown";
 import "./JobPostDescription.css";
 import Demo from "./ImageUploadComponent";
 import { Form, Input, Button, DatePicker, InputNumber, Select } from "antd";
@@ -19,7 +17,7 @@ const rangeConfig = {
     },
   ],
 };
-const OPTIONS = ["Apples", "Nails", "Bananas", "Helicopters"];
+const OPTIONS = ["Teaching", "Event Organizing", "Developing", "Marketing"];
 
 export default function JobPostDescription() {
   const [selectedItems, setSelectedItems] = useState([]);
@@ -55,78 +53,84 @@ export default function JobPostDescription() {
   const [data, setDate] = useState(options);
   const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
   return (
-    <Form
-      name="basic"
-      initialValues={{
-        remember: true,
-      }}
-      onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
-    >
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
+    <Container>
+      <Form
+        name="basic"
+        initialValues={{
+          remember: true,
         }}
+        onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
       >
-        <Container
+        <div
           style={{
             display: "flex",
-            justifyContent: "center",
+            flexDirection: "column",
           }}
         >
-          <div
+          <Container
             style={{
-              width: "70%",
+              display: "flex",
+              justifyContent: "center",
             }}
           >
-            <div>
-              <h3>
-                Create a volunteer opportunity so volunteers can find you in the
-                search results Your Profile and Opportunity will be visible once
-                your organization has been approved.{" "}
-              </h3>
-            </div>
             <div
               style={{
-                backgroundColor: "#eee",
-                padding: "30px 25px",
-                border: "1px solid #E6E6E6",
-                borderRadius: "10px",
-                boxShadow: "1px 2px 6px 0 #d6d6d6",
-                width: "100%",
+                width: "70%",
+                marginTop: "60px",
               }}
             >
               <div
                 style={{
-                  padding: "24px 38px",
-                  backgroundColor: "white",
+                  padding: "3rem",
                 }}
               >
-                <span
+                <h3>
+                  Create a volunteer opportunity so volunteers can find you in
+                  the search results Your Profile and Opportunity will be
+                  visible once your organization has been approved.{" "}
+                </h3>
+              </div>
+              <div
+                style={{
+                  backgroundColor: "#eee",
+                  padding: "30px 25px",
+                  border: "1px solid #E6E6E6",
+                  borderRadius: "10px",
+                  boxShadow: "1px 2px 6px 0 #d6d6d6",
+                  width: "100%",
+                }}
+              >
+                <div
                   style={{
-                    backgroundColor: "#0B697F",
-                  }}
-                ></span>
-                <label
-                  style={{
-                    color: "#0B697F",
-                    position: "relative",
-                    top: " -6px",
-                    left: "0",
-                    paddingLeft: "5px",
-                    fontSize: "1em",
-                    textTransform: "uppercase",
-                    letterSpacing: ".09em",
+                    padding: "24px 38px",
+                    backgroundColor: "white",
                   }}
                 >
-                  Get Started
-                </label>
-                <br></br>
-                <br></br>
-                <label>Give your Opportunity a title and contact:</label>
+                  <span
+                    style={{
+                      backgroundColor: "#0B697F",
+                    }}
+                  ></span>
+                  <label
+                    style={{
+                      color: "#0B697F",
+                      position: "relative",
+                      top: " -6px",
+                      left: "0",
+                      paddingLeft: "5px",
+                      fontSize: "1em",
+                      textTransform: "uppercase",
+                      letterSpacing: ".09em",
+                    }}
+                  >
+                    Get Started
+                  </label>
+                  <br></br>
+                  <br></br>
+                  <label>Give your Opportunity a title and contact:</label>
 
-                {/* <div style={{ display: "flex", flexDirection: "column" }}>
+                  {/* <div style={{ display: "flex", flexDirection: "column" }}>
                   <div style={{ marginTop: "10px" }}>
                     <label>Title</label> &nbsp;
                     <input type="text" className="inputs" />
@@ -137,142 +141,142 @@ export default function JobPostDescription() {
                   </div>
                 </div> */}
 
-                <Form.Item
-                  label="Title"
-                  name="title"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please input your Title!",
-                    },
-                  ]}
-                >
-                  <Input />
-                </Form.Item>
+                  <Form.Item
+                    label="Title"
+                    name="title"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input your Title!",
+                      },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
 
-                <Form.Item
-                  label="Contact Address"
-                  name="contact_address"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please input your contact adress!",
-                    },
-                  ]}
-                >
-                  <Input />
-                </Form.Item>
+                  <Form.Item
+                    label="Contact Address"
+                    name="contact_address"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input your contact adress!",
+                      },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
 
-                <Form.Item
-                  wrapperCol={{
-                    offset: 8,
-                    span: 16,
-                  }}
-                ></Form.Item>
+                  <Form.Item
+                    wrapperCol={{
+                      offset: 8,
+                      span: 16,
+                    }}
+                  ></Form.Item>
 
-                <br></br>
+                  <br></br>
 
-                <br></br>
+                  <br></br>
+                </div>
               </div>
-            </div>
-            <br></br>
-            {/* location div */}
-            <div
-              style={{
-                backgroundColor: "#eee",
-                padding: "30px 25px",
-                border: "1px solid #E6E6E6",
-                borderRadius: "10px",
-                boxShadow: "1px 2px 6px 0 #d6d6d6",
-                width: "100%",
-              }}
-            >
+              <br></br>
+              {/* location div */}
               <div
                 style={{
-                  padding: "24px 38px",
-                  backgroundColor: "white",
+                  backgroundColor: "#eee",
+                  padding: "30px 25px",
+                  border: "1px solid #E6E6E6",
+                  borderRadius: "10px",
+                  boxShadow: "1px 2px 6px 0 #d6d6d6",
+                  width: "100%",
                 }}
               >
-                <span
+                <div
                   style={{
-                    backgroundColor: "#0B697F",
-                  }}
-                ></span>
-                <label
-                  style={{
-                    color: "#0B697F",
-                    position: "relative",
-                    top: " -6px",
-                    left: "0",
-                    paddingLeft: "5px",
-                    fontSize: "1em",
-                    textTransform: "uppercase",
-                    letterSpacing: ".09em",
+                    padding: "24px 38px",
+                    backgroundColor: "white",
                   }}
                 >
-                  Opportunity Location
-                </label>
-                <br></br>
-                <br></br>
-                <label>Give your opportunity Location:</label>
-                <br></br>
-                <br></br>
-                {/* <label>City</label> &nbsp; */}
-                <Form.Item
-                  label="City"
-                  name="city"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please input your city!",
-                    },
-                  ]}
-                >
-                  <Input />
-                </Form.Item>
-              </div>
-            </div>{" "}
-            <br></br>
-            {/* date and time */}
-            <div
-              style={{
-                backgroundColor: "#eee",
-                padding: "30px 25px",
-                border: "1px solid #E6E6E6",
-                borderRadius: "10px",
-                boxShadow: "1px 2px 6px 0 #d6d6d6",
-                width: "100%",
-              }}
-            >
+                  <span
+                    style={{
+                      backgroundColor: "#0B697F",
+                    }}
+                  ></span>
+                  <label
+                    style={{
+                      color: "#0B697F",
+                      position: "relative",
+                      top: " -6px",
+                      left: "0",
+                      paddingLeft: "5px",
+                      fontSize: "1em",
+                      textTransform: "uppercase",
+                      letterSpacing: ".09em",
+                    }}
+                  >
+                    Opportunity Location
+                  </label>
+                  <br></br>
+                  <br></br>
+                  <label>Give your opportunity Location:</label>
+                  <br></br>
+                  <br></br>
+                  {/* <label>City</label> &nbsp; */}
+                  <Form.Item
+                    label="City"
+                    name="city"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input your city!",
+                      },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
+                </div>
+              </div>{" "}
+              <br></br>
+              {/* date and time */}
               <div
                 style={{
-                  padding: "24px 38px",
-                  backgroundColor: "white",
+                  backgroundColor: "#eee",
+                  padding: "30px 25px",
+                  border: "1px solid #E6E6E6",
+                  borderRadius: "10px",
+                  boxShadow: "1px 2px 6px 0 #d6d6d6",
+                  width: "100%",
                 }}
               >
-                <span
+                <div
                   style={{
-                    backgroundColor: "#0B697F",
-                  }}
-                ></span>
-                <label
-                  style={{
-                    color: "#0B697F",
-                    position: "relative",
-                    top: " -6px",
-                    left: "0",
-                    paddingLeft: "5px",
-                    fontSize: "1em",
-                    textTransform: "uppercase",
-                    letterSpacing: ".09em",
+                    padding: "24px 38px",
+                    backgroundColor: "white",
                   }}
                 >
-                  Date and time
-                </label>
-                <br></br>
-                <br></br>
-                <label>Give your Opportunity Date and Time:</label>
-                {/* 
+                  <span
+                    style={{
+                      backgroundColor: "#0B697F",
+                    }}
+                  ></span>
+                  <label
+                    style={{
+                      color: "#0B697F",
+                      position: "relative",
+                      top: " -6px",
+                      left: "0",
+                      paddingLeft: "5px",
+                      fontSize: "1em",
+                      textTransform: "uppercase",
+                      letterSpacing: ".09em",
+                    }}
+                  >
+                    Date and time
+                  </label>
+                  <br></br>
+                  <br></br>
+                  <label>Give your Opportunity Date and Time:</label>
+                  {/* 
                 <div
                   style={{
                     display: "flex",
@@ -291,343 +295,344 @@ export default function JobPostDescription() {
                 </div>
              
               */}
-                <Form.Item
-                  name="start_end_date"
-                  label="Select Start and End Date"
-                  {...rangeConfig}
-                >
-                  <RangePicker />
-                </Form.Item>
-                <br></br>
-                <div style={{ marginTop: "10px" }}>
                   <Form.Item
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input number of volunteers!",
-                      },
-                    ]}
-                    name="num_of_volunteers"
-                    label="Number of volunteers"
+                    name="start_end_date"
+                    label="Select Start and End Date"
+                    {...rangeConfig}
                   >
-                    <InputNumber min={1} />
+                    <RangePicker />
                   </Form.Item>
-                </div>
-
-                <br></br>
-              </div>
-            </div>
-            <br></br>
-            {/* opportunity description */}
-            <div
-              style={{
-                backgroundColor: "#eee",
-                padding: "30px 25px",
-                border: "1px solid #E6E6E6",
-                borderRadius: "10px",
-                boxShadow: "1px 2px 6px 0 #d6d6d6",
-                width: "100%",
-              }}
-            >
-              <div
-                style={{
-                  padding: "24px 38px",
-                  backgroundColor: "white",
-                }}
-              >
-                <span
-                  style={{
-                    backgroundColor: "#0B697F",
-                  }}
-                ></span>
-                <label
-                  style={{
-                    color: "#0B697F",
-                    position: "relative",
-                    top: " -6px",
-                    left: "0",
-                    paddingLeft: "5px",
-                    fontSize: "1em",
-                    textTransform: "uppercase",
-                    letterSpacing: ".09em",
-                  }}
-                >
-                  Opportunity Description
-                </label>
-                <br></br>
-                <br></br>
-                <label>
-                  Write a brief Description of your opportunity:{" "}
-                  <span
-                    style={{
-                      color: "red",
-                    }}
-                  >
-                    *
-                  </span>
-                </label>
-                <br></br>
-                <br></br>
-                <Form.Item
-                  name="description"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please input Job Description!",
-                    },
-                  ]}
-                >
-                  <TextArea rows={4} />
-                </Form.Item>
-
-                <br></br>
-              </div>
-            </div>
-            <br></br>
-            {/* skills */}
-            <div
-              style={{
-                backgroundColor: "#eee",
-                padding: "30px 25px",
-                border: "1px solid #E6E6E6",
-                borderRadius: "10px",
-                boxShadow: "1px 2px 6px 0 #d6d6d6",
-                width: "100%",
-              }}
-            >
-              <div
-                style={{
-                  padding: "24px 38px",
-                  backgroundColor: "white",
-                }}
-              >
-                <span
-                  style={{
-                    backgroundColor: "#0B697F",
-                  }}
-                ></span>
-                <label
-                  style={{
-                    color: "#0B697F",
-                    position: "relative",
-                    top: " -6px",
-                    left: "0",
-                    paddingLeft: "5px",
-                    fontSize: "1em",
-                    textTransform: "uppercase",
-                    letterSpacing: ".09em",
-                  }}
-                >
-                  Skills
-                </label>
-                <br></br>
-                <br></br>
-                <label>
-                  What skills are you looking for in volunteers:{" "}
-                  <span
-                    style={{
-                      color: "red",
-                    }}
-                  >
-                    *
-                  </span>
-                </label>
-                <div>
-                  {/* <Multiselect options={data} displayValue="name" /> */}
-                  <Form.Item
-                    name="skills"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input skill requirments!",
-                      },
-                    ]}
-                  >
-                    <Select
-                      mode="multiple"
-                      placeholder="Inserted are removed"
-                      value={selectedItems}
-                      onChange={handleChange}
-                      style={{ width: "100%" }}
+                  <br></br>
+                  <div style={{ marginTop: "10px" }}>
+                    <Form.Item
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please input number of volunteers!",
+                        },
+                      ]}
+                      name="num_of_volunteers"
+                      label="Number of volunteers"
                     >
-                      {filteredOptions.map((item) => (
-                        <Select.Option key={item} value={item}>
-                          {item}
-                        </Select.Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-                </div>
-                <br></br>
-              </div>
-            </div>
-            <br></br>
-            {/* media */}
-            <div
-              style={{
-                backgroundColor: "#eee",
-                padding: "30px 25px",
-                border: "1px solid #E6E6E6",
-                borderRadius: "10px",
-                boxShadow: "1px 2px 6px 0 #d6d6d6",
-                width: "100%",
-              }}
-            >
-              <div
-                style={{
-                  padding: "24px 38px",
-                  backgroundColor: "white",
-                }}
-              >
-                <span
-                  style={{
-                    backgroundColor: "#0B697F",
-                  }}
-                ></span>
-                <label
-                  style={{
-                    color: "#0B697F",
-                    position: "relative",
-                    top: " -6px",
-                    left: "0",
-                    paddingLeft: "5px",
-                    fontSize: "1em",
-                    textTransform: "uppercase",
-                    letterSpacing: ".09em",
-                  }}
-                >
-                  Media
-                </label>
-                <br></br>
-                <br></br>
-                <label>
-                  Insert Media file:{" "}
-                  <span
-                    style={{
-                      color: "red",
-                    }}
-                  >
-                    *
-                  </span>
-                </label>
-                <Form.Item
-                  name="upload"
-                  label="Upload"
-                  valuePropName="fileList"
-                  getValueFromEvent={normFile}
-                  // rules={[
-                  //   {
-                  //     required: true,
-                  //     message: "Please select an image!",
-                  //   },
-                  // ]}
-                >
-                  <Demo />
-                </Form.Item>
+                      <InputNumber min={1} />
+                    </Form.Item>
+                  </div>
 
-                <br></br>
+                  <br></br>
+                </div>
               </div>
-            </div>
-            <br></br>
-            {/* causes  */}
-            <div
-              style={{
-                backgroundColor: "#eee",
-                padding: "30px 25px",
-                border: "1px solid #E6E6E6",
-                borderRadius: "10px",
-                boxShadow: "1px 2px 6px 0 #d6d6d6",
-                width: "100%",
-              }}
-            >
+              <br></br>
+              {/* opportunity description */}
               <div
                 style={{
-                  padding: "24px 38px",
-                  backgroundColor: "white",
+                  backgroundColor: "#eee",
+                  padding: "30px 25px",
+                  border: "1px solid #E6E6E6",
+                  borderRadius: "10px",
+                  boxShadow: "1px 2px 6px 0 #d6d6d6",
+                  width: "100%",
                 }}
               >
-                <span
+                <div
                   style={{
-                    backgroundColor: "#0B697F",
-                  }}
-                ></span>
-                <label
-                  style={{
-                    color: "#0B697F",
-                    position: "relative",
-                    top: " -6px",
-                    left: "0",
-                    paddingLeft: "5px",
-                    fontSize: "1em",
-                    textTransform: "uppercase",
-                    letterSpacing: ".09em",
+                    padding: "24px 38px",
+                    backgroundColor: "white",
                   }}
                 >
-                  Cause Area
-                </label>
-                <br></br>
-                <br></br>
-                <label>
-                  Give the Cause Area of the Opportunity:{" "}
                   <span
                     style={{
-                      color: "red",
+                      backgroundColor: "#0B697F",
+                    }}
+                  ></span>
+                  <label
+                    style={{
+                      color: "#0B697F",
+                      position: "relative",
+                      top: " -6px",
+                      left: "0",
+                      paddingLeft: "5px",
+                      fontSize: "1em",
+                      textTransform: "uppercase",
+                      letterSpacing: ".09em",
                     }}
                   >
-                    *
-                  </span>
-                </label>
-                <div>
+                    Opportunity Description
+                  </label>
+                  <br></br>
+                  <br></br>
+                  <label>
+                    Write a brief Description of your opportunity:{" "}
+                    <span
+                      style={{
+                        color: "red",
+                      }}
+                    >
+                      *
+                    </span>
+                  </label>
+                  <br></br>
+                  <br></br>
                   <Form.Item
-                    name="causes"
+                    name="description"
                     rules={[
                       {
                         required: true,
-                        message: "Please input cause requirments!",
+                        message: "Please input Job Description!",
                       },
                     ]}
                   >
-                    <Select
-                      mode="multiple"
-                      placeholder="Inserted are removed"
-                      value={selectedItems}
-                      onChange={handleChange}
-                      style={{ width: "100%" }}
-                    >
-                      {filteredOptions.map((item) => (
-                        <Select.Option key={item} value={item}>
-                          {item}
-                        </Select.Option>
-                      ))}
-                    </Select>
+                    <TextArea rows={4} />
                   </Form.Item>
+
+                  <br></br>
                 </div>
-                <br></br>
+              </div>
+              <br></br>
+              {/* skills */}
+              <div
+                style={{
+                  backgroundColor: "#eee",
+                  padding: "30px 25px",
+                  border: "1px solid #E6E6E6",
+                  borderRadius: "10px",
+                  boxShadow: "1px 2px 6px 0 #d6d6d6",
+                  width: "100%",
+                }}
+              >
+                <div
+                  style={{
+                    padding: "24px 38px",
+                    backgroundColor: "white",
+                  }}
+                >
+                  <span
+                    style={{
+                      backgroundColor: "#0B697F",
+                    }}
+                  ></span>
+                  <label
+                    style={{
+                      color: "#0B697F",
+                      position: "relative",
+                      top: " -6px",
+                      left: "0",
+                      paddingLeft: "5px",
+                      fontSize: "1em",
+                      textTransform: "uppercase",
+                      letterSpacing: ".09em",
+                    }}
+                  >
+                    Skills
+                  </label>
+                  <br></br>
+                  <br></br>
+                  <label>
+                    What skills are you looking for in volunteers:{" "}
+                    <span
+                      style={{
+                        color: "red",
+                      }}
+                    >
+                      *
+                    </span>
+                  </label>
+                  <div>
+                    {/* <Multiselect options={data} displayValue="name" /> */}
+                    <Form.Item
+                      name="skills"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please input skill requirments!",
+                        },
+                      ]}
+                    >
+                      <Select
+                        mode="multiple"
+                        placeholder="Inserted are removed"
+                        value={selectedItems}
+                        onChange={handleChange}
+                        style={{ width: "100%" }}
+                      >
+                        {filteredOptions.map((item) => (
+                          <Select.Option key={item} value={item}>
+                            {item}
+                          </Select.Option>
+                        ))}
+                      </Select>
+                    </Form.Item>
+                  </div>
+                  <br></br>
+                </div>
+              </div>
+              <br></br>
+              {/* media */}
+              <div
+                style={{
+                  backgroundColor: "#eee",
+                  padding: "30px 25px",
+                  border: "1px solid #E6E6E6",
+                  borderRadius: "10px",
+                  boxShadow: "1px 2px 6px 0 #d6d6d6",
+                  width: "100%",
+                }}
+              >
+                <div
+                  style={{
+                    padding: "24px 38px",
+                    backgroundColor: "white",
+                  }}
+                >
+                  <span
+                    style={{
+                      backgroundColor: "#0B697F",
+                    }}
+                  ></span>
+                  <label
+                    style={{
+                      color: "#0B697F",
+                      position: "relative",
+                      top: " -6px",
+                      left: "0",
+                      paddingLeft: "5px",
+                      fontSize: "1em",
+                      textTransform: "uppercase",
+                      letterSpacing: ".09em",
+                    }}
+                  >
+                    Media
+                  </label>
+                  <br></br>
+                  <br></br>
+                  <label>
+                    Insert Media file:{" "}
+                    <span
+                      style={{
+                        color: "red",
+                      }}
+                    >
+                      *
+                    </span>
+                  </label>
+                  <Form.Item
+                    name="upload"
+                    label="Upload"
+                    valuePropName="fileList"
+                    getValueFromEvent={normFile}
+                    // rules={[
+                    //   {
+                    //     required: true,
+                    //     message: "Please select an image!",
+                    //   },
+                    // ]}
+                  >
+                    <Demo />
+                  </Form.Item>
+
+                  <br></br>
+                </div>
+              </div>
+              <br></br>
+              {/* causes  */}
+              <div
+                style={{
+                  backgroundColor: "#eee",
+                  padding: "30px 25px",
+                  border: "1px solid #E6E6E6",
+                  borderRadius: "10px",
+                  boxShadow: "1px 2px 6px 0 #d6d6d6",
+                  width: "100%",
+                }}
+              >
+                <div
+                  style={{
+                    padding: "24px 38px",
+                    backgroundColor: "white",
+                  }}
+                >
+                  <span
+                    style={{
+                      backgroundColor: "#0B697F",
+                    }}
+                  ></span>
+                  <label
+                    style={{
+                      color: "#0B697F",
+                      position: "relative",
+                      top: " -6px",
+                      left: "0",
+                      paddingLeft: "5px",
+                      fontSize: "1em",
+                      textTransform: "uppercase",
+                      letterSpacing: ".09em",
+                    }}
+                  >
+                    Cause Area
+                  </label>
+                  <br></br>
+                  <br></br>
+                  <label>
+                    Give the Cause Area of the Opportunity:{" "}
+                    <span
+                      style={{
+                        color: "red",
+                      }}
+                    >
+                      *
+                    </span>
+                  </label>
+                  <div>
+                    <Form.Item
+                      name="causes"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please input cause requirments!",
+                        },
+                      ]}
+                    >
+                      <Select
+                        mode="multiple"
+                        placeholder="Inserted are removed"
+                        value={selectedItems}
+                        onChange={handleChange}
+                        style={{ width: "100%" }}
+                      >
+                        {filteredOptions.map((item) => (
+                          <Select.Option key={item} value={item}>
+                            {item}
+                          </Select.Option>
+                        ))}
+                      </Select>
+                    </Form.Item>
+                  </div>
+                  <br></br>
+                </div>
               </div>
             </div>
-          </div>
-        </Container>
-        <div
-          style={{
-            display: "flex",
+          </Container>
+          <div
+            style={{
+              display: "flex",
 
-            justifyContent: "flex-end",
-            marginTop: "30px",
-            marginRight: "20%",
-          }}
-        >
-          {/* <Button
+              justifyContent: "flex-end",
+              marginTop: "30px",
+              marginRight: "20%",
+            }}
+          >
+            {/* <Button
             variant="contained"
             style={{ backgroundColor: "#FFDB15" }}
             href="/volunteer/reviewApplication"
           >
             Post
           </Button> */}
-          <Button type="primary" htmlType="submit">
-            Submit
-          </Button>
+            <Button type="primary" htmlType="submit">
+              Submit
+            </Button>
+          </div>
         </div>
-      </div>
-    </Form>
+      </Form>
+    </Container>
   );
 }

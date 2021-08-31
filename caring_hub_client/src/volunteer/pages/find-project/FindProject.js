@@ -1,14 +1,15 @@
 import React from "react";
-import CardHolder from '../../components/CardHolder'
-import HeroBox from '../../components/HeroBox'
-export default function FindProject() {
+import { Component } from "react";
+import CardHolder from "../../components/CardHolder";
+import HeroBox from "../../components/HeroBox";
+class FindProject extends Component {
+  render() {
     return (
-        <>
-            <HeroBox />
-            <CardHolder />
-
-        </>
-
-    )
-
+      <>
+        <HeroBox />
+        <CardHolder />
+      </>
+    );
+  }
 }
+export default FindProject;
