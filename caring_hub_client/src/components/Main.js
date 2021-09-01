@@ -28,6 +28,8 @@ import VolunteerHeader from "../volunteer/components/VolunteerHeader";
 import SelectRegistrationType from "../registration/SelectRegistrationType";
 import Login from "./Login";
 import PostProject from "../organization/pages/post-project/PostProject";
+import VolunteerRegistration from "../registration/VolunteerRegistration";
+import OrganizationRegistration from "../registration/OrganizationRegistration";
 
 const mapStateToProps = (state) => {
   return {
@@ -105,6 +107,14 @@ class Main extends Component {
 
             <Route exact path="/organization/postProject">
               <PostProject />
+            </Route>
+
+            <Route exact path="/organizationRegistration">
+              <OrganizationRegistration />
+            </Route>
+
+            <Route exact path="/volunteerRegistration">
+              <VolunteerRegistration />
             </Route>
           </Switch>
         </div>

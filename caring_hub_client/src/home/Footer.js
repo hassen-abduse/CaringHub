@@ -58,9 +58,6 @@ export default function Footer() {
             <div class="col-lg-6 col-md-12 col-sm-12">
               <ul class="list-unstyled li-space-lg p-small">
                 <li>
-                  <a href="#">Article Details</a>
-                </li>
-                <li>
                   <a href="#">Terms & Conditions</a>
                 </li>
                 <li>
@@ -68,9 +65,10 @@ export default function Footer() {
                 </li>
               </ul>
             </div>
-            <div class="col-lg-3 col-md-12 col-sm-12">
+            <div class="col-lg-6 col-md-12 col-sm-12">
               <p class="p-small statement">
-                Copyright © <a href="#">CaringHub</a>
+                {/* Copyright ©  */}
+                <a href="#">CaringHub</a>
               </p>
             </div>
           </div>
