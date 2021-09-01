@@ -1,6 +1,7 @@
 import React from "react";
 import { Box } from "@material-ui/core";
-import Imge from "../../assets/img/1.jpg";
+
+import Imge from "../../../../assets/img/1.jpg";
 
 export default function HeroBox() {
   return (
