@@ -8,51 +8,55 @@ import LandingCardHolder from "./LandingCardHolder";
 
 export default function HeroBox() {
   return (
-    <Box mb={3} mt={5}>
+    <Box>
       <div style={{ position: "relative" }}>
-        <img
-          src={Imge}
-          width="100%"
-          height="400px"
-          style={{ objectFit: "cover" }}
-        />
         <div
+          id="features"
+          class="accordion-hero"
           style={{
-            color: "white",
+            width: "100%",
+            height: "400px",
+            objectFit: "cover",
+            backgroundColor: "#0F5ACA",
+          }}
+        ></div>
+
+        <div
+          class="container"
+          style={{
             position: "absolute",
-            top: "50%",
-            left: "35%",
-            width: "500px",
+            top: "30%",
+            left: "5%",
+            color: "white",
           }}
         >
-          <h2
-            style={{
-              color: "white",
-            }}
-          >
-            Volunteer your skills and make a difference
-          </h2>
-          {/* <Button
-              size="small"
-              color="primary"
-              href="/volunteer/jobDescription"
-            >
-              Find project
-            </Button> */}
           <div
+            class="row"
             style={{
-              display: "flex",
-
+              display: "block",
+              alignItems: "center",
               justifyContent: "center",
             }}
           >
-            <Button variant="contained" style={{ backgroundColor: "#FFDB15" }}>
-              Find a Project
-            </Button>
+            <div class="col-xl-12" style={{ justifyContent: "center" }}>
+              <h2 class="h2-heading" style={{ color: "white" }}>
+                {" "}
+                Volunteering your skills is an excellent way to directly support
+                nonprofits and the communities they serve.
+              </h2>
+            </div>
+            <div>
+              <span class="nav-item">
+                <a class="btn-solid-sm" href="#contact">
+                  Find Projects
+                </a>
+              </span>
+            </div>
           </div>
         </div>
       </div>
 
+      {/* 
       <div
         style={{
           display: "flex",
@@ -114,41 +118,220 @@ export default function HeroBox() {
             </div>
           </div>
         </div>
+      </div> */}
+
+      <div class="basic-2">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-6 col-xl-5">
+              <div class="image-container">
+                <img
+                  style={{
+                    maxWidth: "",
+                    maxHeight: "450px",
+                    paddingRight: "20px",
+                  }}
+                  class="img-fluid"
+                  src={landingImg}
+                  alt="alternative"
+                />
+              </div>
+            </div>
+
+            <div class="col-lg-6 col-xl-7">
+              <div style={{ marginTop: "1rem" }} class="text-container">
+                <div class="section-title">Discover Projects</div>
+                <h2>Find organizations that need your help</h2>
+                <p>
+                  There are many ways to volunteer, so we're glad you chose us!
+                  Welcome to your home base for skills-based, volunteer
+                  opportunities. We believe nonprofit staff are in the best
+                  position to decide what support their organization needs.
+                  Volunteering in your local community is important, and we
+                  always encourage community service! That said, there are
+                  nonprofits all over the Ethiopia and beyond that are great
+                  places to volunteer and could use your volunteer hours.
+                </p>
+                <a class="btn-outline-reg" href="#">
+                  See available projects
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+
+      <div id="features" class="accordion-1">
+        <div class="container">
+          <div class="row">
+            <div class="col-xl-12">
+              <h2 class="h2-heading"> Did You Know?</h2>
+              <p class="p-heading">
+                Volunteering your skills is an excellent way to directly support
+                nonprofits and the communities they serve.
+              </p>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xl-5">
+              <div class="accordion" id="accordionExample">
+                <div class="accordion-item">
+                  <div class="accordion-icon blue">
+                    <span class="fas fa-graduation-cap"></span>
+                  </div>
+                  <div class="accordion-header" id="headingOne">
+                    <button
+                      class="accordion-button"
+                      type="button"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#collapseOne"
+                      aria-expanded="true"
+                      aria-controls="collapseOne"
+                    >
+                      Range of Skills and Experience
+                    </button>
+                  </div>
+                  <div
+                    id="collapseOne"
+                    class="accordion-collapse collapse show"
+                    aria-labelledby="headingOne"
+                    data-bs-parent="#accordionExample"
+                  >
+                    <div class="accordion-body">
+                      Our volunteers represent a wide range of backgrounds and
+                      experience – from college students to retired
+                      professionals, and everything in between. There is a
+                      project here for you.
+                    </div>
+                  </div>
+                </div>
+
+                <div class="accordion-item">
+                  <div class="accordion-icon blue">
+                    <span class="fas fa-handshake"></span>
+                  </div>
+                  <div class="accordion-header" id="headingTwo">
+                    <button
+                      class="accordion-button"
+                      type="button"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#collapseTwo"
+                      aria-expanded="false"
+                      aria-controls="collapseTwo"
+                    >
+                      Lasting Connections
+                    </button>
+                  </div>
+                  <div
+                    id="collapseTwo"
+                    class="accordion-collapse collapse"
+                    aria-labelledby="headingTwo"
+                    data-bs-parent="#accordionExample"
+                  >
+                    <div class="accordion-body">
+                      Many volunteers stay in contact with nonprofits after
+                      projects are completed as trusted advisors, advocates, and
+                      even board members. We love hearing about these
+                      long-lasting relationships!
+                    </div>
+                  </div>
+                </div>
+
+                <div class="accordion-item">
+                  <div class="accordion-icon purple">
+                    <span class="fas fa-chart-line"></span>
+                  </div>
+                  <div class="accordion-header" id="headingThree">
+                    <button
+                      class="accordion-button"
+                      type="button"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#collapseThree"
+                      aria-expanded="false"
+                      aria-controls="collapseThree"
+                    >
+                      Skill Building
+                    </button>
+                  </div>
+                  <div
+                    id="collapseThree"
+                    class="accordion-collapse collapse"
+                    aria-labelledby="headingThree"
+                    data-bs-parent="#accordionExample"
+                  >
+                    <div class="accordion-body">
+                      Volunteering is one of the best ways to develop your
+                      skills, expand your experience, and get references to help
+                      you advance to the next level in your career. There is so
+                      much to gain when you give.
+                    </div>
+                  </div>
+                </div>
+
+                <div class="accordion-item">
+                  <div class="accordion-icon blue">
+                    <span class="fas fa-graduation-cap"></span>
+                  </div>
+                  <div class="accordion-header" id="headingOne">
+                    <button
+                      class="accordion-button"
+                      type="button"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#collapseOne"
+                      aria-expanded="true"
+                      aria-controls="collapseOne"
+                    >
+                      Range of Skills and Experience
+                    </button>
+                  </div>
+                  <div
+                    id="collapseOne"
+                    class="accordion-collapse collapse show"
+                    aria-labelledby="headingOne"
+                    data-bs-parent="#accordionExample"
+                  >
+                    <div class="accordion-body">
+                      Our volunteers represent a wide range of backgrounds and
+                      experience – from college students to retired
+                      professionals, and everything in between. There is a
+                      project here for you.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-7">
+              <div class="image-container">
+                <img
+                  class="img-fluid"
+                  src="assets/images/need-you.svg"
+                  alt="alternative"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div
         style={{
           display: "flex",
-          backgroundColor: "#E0E4F0",
+          backgroundColor: "#fcfafb",
           flexDirection: "column",
           alignItems: "center",
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            flexDirection: "column",
-            marginTop: "30px",
-          }}
-        >
-          <div
-            style={{
-              marginLeft: "40%",
-            }}
-          >
-            <h1>Volunteer the way you want</h1>
-          </div>
-          <div
-            style={{
-              marginLeft: "20%",
-              marginRight: "20%",
-            }}
-          >
-            <h2>
+        <div class="row">
+          <div class="col-lg-12">
+            <h2 style={{ marginTop: 30 }} class="h2-heading">
+              Volunteer the way you want{" "}
+            </h2>
+            <p class="p-heading">
               We have hundreds of volunteer projects for every skill, time
               commitment, and cause area. Find the one that excites you – and
               complete it virtually.
-            </h2>
+            </p>
           </div>
         </div>
         <div
@@ -159,56 +342,6 @@ export default function HeroBox() {
           }}
         >
           <LandingCardHolder />
-        </div>
-      </div>
-      <div
-        style={{
-          position: "relative",
-          // // backgroundImage: { freqAskedPic },
-          width: "100%",
-          height: "400px",
-          backgroundColor: "#0c1630",
-        }}
-      >
-        <div
-          style={{
-            color: "black",
-            position: "absolute",
-            top: "20%",
-            left: "35%",
-            width: "500px",
-          }}
-        >
-          <h2 style={{ marginLeft: "60px", color: "white" }}>
-            Frequently Asked Questions
-          </h2>
-
-          <div
-            style={{
-              display: "flex",
-            }}
-          >
-            <ul
-              style={{
-                color: "white",
-                fontSize: "1rem",
-                lineHeight: "2",
-              }}
-            >
-              <li>
-                Sed velit lectus, porttitor eu convallis sit amet, semper eget
-                mauris. Integer in pulvinar mauris. Donec facilisis.
-              </li>
-              <li>
-                Sed velit lectus, porttitor eu convallis sit amet, semper eget
-                mauris. Integer in pulvinar mauris. Donec facilisis.
-              </li>
-              <li>
-                Sed velit lectus, porttitor eu convallis sit amet, semper eget
-                mauris. Integer in pulvinar mauris. Donec facilisis.
-              </li>
-            </ul>
-          </div>
         </div>
       </div>
     </Box>

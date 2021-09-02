@@ -11,6 +11,7 @@ import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import { Grid, Box } from "@material-ui/core";
 import { ProjectCard } from "./ProjectCard";
+import CardHolder from "./CardHolder";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,64 +25,56 @@ export const DescriptionCard = () => {
   const classes = useStyles();
 
   return (
-    <Container style={{ marginTop: "100px" }}>
-      <div>
+    <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
+      <div className="container">
         <div>
-          <Button
-            variant="contained"
-            style={{ backgroundColor: "#FFDB15" }}
-            href="/volunteer/findProject"
-          >
+          <a className="btn-solid-sm" href="/volunteer/findProject">
             back to all projects
-          </Button>
+          </a>
         </div>
-        <Container>
+        <div>
           <div>
-            <h3>
-              AdisKetema Primary school needs a free volunteer service to teach
-              and support students
-            </h3>
-            <h4>
-              <span>
+            <h2>AdisKetema Primary school</h2>
+            <p>
+              <span className="p-heading">
                 AdisKetema primary school needs to teach children aged between
                 6-14 years. Typical subjects taught include English
                 (Conversational and Written), Maths, Geography, and General
+                Knowledge. AdisKetema primary school needs to teach children
+                aged between 6-14 years. Typical subjects taught include English
+                (Conversational and Written), Maths, Geography, and General
                 Knowledge.
               </span>
-            </h4>
+            </p>
           </div>
-          <div className="description" style={{ display: "flex" }}>
-            <div style={{ width: "40%", height: "40%" }}>
-              <div>
-                <img src={Image} width="100%" height="40%" />
+          <div class="container">
+            <div class="row">
+              <div style={{ padding: 0 }} class="col-lg-6 col-xl-6">
+                <div class="image-container">
+                  <img class="img-fluid" src={Image} alt="alternative" />
+                </div>
               </div>
-            </div>
-            <div
-              style={{
-                marginLeft: "20px",
-                paddingLeft: "20px",
-              }}
-            >
-              <h1>Causes</h1>
-              <Button variant="contained" color="primary" size="small">
-                Education
-              </Button>
-              <h1>Skills</h1>
-              <Button variant="contained" color="primary" size="small">
-                social work
-              </Button>{" "}
-              &nbsp;
-              <Button variant="contained" color="primary" size="small">
-                teaching
-              </Button>
-              <h1>Posted : May 21 2020</h1>
-              <Button
-                variant="contained"
-                style={{ backgroundColor: "#FFDB15" }}
-                href="/volunteer/reviewApplication"
-              >
-                Apply
-              </Button>
+
+              <div class="col-lg-6 col-xl-6">
+                <div style={{ marginTop: "1rem" }} class="text-container">
+                  <h2>Causes</h2>
+
+                  <a style={{ margin: "5px" }} class="btn-outline-sm" href="#">
+                    education
+                  </a>
+                  <h2>Skills</h2>
+                  <a style={{ margin: "5px" }} class="btn-outline-sm" href="#">
+                    social work
+                  </a>
+                  <a style={{ margin: "5px" }} class="btn-outline-sm" href="#">
+                    teaching
+                  </a>
+                  <p>Posted : May 21 2021</p>
+                  <a style={{ margin: "5px" }} class="btn-solid-reg" href="#">
+                    Apply
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
           <div
@@ -112,18 +105,47 @@ export const DescriptionCard = () => {
               sunt in culpa qui officia deserunt mollit anim id est laborum.”
             </p>
           </div>
-        </Container>
-        <div
-          className="other-jobs-card"
-          style={{
-            marginTop: "30px",
-            display: "flex",
-            justifyContent: "space-between",
-          }}
-        >
-          <ProjectCard />
-          <ProjectCard />
-          <ProjectCard />
+        </div>
+        <div style={{ paddingTop: "5.0rem " }} class="cards-2 bg-gray">
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-12">
+                <h2 class="h2-heading">Related Projects</h2>
+                <p class="p-heading">
+                  We have hundreds of volunteer projects for every skill, time
+                  commitment, and cause area. Find the one that excites you –
+                  and complete it virtually.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <CardHolder />
+
+        <div class="cards-2 bg-gray">
+          <div class="container">
+            {/* <div class="card">
+                <img
+                  class="quotes"
+                  src="assets/images/quotes.svg"
+                  alt="alternative"
+                />
+                <div class="card-body">
+                  <p class="testimonial-text">
+                    Suspendisse vitae enim arcu. Aliqu convallis risus a felis
+                    blandit, at mollis nisi bibendum aliquam noto ricos
+                  </p>
+                  <div class="testimonial-author">Susane Blake</div>
+                  <div class="occupation">General Manager, Presentop</div>
+                </div>
+                <div class="gradient-floor purple-to-green"></div>
+              </div> */}
+            <div>
+              <a class="btn-solid-lg" href="#contact">
+                Browse All Projects
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </Container>
