@@ -11,6 +11,7 @@ import ProfileCard from "./volunteer/components/ProfileCard";
 import Dashboard from "./volunteer/pages/dashboard/Dashboard";
 import Volunteers from "./organization/pages/volunteers/Volunteers";
 import Landing from "./volunteer/pages/landing/Landing";
+import Project from "./organization/pages/projects/Project";
 
 const store = __store__();
 class App extends Component {

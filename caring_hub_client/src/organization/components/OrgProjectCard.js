@@ -42,7 +42,12 @@ export const OrgProjectCard = () => {
 
                 <div>
                   <span class="nav-item m-2">
-                    <a class="btn-outline-sm" href="#contact">
+                    <a class="btn-solid-sm" href="#contact">
+                      Applicants
+                    </a>
+                  </span>
+                  <span class="nav-item m-2">
+                    <a class="btn-solid-sm" href="#contact">
                       Volunteers
                     </a>
                   </span>
