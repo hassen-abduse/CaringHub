@@ -4,6 +4,7 @@ import Project from "../projects/Project";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import HomePage from "../Home/HomePage";
 import Volunteers from "../volunteers/Volunteers";
+import PostProject from "../projects/PostProject";
 
 const useStyles = makeStyles({
   MainPage: {},
@@ -20,6 +21,10 @@ export default function MainPage() {
           <Route exact path="/org/projects">
             <Project />
           </Route>
+          <Route exact path="/org/postProject">
+            <PostProject />
+          </Route>
+
           <Route exact path="/org/Dashboard">
             <HomePage />
           </Route>
