@@ -3,8 +3,7 @@ import React, { Component } from "react";
 import ProfileCard from "../../components/ProfileCard";
 import SentApplicationCard from "../../components/SentApplicationCard";
 import Img from "../../../assets/img/bg2.jpg";
-import { Rate } from "antd";
-import { Badge } from "antd";
+import { Badge, Rate } from "antd";
 
 class Dashboard extends Component {
   state = {};
