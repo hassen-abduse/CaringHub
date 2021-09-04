@@ -30,6 +30,7 @@ import Login from "./Login";
 import PostProject from "../organization/pages/post-project/PostProject";
 import VolunteerRegistration from "../registration/VolunteerRegistration";
 import OrganizationRegistration from "../registration/OrganizationRegistration";
+import OrgDashboard from "../organization/OrgDashboard";
 
 const mapStateToProps = (state) => {
   return {
@@ -115,6 +116,9 @@ class Main extends Component {
 
             <Route exact path="/volunteerRegistration">
               <VolunteerRegistration />
+            </Route>
+            <Route exact path="/organization">
+              <OrgDashboard />
             </Route>
           </Switch>
         </div>

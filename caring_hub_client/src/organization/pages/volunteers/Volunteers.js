@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
 import { lighten, makeStyles } from "@material-ui/core/styles";
@@ -22,6 +22,8 @@ import Switch from "@material-ui/core/Switch";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import FilterListIcon from "@material-ui/icons/FilterList";
+import { Modal } from "antd";
+import EvalueateVolunteers from "./EvaluateVolunteers";
 
 function createData(firstName, lastName, phone, email, address, skill, areas) {
   return { firstName, lastName, phone, email, address, skill, areas };
@@ -321,12 +323,13 @@ export default function Volunteers() {
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
+  const handleClick = (event, index) => {
+    console.log(index);
+    const selectedIndex = selected.indexOf(index);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, index);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -358,7 +361,7 @@ export default function Volunteers() {
 
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
-
+  const [visible, setVisible] = useState(false);
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
@@ -383,23 +386,23 @@ export default function Volunteers() {
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.name);
+                  const isItemSelected = isSelected(index);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.name)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.name}
+                      key={index}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">
                         <Checkbox
                           checked={isItemSelected}
                           inputProps={{ "aria-labelledby": labelId }}
+                          onClick={(event) => handleClick(event, index)}
                         />
                       </TableCell>
                       <TableCell
@@ -418,7 +421,19 @@ export default function Volunteers() {
                       <TableCell align="right">{row.skill}</TableCell>
                       <TableCell align="right">{row.areas}</TableCell>
                       <TableCell>
-                        <Button>Evaluate</Button>
+                        <Button type="primary" onClick={() => setVisible(true)}>
+                          Evaluate
+                        </Button>
+                        <Modal
+                          title="evaluate volunteer"
+                          centered
+                          visible={visible}
+                          onOk={() => setVisible(false)}
+                          onCancel={() => setVisible(false)}
+                          width={1000}
+                        >
+                          <EvalueateVolunteers />
+                        </Modal>
                       </TableCell>
                     </TableRow>
                   );
