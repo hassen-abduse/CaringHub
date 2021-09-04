@@ -65,9 +65,7 @@ export const ProgressProject = () => {
           color="Primary"
           className={classes.button}
           startIcon={<EditIcon fontSize="small" />}
-        >
-          Edit
-        </Button>
+        ></Button>
       </CardActions>
     </Card>
   );

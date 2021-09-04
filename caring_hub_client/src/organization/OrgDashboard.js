@@ -24,11 +24,10 @@ import MessageSection from "./components/MessageSection";
 import MessageRounded from "@material-ui/icons/MessageRounded";
 import NotificationImportant from "@material-ui/icons/NotificationImportant";
 import SettingsIcon from "@material-ui/icons/Settings";
-import LanguageIcon from "@material-ui/icons/Language";
+
 import User from "./components/User";
 import ProfileImage from "../assets/img/profile2.jpg";
 import { blue } from "@material-ui/core/colors";
-import Multiselect from "multiselect-react-dropdown";
 
 const drawerWidth = 240;
 
@@ -106,7 +105,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function OrgDashboard() {
+const OrgDashboard = () => {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -259,4 +258,5 @@ export default function OrgDashboard() {
       </main>
     </div>
   );
-}
+};
+export default OrgDashboard;

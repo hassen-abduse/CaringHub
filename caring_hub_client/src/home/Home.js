@@ -139,95 +139,6 @@ function Home() {
           </div>
         </div>
       </div>
-      {/* <div class="slider-1">
-        <div class="container">
-          <div class="row">
-            <div class="col-lg-12">
-              <h4>
-                Trusted by over <span class="blue">5000</span> customers
-                worldwide
-              </h4>
-              <hr class="section-divider" />
-
-              <div class="slider-container">
-                <div class="swiper-container image-slider">
-                  <div class="swiper-wrapper">
-                    <div class="swiper-slide">
-                      <img
-                        class="img-fluid"
-                        src="assets/images/customer-logo-1.png"
-                        alt="alternative"
-                      />
-                    </div>
-                    <div class="swiper-slide">
-                      <img
-                        class="img-fluid"
-                        src="assets/images/customer-logo-2.png"
-                        alt="alternative"
-                      />
-                    </div>
-                    <div class="swiper-slide">
-                      <img
-                        class="img-fluid"
-                        src="assets/images/customer-logo-3.png"
-                        alt="alternative"
-                      />
-                    </div>
-                    <div class="swiper-slide">
-                      <img
-                        class="img-fluid"
-                        src="assets/images/customer-logo-4.png"
-                        alt="alternative"
-                      />
-                    </div>
-                    <div class="swiper-slide">
-                      <img
-                        class="img-fluid"
-                        src="assets/images/customer-logo-5.png"
-                        alt="alternative"
-                      />
-                    </div>
-                    <div class="swiper-slide">
-                      <img
-                        class="img-fluid"
-                        src="assets/images/customer-logo-6.png"
-                        alt="alternative"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div> */}
-
-      {/* <div class="basic-3">
-        <div class="container">
-          <div class="row">
-            <div class="col-lg-12">
-              <div class="text-container">
-                <h2>Frequently Asked Questions</h2>
-                <p style={{ marginBottom: 10 }} class="p-large">
-                  Q. How do I become a volunteer?
-                </p>
-                <p style={{ marginBottom: 10 }} class="p-large">
-                  Q. Can I leave if I don't like my role?
-                </p>
-                <p style={{ marginBottom: 10 }} class="p-large">
-                  Q. Can I claim benefits while volunteering?{" "}
-                </p>
-                <p style={{ marginBottom: 10 }} class="p-large">
-                  Q. Can I get a qualification or an award?
-                </p>
-                <p style={{ marginBottom: 10 }} class="p-large">
-                  Q. Can I volunteer with my family or friends?
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div> */}
 
       <div id="features" class="accordion-1">
         <div class="container">
@@ -381,5 +292,4 @@ function Home() {
     </div>
   );
 }
-
 export default Home;
