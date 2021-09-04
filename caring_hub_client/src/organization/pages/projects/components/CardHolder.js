@@ -11,6 +11,7 @@ import {
 import { green, purple } from "@material-ui/core/colors";
 import { ProgressProject } from "./ProgressProject";
 import { NewProject } from "./NewProject";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles({
   Header: {
@@ -28,12 +29,8 @@ export default function CardHolder() {
           </Grid>
           <Grid item xs></Grid>
           <Grid item>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.margin}
-            >
-              create project
+            <Button variant="contained" color="primary" href="/org/postProject">
+              Create project
             </Button>
           </Grid>
         </Grid>
