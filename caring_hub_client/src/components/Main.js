@@ -32,6 +32,9 @@ import VolunteerRegistration from "../registration/VolunteerRegistration";
 import OrganizationRegistration from "../registration/OrganizationRegistration";
 import OrgDashboard from "../organization/OrgDashboard";
 import Profile from "../organization/pages/profile/Profile";
+import OrganizationHeader from "../organization/components/OrganizationHeader";
+import Volunteers from "../organization/pages/volunteers/Volunteers";
+import Project from "../organization/pages/projects/Project";
 
 const mapStateToProps = (state) => {
   return {
@@ -75,7 +78,7 @@ class Main extends Component {
   render() {
     return (
       <React.Fragment>
-        <AppBar />
+        <OrganizationHeader />
 
         <div>
           <Switch>
@@ -125,6 +128,18 @@ class Main extends Component {
             <Route exact path="/organization/profile">
               <Profile />
             </Route>
+
+            <Route exact path="/organization/projects">
+              <Project />
+            </Route>
+
+            <Route exact path="/organization/volunteers">
+              <Volunteers />
+            </Route>
+
+            {/* <Route exact path="/organization/applicants">
+              <Applicants />
+            </Route> */}
           </Switch>
         </div>
         <Footer />
