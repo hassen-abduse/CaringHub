@@ -5,6 +5,8 @@ import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import Main from "./components/Main";
 import { __store__ } from "./redux/configureStore";
+import OrgDashboard from "./organization/OrgDashboard";
+import Dashboard from "./volunteer/pages/dashboard/Dashboard";
 const store = __store__();
 class App extends Component {
   render() {
@@ -12,7 +14,8 @@ class App extends Component {
       <Provider store={store}>
         <BrowserRouter>
           <div>
-            <Main />
+            <OrgDashboard />
+            {/* <Dashboard /> */}
           </div>
         </BrowserRouter>
       </Provider>
