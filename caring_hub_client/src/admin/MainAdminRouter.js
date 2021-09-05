@@ -19,26 +19,26 @@ export default function MainPage() {
     <Router>
       <div className={classes.MainPage}>
         <Switch>
-          <Route exact path="/org/projects">
+          <Route exact path="/admin/projects">
             <Project />
           </Route>
-          <Route exact path="/org/postProject">
+          <Route exact path="/admin/volunteers">
             <PostProject />
           </Route>
 
-          <Route exact path="/org/Dashboard">
+          <Route exact path="/admin/Dashboard">
             <HomePage />
           </Route>
-          <Route exact path="/org/Profile">
+          <Route exact path="/admin/profile">
             <Project />
           </Route>
-          <Route exact path="/org/applicants">
+          <Route exact path="/admin/applicants">
             <Applicants />
           </Route>
-          <Route exact path="/org/volunteers">
+          <Route exact path="/admin/organiztion">
             <Volunteers />
           </Route>
-          <Route exact path="/org">
+          <Route exact path="/admin">
             <HomePage />
           </Route>
         </Switch>

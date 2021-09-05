@@ -14,6 +14,7 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     maxWidth: "36ch",
     backgroundColor: theme.palette.background.paper,
+    boxShadow: theme.boxShadow,
   },
   inline: {
     display: "inline",
