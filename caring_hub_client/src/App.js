@@ -5,8 +5,6 @@ import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import Main from "./components/Main";
 import { __store__ } from "./redux/configureStore";
-import Volunteers from "./organization/pages/volunteers/Volunteers";
-import Applicants from "./organization/pages/applicants/Applicant";
 
 const store = __store__();
 class App extends Component {
@@ -15,8 +13,7 @@ class App extends Component {
       <Provider store={store}>
         <BrowserRouter>
           <div>
-            {/* <Volunteers /> */}
-            <Applicants />
+            <Main />
           </div>
         </BrowserRouter>
       </Provider>
