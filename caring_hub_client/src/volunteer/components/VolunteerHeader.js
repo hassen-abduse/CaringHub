@@ -3,7 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "../../assets/css/styles.css";
 import "../../assets/css/swiper.css";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
-import Divider from "@material-ui/core/Divider";
+
 export default function VolunteerHeader() {
   return (
     <div>

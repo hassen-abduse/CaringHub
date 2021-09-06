@@ -3,7 +3,7 @@ import React from "react";
 export default function Footer() {
   return (
     <div>
-      <div class="footer bg-gray">
+      {/* <div class="footer bg-gray">
         <img
           class="decoration-circles"
           src="assets/images/decoration-circles.png"
@@ -51,7 +51,7 @@ export default function Footer() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
       <div class="copyright bg-gray">
         <div class="container">
           <div class="row">

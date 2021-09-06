@@ -1,8 +1,10 @@
 import { Grid, Container, Paper, Typography } from "@material-ui/core";
 import React, { Component } from "react";
 import Divider from "@material-ui/core/Divider";
+import { Rate } from "antd";
 import Avatar from "./Avatars";
 
+const desc = ["terrible", "bad", "normal", "good", "wonderful"];
 class ProfileCard extends Component {
   state = {};
   render() {
@@ -40,7 +42,7 @@ class ProfileCard extends Component {
               Status: Ready To Volunteer
             </Typography>
             <Typography variant="body2" className="skill_description">
-              Rating :
+              Rating :<Rate disabled defaultValue={4} />
             </Typography>
           </Grid>
         </Grid>

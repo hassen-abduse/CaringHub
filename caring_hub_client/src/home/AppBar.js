@@ -1,9 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../assets/css/styles.css";
 import "../assets/css/swiper.css";
+import { useLocation } from "react-router";
+import { Link } from "react-router-dom";
 
 export default function AppBar() {
+  const route = useLocation().pathname;
+  const user = localStorage.getItem("userId");
+  const role = localStorage.getItem("Role");
   return (
     <div>
       <nav
@@ -12,7 +17,7 @@ export default function AppBar() {
         aria-label="Main navigation"
       >
         <div class="container">
-          <a class="navbar-brand logo-text" href="/">
+          <a className="navbar-brand logo-text" href="/">
             CaringHub
           </a>
 
@@ -31,80 +36,38 @@ export default function AppBar() {
           >
             <ul class="navbar-nav ms-auto navbar-nav-scroll">
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="/">
+                <Link
+                  class={route === "/" ? "nav-link active" : "nav-link"}
+                  aria-current="page"
+                  to="/"
+                >
                   Home
-                </a>
+                </Link>
               </li>
 
-              <li class="nav-item dropdown">
-                <a
-                  class="nav-link dropdown-toggle"
-                  href="#"
-                  id="dropdown01"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
+              <li class="nav-item">
+                <Link
+                  class={
+                    route === "/volunteer" ? "nav-link active" : "nav-link"
+                  }
+                  to="/volunteer"
                 >
-                  Volunteers
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="dropdown01">
-                  <li>
-                    <a class="dropdown-item" href="/volunteer">
-                      Dashboard
-                    </a>
-                  </li>
-                  <li>
-                    <div class="dropdown-divider"></div>
-                  </li>
-                  <li>
-                    <a class="dropdown-item" href="/volunteer/findProject">
-                      Find Project
-                    </a>
-                  </li>
-                  <li>
-                    <div class="dropdown-divider"></div>
-                  </li>
-                  <li>
-                    <a class="dropdown-item" href="volunteer/dashboard">
-                      Browse Organizations
-                    </a>
-                  </li>
-                </ul>
+                  Volunteer
+                </Link>
               </li>
 
-              <li class="nav-item dropdown">
-                <a
-                  class="nav-link dropdown-toggle"
-                  href="#"
-                  id="dropdown02"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  Organization
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="dropdown01">
-                  <li>
-                    <a class="dropdown-item" href="#">
-                      Home
-                    </a>
-                  </li>
-                  <li>
-                    <div class="dropdown-divider"></div>
-                  </li>
-                  <li>
-                    <a class="dropdown-item" href="/organization/postProject">
-                      Post Project
-                    </a>
-                  </li>
-                  <li>
-                    <div class="dropdown-divider"></div>
-                  </li>
-                  <li>
-                    <a class="dropdown-item" href="#">
-                      Discover Volunteers
-                    </a>
-                  </li>
-                </ul>
-              </li>
+              {user && role === "organization" && (
+                <li class="nav-item ">
+                  <Link
+                    class={
+                      route === "/organization" ? "nav-link active" : "nav-link"
+                    }
+                    to="/organization"
+                  >
+                    Organization
+                  </Link>
+                </li>
+              )}
             </ul>
             <span class="nav-item">
               <a class="btn-solid-sm" href="/login">

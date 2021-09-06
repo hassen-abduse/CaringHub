@@ -16,6 +16,9 @@ p {
   color: #5e6576;
   font: 400 1rem/1.625rem "Open Sans", sans-serif;
 }
+.teal {
+  color: #159197;
+}
 
 h1 {
   color: #223150;
@@ -701,7 +704,7 @@ a:hover {
 }
 
 .cards-2 .card-body {
-  padding: 3.5rem 2rem 3.125rem 2rem;
+  padding: 1.5rem 2rem 3.125rem 2rem;
 }
 
 .cards-2 .testimonial-author {

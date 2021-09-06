@@ -158,9 +158,11 @@ export default function OrgDashboard() {
                   </Badge>
                 </ListItem>
                 <ListItem>
-                  <Badge badgeContent={6} color="secondary">
-                    <NotificationImportant />
-                  </Badge>
+                  <Link href="/org/applicants">
+                    <Badge badgeContent={6} color="secondary">
+                      <NotificationImportant />
+                    </Badge>
+                  </Link>
                 </ListItem>
 
                 <ListItem>
