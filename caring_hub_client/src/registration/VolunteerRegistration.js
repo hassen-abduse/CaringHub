@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import Container from "@material-ui/core/Container";
-
+import { Modal } from "antd";
 import { Form, Input, Button, DatePicker, InputNumber, Select } from "antd";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import TextArea from "antd/lib/input/TextArea";
 import Demo from "../organization/components/ImageUploadComponent";
 import "../organization/components/JobPostDescription.css";
-import FileUpload from "./FileUpload";
+import VolunteerFileUpload from "./VolunteerFileUpload";
 
 const { RangePicker } = DatePicker;
 const rangeConfig = {
@@ -20,7 +20,8 @@ const rangeConfig = {
 };
 const OPTIONS = ["Teaching", "Event Organizing", "Developing", "Marketing"];
 
-export default function OrganizationRegistration() {
+export default function VolunteerRegistration() {
+  const [visible, setVisible] = useState(false);
   const { Option } = Select;
   const [selectedItems, setSelectedItems] = useState([]);
   const handleChange = (selectedItems) => {
@@ -67,9 +68,34 @@ export default function OrganizationRegistration() {
       </Select>
     </Form.Item>
   );
+
   return (
     <div style={{ backgroundColor: "#EEEEEE" }}>
       <Container style={{ backgroundColor: "#EEEEEE" }}>
+        <Modal
+          title="Upload Files"
+          centered
+          visible={visible}
+          // mask={false}
+          maskStyle={{
+            backgroundColor: "rgba(0, 0, 0, 0.25)",
+          }}
+          onOk={() => setVisible(false)}
+          onCancel={() => setVisible(false)}
+          width={700}
+          footer={[
+            <Button
+              key="back"
+              size="large"
+              color="primary"
+              onClick={() => setVisible(false)}
+            >
+              Done
+            </Button>,
+          ]}
+        >
+          <VolunteerFileUpload />
+        </Modal>
         <Form
           labelCol={{ span: 6 }}
           wrapperCol={{ span: 12 }}
@@ -433,32 +459,6 @@ export default function OrganizationRegistration() {
                     <br></br>
 
                     <br></br>
-                    <label>
-                      Provide certificates for your skills:
-                      <span
-                        style={{
-                          color: "red",
-                        }}
-                      >
-                        *
-                      </span>
-                    </label>
-                    <Form.Item
-                      name="upload"
-                      label=""
-                      valuePropName="fileList"
-                      getValueFromEvent={normFile}
-                      // rules={[
-                      //   {
-                      //     required: true,
-                      //     message: "Please select an image!",
-                      //   },
-                      // ]}
-                    >
-                      <FileUpload />
-                    </Form.Item>
-
-                    <br></br>
                   </div>
                 </div>
                 <br></br>
@@ -561,6 +561,7 @@ export default function OrganizationRegistration() {
                 type="primary"
                 htmlType="submit"
                 className="btn-solid-reg"
+                onClick={() => setVisible(true)}
               >
                 Submit
               </Button>

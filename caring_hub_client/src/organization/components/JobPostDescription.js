@@ -6,6 +6,8 @@ import Demo from "./ImageUploadComponent";
 import { Form, Input, Button, DatePicker, InputNumber, Select } from "antd";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import TextArea from "antd/lib/input/TextArea";
+import UploadMedia from "../components/UploadMedia";
+import { Modal } from "antd";
 
 const { RangePicker } = DatePicker;
 const rangeConfig = {
@@ -50,10 +52,35 @@ export default function JobPostDescription() {
     { id: "5", name: "Marketing" },
     { id: "6", name: "Event Hosting" },
   ];
+  const [visible, setVisible] = useState(false);
   const [data, setDate] = useState(options);
   const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
   return (
     <Container>
+      <Modal
+        title="Upload Files"
+        centered
+        visible={visible}
+        // mask={false}
+        maskStyle={{
+          backgroundColor: "rgba(0, 0, 0, 0.25)",
+        }}
+        onOk={() => setVisible(false)}
+        onCancel={() => setVisible(false)}
+        width={700}
+        footer={[
+          <Button
+            key="back"
+            size="large"
+            color="primary"
+            onClick={() => setVisible(false)}
+          >
+            Done
+          </Button>,
+        ]}
+      >
+        <UploadMedia />
+      </Modal>
       <Form
         name="basic"
         initialValues={{
@@ -466,73 +493,6 @@ export default function JobPostDescription() {
                 </div>
               </div>
               <br></br>
-              {/* media */}
-              <div
-                style={{
-                  backgroundColor: "#eee",
-                  padding: "30px 25px",
-                  border: "1px solid #E6E6E6",
-                  borderRadius: "10px",
-                  boxShadow: "1px 2px 6px 0 #d6d6d6",
-                  width: "100%",
-                }}
-              >
-                <div
-                  style={{
-                    padding: "24px 38px",
-                    backgroundColor: "white",
-                  }}
-                >
-                  <span
-                    style={{
-                      backgroundColor: "#0B697F",
-                    }}
-                  ></span>
-                  <label
-                    style={{
-                      color: "#0B697F",
-                      position: "relative",
-                      top: " -6px",
-                      left: "0",
-                      paddingLeft: "5px",
-                      fontSize: "1em",
-                      textTransform: "uppercase",
-                      letterSpacing: ".09em",
-                    }}
-                  >
-                    Media
-                  </label>
-                  <br></br>
-                  <br></br>
-                  <label>
-                    Insert Media file:{" "}
-                    <span
-                      style={{
-                        color: "red",
-                      }}
-                    >
-                      *
-                    </span>
-                  </label>
-                  <Form.Item
-                    name="upload"
-                    label="Upload"
-                    valuePropName="fileList"
-                    getValueFromEvent={normFile}
-                    // rules={[
-                    //   {
-                    //     required: true,
-                    //     message: "Please select an image!",
-                    //   },
-                    // ]}
-                  >
-                    <Demo />
-                  </Form.Item>
-
-                  <br></br>
-                </div>
-              </div>
-              <br></br>
               {/* causes  */}
               <div
                 style={{
@@ -627,7 +587,12 @@ export default function JobPostDescription() {
           >
             Post
           </Button> */}
-            <Button type="primary" htmlType="submit">
+            <Button
+              type="primary"
+              htmlType="submit"
+              onClick
+              onClick={() => setVisible(true)}
+            >
               Submit
             </Button>
           </div>

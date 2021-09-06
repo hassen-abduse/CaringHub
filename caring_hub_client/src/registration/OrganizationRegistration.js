@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import Container from "@material-ui/core/Container";
-
+import { Modal } from "antd";
 import { Form, Input, Button, DatePicker, InputNumber, Select } from "antd";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import TextArea from "antd/lib/input/TextArea";
 import Demo from "../organization/components/ImageUploadComponent";
 import "../organization/components/JobPostDescription.css";
-import FileUpload from "./FileUpload";
+
+import OrgFileUpload from "./OrgFileUpload";
 
 const { RangePicker } = DatePicker;
 const rangeConfig = {
@@ -21,6 +22,7 @@ const rangeConfig = {
 const OPTIONS = ["Teaching", "Event Organizing", "Developing", "Marketing"];
 
 export default function OrganizationRegistration() {
+  const [visible, setVisible] = useState(false);
   const { Option } = Select;
   const [selectedItems, setSelectedItems] = useState([]);
   const handleChange = (selectedItems) => {
@@ -70,6 +72,30 @@ export default function OrganizationRegistration() {
   return (
     <div style={{ backgroundColor: "#EEEEEE" }}>
       <Container style={{ backgroundColor: "#EEEEEE" }}>
+        <Modal
+          title="Upload Files"
+          centered
+          visible={visible}
+          // mask={false}
+          maskStyle={{
+            backgroundColor: "rgba(0, 0, 0, 0.25)",
+          }}
+          onOk={() => setVisible(false)}
+          onCancel={() => setVisible(false)}
+          width={700}
+          footer={[
+            <Button
+              key="back"
+              size="large"
+              color="primary"
+              onClick={() => setVisible(false)}
+            >
+              Done
+            </Button>,
+          ]}
+        >
+          <OrgFileUpload />
+        </Modal>
         <Form
           labelCol={{ span: 6 }}
           wrapperCol={{ span: 12 }}
@@ -386,71 +412,6 @@ export default function OrganizationRegistration() {
                 </div>
                 <br></br>
                 {/* media */}
-                <div
-                  style={{
-                    // backgroundColor: "#eee",
-                    // padding: "30px 25px",
-                    border: "1px solid #E6E6E6",
-                    borderRadius: "10px",
-                    boxShadow: "1px 2px 6px 0 #d6d6d6",
-                    width: "100%",
-                  }}
-                >
-                  <div
-                    style={{
-                      padding: "24px 38px",
-                      backgroundColor: "white",
-                    }}
-                  >
-                    <span
-                      style={{
-                        backgroundColor: "#0B697F",
-                      }}
-                    ></span>
-                    <label
-                      style={{
-                        color: "#0B697F",
-                        position: "relative",
-                        top: " -6px",
-                        left: "0",
-                        paddingLeft: "5px",
-                        fontSize: "1em",
-                        textTransform: "uppercase",
-                        letterSpacing: ".09em",
-                      }}
-                    >
-                      Legal Documentations
-                    </label>
-                    <br></br>
-                    <br></br>
-                    <label>
-                      Provide Some Legal Documentation of Organization:
-                      <span
-                        style={{
-                          color: "red",
-                        }}
-                      >
-                        *
-                      </span>
-                    </label>
-                    <Form.Item
-                      name="upload"
-                      label="Upload"
-                      valuePropName="fileList"
-                      getValueFromEvent={normFile}
-                      // rules={[
-                      //   {
-                      //     required: true,
-                      //     message: "Please select an image!",
-                      //   },
-                      // ]}
-                    >
-                      <FileUpload />
-                    </Form.Item>
-
-                    <br></br>
-                  </div>
-                </div>
                 <br></br>
                 {/* logo */}
                 <div
@@ -462,62 +423,7 @@ export default function OrganizationRegistration() {
                     boxShadow: "1px 2px 6px 0 #d6d6d6",
                     width: "100%",
                   }}
-                >
-                  <div
-                    style={{
-                      padding: "24px 38px",
-                      backgroundColor: "white",
-                    }}
-                  >
-                    <span
-                      style={{
-                        backgroundColor: "#0B697F",
-                      }}
-                    ></span>
-                    <label
-                      style={{
-                        color: "#0B697F",
-                        position: "relative",
-                        top: " -6px",
-                        left: "0",
-                        paddingLeft: "5px",
-                        fontSize: "1em",
-                        textTransform: "uppercase",
-                        letterSpacing: ".09em",
-                      }}
-                    >
-                      Image or Logo
-                    </label>
-                    <br></br>
-                    <br></br>
-                    <label>
-                      Insert Media file:{" "}
-                      <span
-                        style={{
-                          color: "red",
-                        }}
-                      >
-                        *
-                      </span>
-                    </label>
-                    <Form.Item
-                      name="upload"
-                      label="Upload"
-                      valuePropName="fileList"
-                      getValueFromEvent={normFile}
-                      // rules={[
-                      //   {
-                      //     required: true,
-                      //     message: "Please select an image!",
-                      //   },
-                      // ]}
-                    >
-                      <Demo />
-                    </Form.Item>
-
-                    <br></br>
-                  </div>
-                </div>
+                ></div>
                 <br></br>
                 {/* causes  */}
                 <div
@@ -618,6 +524,7 @@ export default function OrganizationRegistration() {
                 type="primary"
                 htmlType="submit"
                 className="btn-solid-reg"
+                onClick={() => setVisible(true)}
               >
                 Submit
               </Button>
@@ -628,3 +535,4 @@ export default function OrganizationRegistration() {
     </div>
   );
 }
+//
