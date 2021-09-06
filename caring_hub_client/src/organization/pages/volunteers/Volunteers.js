@@ -5,6 +5,7 @@ import { lighten, makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
+
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
@@ -170,21 +171,20 @@ function EnhancedTableHead(props) {
   };
 
   return (
-    <TableHead>
+    <TableHead style={{ paddingLeft: "20px" }}>
       <TableRow>
-        <TableCell padding="checkbox">
+        {/* <TableCell padding="checkbox">
           <Checkbox
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
             inputProps={{ "aria-label": "select all desserts" }}
           />
-        </TableCell>
+        </TableCell> */}
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
             align={headCell.numeric ? "right" : "left"}
-            padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
@@ -399,7 +399,7 @@ export default function Volunteers() {
                 onRequestSort={handleRequestSort}
                 rowCount={rows.length}
               />
-              <TableBody>
+              <TableBody style={{ paddingLeft: "20px" }}>
                 {stableSort(rows, getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
@@ -415,19 +415,14 @@ export default function Volunteers() {
                         key={index}
                         selected={isItemSelected}
                       >
-                        <TableCell padding="checkbox">
+                        {/* <TableCell padding="checkbox">
                           <Checkbox
                             checked={isItemSelected}
                             inputProps={{ "aria-labelledby": labelId }}
                             onClick={(event) => handleClick(event, index)}
                           />
-                        </TableCell>
-                        <TableCell
-                          component="th"
-                          id={labelId}
-                          scope="row"
-                          padding="none"
-                        >
+                        </TableCell> */}
+                        <TableCell component="th" id={labelId} scope="row">
                           {row.firstName}
                         </TableCell>
 
@@ -454,7 +449,8 @@ export default function Volunteers() {
                             }}
                             onOk={() => setVisible(false)}
                             onCancel={() => setVisible(false)}
-                            width={1000}
+                            width={700}
+                            footer={null}
                           >
                             <EvalueateVolunteers />
                           </Modal>
