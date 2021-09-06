@@ -15,6 +15,12 @@ export const receiveSignup = (response) => {
   }
 }
 
+export const signupError = (message) => {
+  return {
+    type: actionTypes.SIGNUP_FAILURE,
+    message: message
+  }
+}
 export const registerUser = (formData) => (dispatch) => {
   dispatch(requestSignup(formData))
 

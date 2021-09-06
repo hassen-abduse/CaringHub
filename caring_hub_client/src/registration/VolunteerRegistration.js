@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import Container from "@material-ui/core/Container";
+import { registerVolunteer } from '../redux/ActionCreators/registrationActions'
+import { connect } from "react-redux";
+
 
 import { Form, Input, Button, DatePicker, InputNumber, Select } from "antd";
 import { InfoCircleOutlined } from "@ant-design/icons";
@@ -7,6 +10,17 @@ import TextArea from "antd/lib/input/TextArea";
 import Demo from "../organization/components/ImageUploadComponent";
 import "../organization/components/JobPostDescription.css";
 import FileUpload from "./FileUpload";
+
+const mapStateToProps = state => {
+  return {
+    Registration: state.Registration,
+    Skills: state.Skills,
+    Causes: state.Causes,
+  }
+}
+const mapDispatchToProps = (dispatch) => ({
+  registerVolunteer: (data) => dispatch(registerVolunteer(data)),
+})
 
 const { RangePicker } = DatePicker;
 const rangeConfig = {
@@ -20,14 +34,26 @@ const rangeConfig = {
 };
 const OPTIONS = ["Teaching", "Event Organizing", "Developing", "Marketing"];
 
-export default function OrganizationRegistration() {
+function VolunteerRegistration(props) {
   const { Option } = Select;
   const [selectedItems, setSelectedItems] = useState([]);
   const handleChange = (selectedItems) => {
     setSelectedItems(selectedItems);
   };
   const onFinish = (values) => {
-    console.log("Success:", values);
+    props.registerVolunteer({
+      firstName:values.firstName,
+      lastName: values.lastName,
+      username: values.username,
+      phoneNumber: values.prefix + values.phone,
+      emailAddress: values.email,
+      skillSets: [],
+      causeAreas: [],
+      password: values.password,
+      address: {
+        city: values.city
+      }
+    })
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -163,7 +189,7 @@ export default function OrganizationRegistration() {
 
                     <Form.Item
                       label="First Name"
-                      name="first-name"
+                      name="firstName"
                       rules={[
                         {
                           required: true,
@@ -176,11 +202,24 @@ export default function OrganizationRegistration() {
 
                     <Form.Item
                       label="Last Name"
-                      name="last-name"
+                      name="lastName"
                       rules={[
                         {
                           required: true,
                           message: "Please input your your last name!",
+                        },
+                      ]}
+                    >
+                      <Input />
+                    </Form.Item>
+
+                    <Form.Item
+                      label="User Name"
+                      name="username"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please input your user name!",
                         },
                       ]}
                     >
@@ -571,3 +610,5 @@ export default function OrganizationRegistration() {
     </div>
   );
 }
+
+export default connect(mapStateToProps, mapDispatchToProps) (VolunteerRegistration)
