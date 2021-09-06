@@ -14,7 +14,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 import Checkbox from "@material-ui/core/Checkbox";
-import { Button } from "@material-ui/core";
+import { Button, Grid } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -23,27 +23,14 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import { Modal } from "antd";
-import EvalueateVolunteers from "./EvaluateVolunteers";
+import AcceptApplicant from "./AcceptApplicant";
+import DeclineApplicant from "./DeclineApplicant";
+import ClearIcon from "@material-ui/icons/Clear";
+import DoneAllIcon from "@material-ui/icons/DoneAll";
 
 function createData(firstName, lastName, phone, email, address, skill, areas) {
   return { firstName, lastName, phone, email, address, skill, areas };
 }
-
-const customeStyle = {
-  content: {
-    top: "auto",
-    left: "auto",
-    right: "auto",
-    bottom: "0",
-    marginRight: "auto",
-    width: "100%",
-  },
-  overlay: {
-    backdropFilter: "blur(5px)",
-
-    backgroundColor: "rgba(253,255,255,0.44)",
-  },
-};
 
 const rows = [
   createData(
@@ -121,37 +108,25 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
-    id: "First-Name",
+    id: "Full-Name",
     numeric: false,
     disablePadding: true,
-    label: "First Name",
+    label: "Full Name",
   },
-  {
-    id: "Last-Name",
-    numeric: true,
-    disablePadding: false,
-    label: "Last Name",
-  },
-  {
-    id: "phone",
-    numeric: true,
-    disablePadding: false,
-    label: "Phone Number",
-  },
-  { id: "email", numeric: true, disablePadding: false, label: "Emain address" },
+
   { id: "address", numeric: true, disablePadding: false, label: "address" },
-  { id: "skill", numeric: true, disablePadding: false, label: "skill" },
+
   {
     id: "areas",
     numeric: true,
     disablePadding: false,
-    label: "Areas to work on ",
+    label: "applied to project- ",
   },
   {
-    id: "actions",
+    id: "verify",
     numeric: false,
     disablePadding: false,
-    label: "Actions ",
+    label: "Verify applicants ",
   },
 ];
 
@@ -234,8 +209,9 @@ const useToolbarStyles = makeStyles((theme) => ({
   title: {
     flex: "1 1 100%",
   },
-  HeaderIcons: {
+  headerTooltip: {
     display: "flex",
+    padding: "0 5px",
   },
 }));
 
@@ -265,16 +241,23 @@ const EnhancedTableToolbar = (props) => {
           id="tableTitle"
           component="div"
         >
-          Volunteers
+          Applicants
         </Typography>
       )}
 
       {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton aria-label="delete">
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
+        <div className={classes.headerTooltip}>
+          <Tooltip title="accept selected applicants">
+            <IconButton aria-label="delete">
+              <DoneAllIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="decline selected applicants">
+            <IconButton aria-label="delete">
+              <ClearIcon />
+            </IconButton>
+          </Tooltip>
+        </div>
       ) : (
         <Tooltip title="Filter list">
           <IconButton aria-label="filter list">
@@ -315,7 +298,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Volunteers() {
+export default function Applicants() {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
@@ -379,112 +362,148 @@ export default function Volunteers() {
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
   const [visible, setVisible] = useState(false);
   return (
-    <div className="container">
-      <div className={classes.root}>
-        <Paper className={classes.paper}>
-          <EnhancedTableToolbar numSelected={selected.length} />
-          <TableContainer>
-            <Table
-              className={classes.table}
-              aria-labelledby="tableTitle"
-              size={dense ? "small" : "medium"}
-              aria-label="enhanced table"
-            >
-              <EnhancedTableHead
-                classes={classes}
-                numSelected={selected.length}
-                order={order}
-                orderBy={orderBy}
-                onSelectAllClick={handleSelectAllClick}
-                onRequestSort={handleRequestSort}
-                rowCount={rows.length}
-              />
-              <TableBody>
-                {stableSort(rows, getComparator(order, orderBy))
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row, index) => {
-                    const isItemSelected = isSelected(index);
-                    const labelId = `enhanced-table-checkbox-${index}`;
+    <div className={classes.root}>
+      <Paper className={classes.paper}>
+        <EnhancedTableToolbar numSelected={selected.length} />
+        <TableContainer>
+          <Table
+            className={classes.table}
+            aria-labelledby="tableTitle"
+            size={dense ? "small" : "medium"}
+            aria-label="enhanced table"
+          >
+            <EnhancedTableHead
+              classes={classes}
+              numSelected={selected.length}
+              order={order}
+              orderBy={orderBy}
+              onSelectAllClick={handleSelectAllClick}
+              onRequestSort={handleRequestSort}
+              rowCount={rows.length}
+            />
+            <TableBody>
+              {stableSort(rows, getComparator(order, orderBy))
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((row, index) => {
+                  const isItemSelected = isSelected(index);
+                  const labelId = `enhanced-table-checkbox-${index}`;
 
-                    return (
-                      <TableRow
-                        hover
-                        role="checkbox"
-                        aria-checked={isItemSelected}
-                        tabIndex={-1}
-                        key={index}
-                        selected={isItemSelected}
+                  return (
+                    <TableRow
+                      hover
+                      role="checkbox"
+                      aria-checked={isItemSelected}
+                      tabIndex={-1}
+                      key={index}
+                      selected={isItemSelected}
+                    >
+                      <TableCell padding="checkbox">
+                        <Checkbox
+                          checked={isItemSelected}
+                          inputProps={{ "aria-labelledby": labelId }}
+                          onClick={(event) => handleClick(event, index)}
+                        />
+                      </TableCell>
+                      <TableCell
+                        component="th"
+                        id={labelId}
+                        scope="row"
+                        padding="none"
                       >
-                        <TableCell padding="checkbox">
-                          <Checkbox
-                            checked={isItemSelected}
-                            inputProps={{ "aria-labelledby": labelId }}
-                            onClick={(event) => handleClick(event, index)}
-                          />
-                        </TableCell>
-                        <TableCell
-                          component="th"
-                          id={labelId}
-                          scope="row"
-                          padding="none"
-                        >
-                          {row.firstName}
-                        </TableCell>
+                        {row.firstName + " " + row.lastName}
+                      </TableCell>
 
-                        <TableCell align="right">{row.lastName}</TableCell>
-                        <TableCell align="right">{row.phone}</TableCell>
-                        <TableCell align="right">{row.email}</TableCell>
-                        <TableCell align="right">{row.address}</TableCell>
-                        <TableCell align="right">{row.skill}</TableCell>
-                        <TableCell align="right">{row.areas}</TableCell>
-                        <TableCell>
-                          <Button
-                            type="primary"
-                            onClick={() => setVisible(true)}
-                          >
-                            Evaluate
-                          </Button>
-                          <Modal
-                            title="evaluate volunteer"
-                            centered
-                            visible={visible}
-                            // mask={false}
-                            maskStyle={{
-                              backgroundColor: "rgba(0, 0, 0, 0.25)",
+                      <TableCell align="right">{row.address}</TableCell>
+
+                      <TableCell align="right">{row.areas}</TableCell>
+                      <TableCell>
+                        <Grid
+                          container
+                          style={{
+                            margin: "10px",
+                            alignContent: "center",
+                            justifyContent: "space-between",
+                            width: "200px",
+                            marginLeft: "30px",
+                          }}
+                        >
+                          <Grid
+                            item
+                            style={{
+                              backgroundColor: "green",
+                              borderRadius: "5px",
                             }}
-                            onOk={() => setVisible(false)}
-                            onCancel={() => setVisible(false)}
-                            width={1000}
                           >
-                            <EvalueateVolunteers />
-                          </Modal>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-                {emptyRows > 0 && (
-                  <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
-                    <TableCell colSpan={6} />
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
-            component="div"
-            count={rows.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
-        </Paper>
-        <FormControlLabel
-          control={<Switch checked={dense} onChange={handleChangeDense} />}
-          label="Dense padding"
+                            <Button
+                              type="primary"
+                              onClick={() => setVisible(true)}
+                              style={{}}
+                            >
+                              Accept
+                            </Button>
+                            <Modal
+                              title="Applicant Detail"
+                              centered
+                              visible={visible}
+                              onOk={() => setVisible(false)}
+                              onCancel={() => setVisible(false)}
+                              width={1000}
+                            >
+                              <AcceptApplicant />
+                            </Modal>
+                          </Grid>
+
+                          <Grid
+                            item
+                            style={{
+                              backgroundColor: "red",
+                              borderRadius: "5px",
+                            }}
+                          >
+                            <Button
+                              type="primary"
+                              onClick={() => setVisible(true)}
+                            >
+                              Decline
+                            </Button>
+                            <Modal
+                              title="Applicant Detail"
+                              centered
+                              visible={visible}
+                              onOk={() => setVisible(false)}
+                              onCancel={() => setVisible(false)}
+                              width={1000}
+                            >
+                              <DeclineApplicant />
+                            </Modal>
+                          </Grid>
+                        </Grid>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              {emptyRows > 0 && (
+                <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
+                  <TableCell colSpan={6} />
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={rows.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
         />
-      </div>
+      </Paper>
+      <FormControlLabel
+        control={<Switch checked={dense} onChange={handleChangeDense} />}
+        label="Dense padding"
+      />
     </div>
   );
 }

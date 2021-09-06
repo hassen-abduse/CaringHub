@@ -19,13 +19,11 @@ import ListItemText from "@material-ui/core/ListItemText";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
 import MailIcon from "@material-ui/icons/Mail";
 import MainPage from "./pages/Layout/MainPage";
-import SearchBar from "./components/SearchBar";
-import MessageSection from "./components/MessageSection";
 import MessageRounded from "@material-ui/icons/MessageRounded";
 import NotificationImportant from "@material-ui/icons/NotificationImportant";
 import SettingsIcon from "@material-ui/icons/Settings";
 import LanguageIcon from "@material-ui/icons/Language";
-import User from "./components/User";
+import Admin from "./components/Admin";
 import ProfileImage from "../assets/img/profile2.jpg";
 import { blue } from "@material-ui/core/colors";
 import Multiselect from "multiselect-react-dropdown";
@@ -106,7 +104,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function OrgDashboard() {
+export default function AdminDashboard() {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -193,7 +191,7 @@ export default function OrgDashboard() {
         <div className={classes.drawerHeader}>
           <div>
             <User />
-            <Typography>Organization Dashboard</Typography>
+            <Typography>Admin Dashboard</Typography>
           </div>
 
           <IconButton onClick={handleDrawerClose}>

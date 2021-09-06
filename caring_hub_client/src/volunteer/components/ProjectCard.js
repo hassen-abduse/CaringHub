@@ -1,15 +1,5 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Card from "@material-ui/core/Card";
-import CardActionArea from "@material-ui/core/CardActionArea";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
-import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
-import Image from "../../assets/img/2.jpg";
-import { DescriptionCard } from "./JobDescriptionCard";
-import ButtonBase from "@material-ui/core/ButtonBase";
 
 const useStyles = makeStyles({
   root: {
@@ -20,47 +10,9 @@ const useStyles = makeStyles({
   },
 });
 
-export const ProjectCard = () => {
-  const classes = useStyles();
-
+export default function ProjectCard(props) {
+  const { movie } = props;
   return (
-    // <Card className={classes.root}>
-    //   <ButtonBase href="/volunteer/jobDescription">
-    //     <CardActionArea>
-    //       <CardMedia
-    //         className={classes.media}
-    //         alt="landing"
-    //         image={Image}
-    //         title="Contemplative Reptile"
-    //       />
-    //       <CardContent>
-    //         <Typography
-    //           gutterBottom
-    //           variant="h5"
-    //           component="h2"
-    //           color="primary"
-    //         >
-    //           Project | 6-7 days
-    //         </Typography>
-    //         <Typography gutterBottom variant="h6" component="h2">
-    //           Environment
-    //         </Typography>
-    //         <Typography variant="body2" color="textSecondary" component="p">
-    //           Contribute planting trees organized by green legacy Ethiopia
-    //         </Typography>
-    //       </CardContent>
-    //     </CardActionArea>
-    //   </ButtonBase>
-    //   <CardActions>
-    //     {/* <Button size="small" color="primary">
-    //       check
-    //     </Button> */}
-    //     <Button size="small" color="primary" href="/volunteer/jobDescription">
-    //       Check
-    //     </Button>
-    //   </CardActions>
-    // </Card>
-
     <div class="cards-2 bg-gray">
       <div class="container">
         {/* <div class="row">
@@ -79,16 +31,16 @@ export const ProjectCard = () => {
           <div class="col-lg-12">
             <div class="card">
               <img
-                style={{ width: "100%", height: "100%" }}
+                style={{ width: "100%", maxHeight: "330px" }}
                 class="img-fluid"
-                src="../../assets/images/childrens.jpg"
+                src={movie.Poster}
                 alt="alternative"
               />
               <div class="card-body">
                 <p style={{ color: "#0092FF" }} class="testimonial-text">
-                  Project | 6-7 days
+                  {movie.Year}
                 </p>
-                <div class="testimonial-author">Environment</div>
+                <div class="testimonial-author">{movie.Title}</div>
 
                 <p class="testimonial-text">
                   Suspendisse vitae enim arcu. Aliqu convallis risus a felis
@@ -127,4 +79,4 @@ export const ProjectCard = () => {
       </div>
     </div>
   );
-};
+}

@@ -14,8 +14,20 @@ const App = () => {
         visible={visible}
         onOk={() => setVisible(false)}
         onCancel={() => setVisible(false)}
-        width={1000}
+        width={500}
       >
+        <p>some contents...</p>
+        <p>some contents...</p>
+        <p>some contents...</p>
+        <p>some contents...</p>
+        <p>some contents...</p>
+        <p>some contents...</p>
+        <p>some contents...</p>
+        <p>some contents...</p>
+        <p>some contents...</p>
+        <p>some contents...</p>
+        <p>some contents...</p>
+        <p>some contents...</p>
         <p>some contents...</p>
         <p>some contents...</p>
         <p>some contents...</p>

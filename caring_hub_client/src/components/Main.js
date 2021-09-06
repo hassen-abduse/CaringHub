@@ -1,11 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Switch, Route, withRouter, Router } from "react-router-dom";
-//material ui imports
-import CssBaseline from "@material-ui/core/CssBaseline";
-import Typography from "@material-ui/core/Typography";
-import Container from "@material-ui/core/Container";
-import SignUp from "../Roles/common/SignUp";
 import Header from "./Header";
 import Footer from "../home/Footer";
 import Dashboard from "../volunteer/pages/dashboard/Dashboard";
@@ -23,18 +18,21 @@ import { fetchProjects } from "../redux/ActionCreators/projectActions";
 import { fetchSkills } from "../redux/ActionCreators/skillActions";
 import { fetchUsers } from "../redux/ActionCreators/userActions";
 import { fetchVolunteers } from "../redux/ActionCreators/volActions";
-import AppBar from "../home/AppBar";
-import VolunteerHeader from "../volunteer/components/VolunteerHeader";
+
 import SelectRegistrationType from "../registration/SelectRegistrationType";
 import Login from "./Login";
 import PostProject from "../organization/pages/post-project/PostProject";
 import VolunteerRegistration from "../registration/VolunteerRegistration";
 import OrganizationRegistration from "../registration/OrganizationRegistration";
-import OrgDashboard from "../organization/OrgDashboard";
+
 import Profile from "../organization/pages/profile/Profile";
 import OrganizationHeader from "../organization/components/OrganizationHeader";
 import Volunteers from "../organization/pages/volunteers/Volunteers";
 import Project from "../organization/pages/projects/Project";
+import Applicants from "../organization/pages/applicants/Applicant";
+import VolunteerHeader from "../volunteer/components/VolunteerHeader";
+import AppBar from "../home/AppBar";
+import FouroFour from "./FouroFour";
 
 const mapStateToProps = (state) => {
   return {
@@ -64,6 +62,7 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 class Main extends Component {
+  state = { role: "volunteer" };
   componentDidMount() {
     this.props.fetchApplications();
     this.props.fetchCauses();
@@ -78,18 +77,14 @@ class Main extends Component {
   render() {
     return (
       <React.Fragment>
-        <OrganizationHeader />
+        {this.state.role === "volunteer" && <VolunteerHeader />}
+        {this.state.role === "guest" && <AppBar />}
+        {this.state.role === "organization" && <OrganizationHeader />}
 
         <div>
           <Switch>
             <Route exact path="/">
               <Home />
-            </Route>
-            <Route exact path="/volunteer">
-              <Landing />
-            </Route>
-            <Route exact path="/volunteer/dashboard">
-              <Dashboard />
             </Route>
 
             <Route exact path="/register">
@@ -100,46 +95,61 @@ class Main extends Component {
               <Login />
             </Route>
 
-            <Route exact path="/volunteer/findProject">
-              <FindProject />
-            </Route>
-            <Route exact path="/volunteer/reviewApplication">
-              <ReviewApplication />
-            </Route>
-            <Route exact path="/volunteer/jobDescription">
-              <DescriptionCard />
-            </Route>
-
-            <Route exact path="/organization/postProject">
-              <PostProject />
+            <Route exact path="/volunteerRegistration">
+              <VolunteerRegistration />
             </Route>
 
             <Route exact path="/organizationRegistration">
               <OrganizationRegistration />
             </Route>
 
-            <Route exact path="/volunteerRegistration">
-              <VolunteerRegistration />
-            </Route>
-            <Route exact path="/organization">
-              <OrgDashboard />
-            </Route>
+            {this.state.role === "volunteer" && (
+              <>
+                <Route exact path="/volunteer">
+                  <Landing />
+                </Route>
+                <Route exact path="/volunteer/dashboard">
+                  <Dashboard />
+                </Route>
+                <Route exact path="/volunteer/findProject">
+                  <FindProject />
+                </Route>
+                <Route exact path="/volunteer/reviewApplication">
+                  <ReviewApplication />
+                </Route>
+                <Route exact path="/volunteer/jobDescription">
+                  <DescriptionCard />
+                </Route>
+              </>
+            )}
 
-            <Route exact path="/organization/profile">
-              <Profile />
-            </Route>
+            {this.state.role === "organization" && (
+              <>
+                <Route exact path="/organization">
+                  <Profile />
+                </Route>
+                <Route exact path="/organization/postProject">
+                  <PostProject />
+                </Route>
 
-            <Route exact path="/organization/projects">
-              <Project />
-            </Route>
+                <Route exact path="/organization/volunteers">
+                  <Volunteers />
+                </Route>
+                <Route exact path="/organization/volunteers">
+                  <Volunteers />
+                </Route>
+                <Route exact path="/organization/projects">
+                  <Project />
+                </Route>
+                <Route exact path="/organization/applicants">
+                  <Applicants />
+                </Route>
+              </>
+            )}
 
-            <Route exact path="/organization/volunteers">
-              <Volunteers />
+            <Route path="*">
+              <FouroFour />
             </Route>
-
-            {/* <Route exact path="/organization/applicants">
-              <Applicants />
-            </Route> */}
           </Switch>
         </div>
         <Footer />

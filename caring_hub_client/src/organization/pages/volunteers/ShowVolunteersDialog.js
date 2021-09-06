@@ -6,7 +6,7 @@ import Avatar from "../../../volunteer/components/Avatars";
 import { Badge } from "antd";
 
 const desc = ["terrible", "bad", "normal", "good", "wonderful"];
-class EvalueateVolunteers extends Component {
+class ShowVolunteersDialog extends Component {
   state = {
     value: 3,
   };
@@ -159,4 +159,4 @@ class EvalueateVolunteers extends Component {
   }
 }
 
-export default EvalueateVolunteers;
+export default ShowVolunteersDialog;
