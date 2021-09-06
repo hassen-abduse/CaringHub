@@ -1,27 +1,36 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Container, Grid } from "@material-ui/core";
 import Imge from "../../assets/img/1.jpg";
 import SearchProject from "./SearchProject";
 
 import SearchPanel from "./SearchPanel";
 import { ProjectCard } from "./ProjectCard";
+import { fetchProjects } from '../../redux/ActionCreators/projectActions'
 import CardHolder from "./CardHolder";
 import MovieSource from "./MovieSource";
+import {connect} from 'react-redux'
 
-function HeroBox() {
-  const [state, setState] = useState({
-    results: [],
-  });
+const mapStateToProps = state => {
+  return {
+      Projects: state.Projects
+  }
+}
 
-  const onSearch = async (text) => {
-    const results = await MovieSource.get("/", {
-      params: { s: text, i: "tt3896198", apiKey: "821d565d" },
-    });
+const mapDispatchToProps = (dispatch) => ({
+  fetchProjects: () => dispatch(fetchProjects())
+})
 
-    setState((prevState) => {
-      return { ...prevState, results: results };
-    });
-  };
+function HeroBox(props) {
+  // const onSearch = async (text) => {
+  //   const results = await MovieSource.get("/", {
+  //     params: { s: text, i: "tt3896198", apiKey: "821d565d" },
+  //   });
+
+  //   setState((prevState) => {
+  //     return { ...prevState, results: results };
+  //   });
+  // };
+  console.log(props.Projects.projects)
   return (
     <Box>
       <div
@@ -61,10 +70,10 @@ function HeroBox() {
             We think this projects could be a great suit for you{" "}
           </p>
         </div>
-        <SearchPanel onSearch={onSearch} />
+        {/* </div><SearchPanel onSearch={onSearch} /> */}
       </div>
-      <CardHolder results={state.results} />
+      <CardHolder results={props.Projects.projects} />
     </Box>
   );
 }
-export default HeroBox;
+export default connect(mapStateToProps, mapDispatchToProps)(HeroBox);

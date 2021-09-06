@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Switch, Route, withRouter, Router } from "react-router-dom";
 import Header from "./Header";
+import jwtDecode from "jwt-decode";
 import Footer from "../home/Footer";
 import Dashboard from "../volunteer/pages/dashboard/Dashboard";
 import FindProject from "../volunteer/pages/find-project/FindProject";
@@ -62,7 +63,7 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 class Main extends Component {
-  state = { role: "volunteer" };
+  state = { role: "guest" };
   componentDidMount() {
     this.props.fetchApplications();
     this.props.fetchCauses();
@@ -75,17 +76,22 @@ class Main extends Component {
   }
 
   render() {
+    const decoded = this.props.auth.token ? jwtDecode(this.props.auth.token) : { role: '' }
     return (
       <React.Fragment>
-        {this.state.role === "volunteer" && <VolunteerHeader />}
-        {this.state.role === "guest" && <AppBar />}
-        {this.state.role === "organization" && <OrganizationHeader />}
+        {decoded.role === "Vol" && <VolunteerHeader />}
+        {decoded.role === "" && <AppBar />}
+        {decoded.role === "Org" && <OrganizationHeader />}
+        {decoded.role === 'Admin' && <AppBar />}
 
         <div>
           <Switch>
-            <Route exact path="/">
-              <Home />
-            </Route>
+            {
+              decoded.role === '' &&
+              <Route exact path="/">
+                <Home />
+              </Route>
+            }
 
             <Route exact path="/register">
               <SelectRegistrationType />
@@ -103,9 +109,9 @@ class Main extends Component {
               <OrganizationRegistration />
             </Route>
 
-            {this.state.role === "volunteer" && (
+            {decoded.role === "Vol" && (
               <>
-                <Route exact path="/volunteer">
+                <Route exact path="/">
                   <Landing />
                 </Route>
                 <Route exact path="/volunteer/dashboard">
@@ -117,15 +123,15 @@ class Main extends Component {
                 <Route exact path="/volunteer/reviewApplication">
                   <ReviewApplication />
                 </Route>
-                <Route exact path="/volunteer/jobDescription">
+                <Route exact path="/volunteer/jobDescription/:id">
                   <DescriptionCard />
                 </Route>
               </>
             )}
 
-            {this.state.role === "organization" && (
+            {decoded.role === "Org" && (
               <>
-                <Route exact path="/organization">
+                <Route exact path="/">
                   <Profile />
                 </Route>
                 <Route exact path="/organization/postProject">

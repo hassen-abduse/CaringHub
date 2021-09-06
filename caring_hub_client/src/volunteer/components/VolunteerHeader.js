@@ -2,7 +2,10 @@ import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../../assets/css/styles.css";
 import "../../assets/css/swiper.css";
+
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import { Button } from "@material-ui/core";
+import { logoutUser } from "../../redux/ActionCreators/authActions";
 
 export default function VolunteerHeader() {
   return (
@@ -72,9 +75,12 @@ export default function VolunteerHeader() {
               </li>
 
               <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="/">
+                <Button
+                  
+                  class="nav-link" aria-current="page">
                   Logout
-                </a>
+
+                </Button>
               </li>
             </ul>
           </div>

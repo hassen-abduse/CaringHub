@@ -4,16 +4,11 @@ import ProjectCard from "./ProjectCard";
 import { Grid } from "@material-ui/core";
 
 export default function CardHolder({ results }) {
-  let data = [];
-  if (results.data) {
-    data = results.data.Search || [];
-  }
-  console.log(data);
   return (
     <Container>
       <Grid container spacing={3}>
-        {data.map((item) => (
-          <ProjectCard key={item.imdbID} movie={item} />
+        {results.map((item) => (
+          <ProjectCard key={item._id} project={item} />
         ))}
       </Grid>
     </Container>

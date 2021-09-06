@@ -9,16 +9,16 @@ export const HelpRequests = (state = {
     case actionTypes.HELPS_LOADING:
       return {
         ...state,
-        isLoading: false,
+        isLoading: true,
         errMess: null,
-        helpRequests: action.payload
+        helpRequests: []
       }
     case actionTypes.ADD_HELPS:
       return {
         ...state,
-        isLoading: true,
+        isLoading: false,
         errMess: null,
-        helpRequests: []
+        helpRequests: action.payload
       }
     case actionTypes.HELPS_FAILED:
       return {
@@ -30,6 +30,8 @@ export const HelpRequests = (state = {
     case actionTypes.ADD_HELP_ITEM:
       return {
         ...state,
+        isLoading:false,
+        errMess: null,
         helpRequests: state.helpRequests.concat(action.payload)
       }
     default:

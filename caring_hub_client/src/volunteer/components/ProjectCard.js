@@ -1,5 +1,6 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles({
   root: {
@@ -11,7 +12,7 @@ const useStyles = makeStyles({
 });
 
 export default function ProjectCard(props) {
-  const { movie } = props;
+  const { project } = props;
   return (
     <div class="cards-2 bg-gray">
       <div class="container">
@@ -33,24 +34,24 @@ export default function ProjectCard(props) {
               <img
                 style={{ width: "100%", maxHeight: "330px" }}
                 class="img-fluid"
-                src={movie.Poster}
+                src={project.image}
                 alt="alternative"
               />
               <div class="card-body">
                 <p style={{ color: "#0092FF" }} class="testimonial-text">
-                  {movie.Year}
+                  {project.startDate}
                 </p>
-                <div class="testimonial-author">{movie.Title}</div>
+                <div class="testimonial-author">{project.name}</div>
 
                 <p class="testimonial-text">
-                  Suspendisse vitae enim arcu. Aliqu convallis risus a felis
-                  blandit, at mollis nisi bibendum aliquam noto ricos
-                </p>
+                  {
+                    project.description     
+                  } </p>
                 <div>
                   <span class="nav-item">
-                    <a class="btn-solid-sm" href="#contact">
+                    <Link class="btn-solid-sm" to={`/volunteer/jobDescription/${project._id}`}>
                       Check
-                    </a>
+                    </Link>
                   </span>
                 </div>
               </div>

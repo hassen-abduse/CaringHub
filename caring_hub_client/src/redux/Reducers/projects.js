@@ -9,16 +9,16 @@ export const Projects = (state = {
     case actionTypes.PROJECTS_LOADING:
       return {
         ...state,
-        isLoading: false,
+        isLoading: true,
         errMess: null,
-        projects: action.payload
+        projects: []
       }
     case actionTypes.ADD_PROJECTS:
       return {
         ...state,
-        isLoading: true,
+        isLoading: false,
         errMess: null,
-        projects: []
+        projects: action.payload
       }
     case actionTypes.PROJECTS_FAILED:
       return {
@@ -30,6 +30,8 @@ export const Projects = (state = {
     case actionTypes.ADD_PROJECT_ITEM:
       return {
         ...state,
+        isLoading: false,
+        errMess: null,
         projects: state.projects.concat(action.payload)
       }
     default:

@@ -1,33 +1,33 @@
 import * as actionTypes from '../actionTypes'
 
-export const Registration = (state = {
+export const NetRequest = (state = {
   isLoading: false,
   errMess: null,
-  success: false,
-  profile: null
+  status: null,
+  data: null
 }, action) => {
   switch (action.type) {
-    case actionTypes.SIGNUP_REQUEST:
+    case actionTypes.NET_REQUEST_LOADING:
       return {
         ...state,
         isLoading: true,
-        profile: action.profile,
-        success: false
+        data: action.data,
+        status: null
       }
-    case actionTypes.SIGNUP_SUCCESS:
+    case actionTypes.NET_REQUEST_SUCCESS:
       return {
         ...state,
         isLoading: false,
-        success: true,
+        status: action.status,
         errMess: null,
-        profile: null
+        data: null
       }
-    case actionTypes.SIGNUP_FAILURE:
+    case actionTypes.NET_REQUEST_FAILED:
       return {
         ...state,
         isLoading: false,
-        errMess: action.message,
-        success: false
+        errMess: action.errMess,
+        status: null
       }
     default:
       return state

@@ -11,15 +11,13 @@ export const receiveLogin = (response) => {
   return {
     type: actionTypes.LOGIN_SUCCESS,
     token: response.token,
-    Role: response.Role,
-    userId: response.userId
   }
 }
 
 export const loginUser = (creds) => (dispatch) => {
   // We dispatch requestLogin to kickoff the call to the API
   dispatch(requestLogin(creds))
-  return fetch(baseUrl + '/login', {
+  return fetch(baseUrl + 'login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -44,8 +42,6 @@ export const loginUser = (creds) => (dispatch) => {
         // If login was successful, set the token in local storage
         localStorage.setItem('token', response.token)
         localStorage.setItem('creds', JSON.stringify(creds))
-        localStorage.setItem('Role', response.Role)
-        localStorage.setItem('userId', response.userId)
         // Dispatch the success action
         dispatch(receiveLogin(response))
       } else {
@@ -81,7 +77,5 @@ export const logoutUser = () => (dispatch) => {
   dispatch(requestLogout())
   localStorage.removeItem('token')
   localStorage.removeItem('creds')
-  localStorage.removeItem('Role')
-  localStorage.removeItem('userId')
   dispatch(receiveLogout())
 }
