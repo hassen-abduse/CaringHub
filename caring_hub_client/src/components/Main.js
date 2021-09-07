@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Switch, Route, withRouter, Router } from "react-router-dom";
+import { Switch, Route, withRouter, Redirect } from "react-router-dom";
 import Header from "./Header";
 import jwtDecode from "jwt-decode";
 import Footer from "../home/Footer";
@@ -79,19 +79,13 @@ class Main extends Component {
     const decoded = this.props.auth.token ? jwtDecode(this.props.auth.token) : { role: '' }
     return (
       <React.Fragment>
-        {decoded.role === "Vol" && <VolunteerHeader />}
-        {decoded.role === "" && <AppBar />}
-        {decoded.role === "Org" && <OrganizationHeader />}
-        {decoded.role === 'Admin' && <AppBar />}
-
+        <AppBar />
         <div>
           <Switch>
-            {
-              decoded.role === '' &&
-              <Route exact path="/">
-                <Home />
-              </Route>
-            }
+
+            <Route exact path="/index">
+              <Home />
+            </Route>
 
             <Route exact path="/register">
               <SelectRegistrationType />
@@ -156,6 +150,7 @@ class Main extends Component {
             <Route path="*">
               <FouroFour />
             </Route>
+            <Redirect to="/index" />
           </Switch>
         </div>
         <Footer />
