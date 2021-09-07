@@ -6,7 +6,7 @@ import freqAskedPic from "../../assets/img/bcg.jpg";
 import Button from "@material-ui/core/Button";
 import LandingCardHolder from "./LandingCardHolder";
 
-export default function HeroBox() {
+export default function LandingHeroBox() {
   return (
     <Box>
       <div style={{ position: "relative" }}>

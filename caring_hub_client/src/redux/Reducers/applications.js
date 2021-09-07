@@ -9,16 +9,16 @@ export const Applications = (state = {
     case actionTypes.APPS_LOADING:
       return {
         ...state,
-        isLoading: false,
+        isLoading: true,
         errMess: null,
-        applications: action.payload
+        applications: []
       }
     case actionTypes.ADD_APPS:
       return {
         ...state,
-        isLoading: true,
+        isLoading: false,
         errMess: null,
-        applications: []
+        applications: action.payload
       }
     case actionTypes.APPS_FAILED:
       return {
@@ -30,7 +30,9 @@ export const Applications = (state = {
     case actionTypes.ADD_APP_ITEM:
       return {
         ...state,
-        applications: state.projects.concat(action.payload)
+        isLoading: false,
+        errMess: null,
+        applications: state.applications.concat(action.payload)
       }
     default:
       return state

@@ -2,12 +2,10 @@ import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../../assets/css/styles.css";
 import "../../assets/css/swiper.css";
-
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
-import { Button } from "@material-ui/core";
-import { logoutUser } from "../../redux/ActionCreators/authActions";
+import { Badge } from "antd";
 
-export default function VolunteerHeader() {
+export default function OrganizationHeader() {
   return (
     <div>
       <nav
@@ -38,27 +36,46 @@ export default function VolunteerHeader() {
                 <a
                   class="nav-link active"
                   aria-current="page"
-                  href="/volunteer"
-                >
-                  Home
-                </a>
-              </li>
-              <li class="nav-item">
-                <a
-                  class="nav-link"
-                  aria-current="page"
-                  href="/volunteer/dashboard"
+                  href="/organization"
                 >
                   Dashboard
                 </a>
               </li>
+
               <li class="nav-item">
                 <a
                   class="nav-link"
                   aria-current="page"
-                  href="/volunteer/findProject"
+                  href="/organization/projects"
                 >
-                  Find Projects
+                  My Projects
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  aria-current="page"
+                  href="/organization/volunteers"
+                >
+                  Volunteers
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  aria-current="page"
+                  href="/organization/applicants"
+                >
+                  Applicants{" "}
+                  <Badge
+                    // className="site-badge-count-109"
+                    count={2}
+                    style={{
+                      backgroundColor: "#0092FF",
+                    }}
+                  />
                 </a>
               </li>
 
@@ -75,12 +92,9 @@ export default function VolunteerHeader() {
               </li>
 
               <li class="nav-item">
-                <Button
-                  
-                  class="nav-link" aria-current="page">
+                <a class="nav-link" aria-current="page" href="/">
                   Logout
-
-                </Button>
+                </a>
               </li>
             </ul>
           </div>

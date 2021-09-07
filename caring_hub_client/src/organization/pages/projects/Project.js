@@ -7,7 +7,8 @@ import WorkWithTalent from "./components/WorkWithTalent";
 
 export default function Project() {
   return (
-    <Container
+    <div
+      className="container"
       style={{
         display: "flex",
         justifyContent: "center",
@@ -28,6 +29,6 @@ export default function Project() {
       </div>
 
       {/* how to post a project */}
-    </Container>
+    </div>
   );
 }

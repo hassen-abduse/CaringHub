@@ -12,6 +12,9 @@ import CardMedia from "@material-ui/core/CardMedia";
 import { Grid, Box } from "@material-ui/core";
 import { ProjectCard } from "./ProjectCard";
 import CardHolder from "./CardHolder";
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { baseUrl } from "../../redux/shared/baseUrl";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -20,10 +23,34 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
-
+function renderItem(item) {
+  return (
+    <p style={{ margin: "5px" }} class="btn-outline-sm" href="#">
+      {item.name}
+    </p>)
+}
 export const DescriptionCard = () => {
   const classes = useStyles();
+  const { id } = useParams()
+  const [project, setProject] = useState({})
+  useEffect(async () => {
+    const response = await fetch(baseUrl + 'projects/' + id)
+    if (response.ok) {
+      const data = await response.json()
+      setProject(data)
+    }
+  }, [])
+  // const skills = project.skillSets.map(skill => {
+  //   return (
+  //     renderItem(skill)
+  //   )
+  // })
 
+  // const causes = project.causeAreas.map(cause => {
+  //   return (
+  //     renderItem(cause)
+  //   )
+  // })
   return (
     <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
       <div className="container">
@@ -34,16 +61,10 @@ export const DescriptionCard = () => {
         </div>
         <div>
           <div>
-            <h2>AdisKetema Primary school</h2>
+            <h2>{project.name}</h2>
             <p>
               <span className="p-heading">
-                AdisKetema primary school needs to teach children aged between
-                6-14 years. Typical subjects taught include English
-                (Conversational and Written), Maths, Geography, and General
-                Knowledge. AdisKetema primary school needs to teach children
-                aged between 6-14 years. Typical subjects taught include English
-                (Conversational and Written), Maths, Geography, and General
-                Knowledge.
+                {project.description}
               </span>
             </p>
           </div>
@@ -58,18 +79,24 @@ export const DescriptionCard = () => {
               <div class="col-lg-6 col-xl-6">
                 <div style={{ marginTop: "1rem" }} class="text-container">
                   <h2>Causes</h2>
-
-                  <a style={{ margin: "5px" }} class="btn-outline-sm" href="#">
-                    education
-                  </a>
+                  {
+                    project.causeAreas &&
+                    project.causeAreas.map(cause=> {
+                      return (renderItem(cause))
+                    })
+                  }
                   <h2>Skills</h2>
-                  <a style={{ margin: "5px" }} class="btn-outline-sm" href="#">
-                    social work
-                  </a>
-                  <a style={{ margin: "5px" }} class="btn-outline-sm" href="#">
-                    teaching
-                  </a>
-                  <p>Posted : May 21 2021</p>
+                  {
+                    project.skillSets && 
+                    project.skillSets.map(
+                      skill => {
+                        return(renderItem(skill))
+                      }
+                    )
+                  }
+                  <p>Posted on: {project.createdAt}</p>
+                  <p>Starts on: {project.startDate}</p>
+                  <p>Ends on: {project.endDate}</p>
                   <a style={{ margin: "5px" }} class="btn-solid-reg" href="#">
                     Apply
                   </a>
@@ -120,7 +147,7 @@ export const DescriptionCard = () => {
             </div>
           </div>
         </div>
-        <CardHolder />
+        {/* <CardHolder /> */}
 
         <div class="cards-2 bg-gray">
           <div class="container">

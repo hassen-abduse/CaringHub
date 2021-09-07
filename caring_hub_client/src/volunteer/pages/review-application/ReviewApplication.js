@@ -5,156 +5,152 @@ import img from "../../../assets/img/image.jpg";
 import ProfessionalExperienceCard from "../../components/ProfessionalExperienceCard";
 export default function ReviewApplication() {
   return (
-    <>
-      <div className="project-application">
-        <div className="container-fluid application-flow">
-          <div className="container">
-            <div className="text-center">
-              <h4 className="application-title">Your Application For </h4>
-              <h5 className="application-subtitle">
-                Flexible Human Resources Support with JewishCare NSW
-              </h5>
+    <div className="container">
+      <div style={{ justifyContent: "center" }} className="row">
+        <div
+          style={{
+            display: "flex",
+            marginTop: "100px",
+            borderBottom: "1px solid rgba(0,0,0,.1)",
+          }}
+          className="col-lg-8"
+        >
+          <div style={{}} className="col-lg-4">
+            <p
+              style={{
+                fontFamily: " museo-slab,Helvetica,Arial,sans-serif",
+                fontSize: "1.5rem",
+                fontWeight: 600,
+                lineHeight: "1.2",
+              }}
+            >
+              Project Requirements
+            </p>
+          </div>
+
+          <div style={{}} className="col-lg-10">
+            <p>
+              This project has the following recommended skills and experience
+            </p>
+            <p>
+              <ul style={{ paddingLeft: "1rem" }}>
+                <li>
+                  Experience working in graphic design in a professional
+                  capacity
+                </li>
+                <li>
+                  Experience working in graphic design in a professional
+                  capacity
+                </li>
+              </ul>
+            </p>
+          </div>
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            marginTop: "50px",
+            paddingBottom: "50px",
+
+            borderBottom: "1px solid rgba(0,0,0,.1)",
+          }}
+          className="col-lg-8"
+        >
+          <div style={{}} className="col-lg-4">
+            <p
+              style={{
+                fontFamily: " museo-slab,Helvetica,Arial,sans-serif",
+                fontSize: "1.5rem",
+                fontWeight: 600,
+                lineHeight: "1.2",
+              }}
+            >
+              Your Profile
+            </p>
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+            }}
+            className="col-lg-8"
+          >
+            <div style={{}}>
+              <img
+                style={{ borderRadius: "100%", width: "80px", height: "80px" }}
+                alt="Image placeholder"
+                src="https://demos.creative-tim.com/argon-dashboard-pro/assets/img/theme/team-4.jpg"
+              ></img>
+            </div>
+            <div style={{ marginLeft: "10px" }}>
+              <p style={{ marginBottom: 0 }}>Beshir Dekebo </p>
+              <p>Software Engineer </p>
             </div>
           </div>
         </div>
-        <div className="light-bg">
-          <div className="application-desc-container">
-            <div className="project-application-desc">
-              <div className="application-desc">
-                <div
-                  style={{
-                    width: "33%",
-                    display: "flex",
-                    paddingLeft: "10px",
-                  }}
-                >
-                  <div>
-                    <h4 className="app-desc-about-text">About You</h4>
-                  </div>
-                </div>
-                <div
-                  style={{
-                    width: "67%",
-                  }}
-                ></div>
-              </div>
-              <div className="application-desc">
-                <div
-                  style={{
-                    width: "33%",
-                    display: "flex",
 
-                    padding: "10px",
-                  }}
-                >
-                  <div>
-                    <h5> Project Requirement</h5>
-                  </div>
-                </div>
-                <div style={{ width: "67%", padding: "20px" }}>
-                  <p>
-                    This project has the following recommended skills and
-                    experience:
-                  </p>
-                  <p>
-                    <ul>
-                      <li>
-                        Experience working in Human Resources in a professional
-                        capacity
-                      </li>
-                      <li>
-                        Experience working in Human Resources in a professional
-                        capacity
-                      </li>
-                      <li>
-                        Experience working in Human Resources in a professional
-                        capacity
-                      </li>
-                    </ul>
-                  </p>
-                </div>
-              </div>
-              <hr className="caf-my-10"></hr>
-
-              <div className="application-desc">
-                <div
-                  style={{
-                    width: "33%",
-                    display: "flex",
-
-                    padding: "10px",
-                  }}
-                >
-                  <div>
-                    <h5> Your Profile and Professional Experience</h5>
-                  </div>
-                </div>
-
-                <div
-                  style={{
-                    width: "67%",
-                    padding: "20px",
-                    display: "flex",
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      width: "25%",
-                    }}
-                  >
-                    <div>
-                      <img
-                        src={img}
-                        style={{
-                          borderRadius: "100%",
-                          width: "100%",
-                          height: "40%",
-                        }}
-                      />
-                    </div>
-                  </div>
-                  <div
-                    style={{
-                      padding: "5px",
-                      marginLeft: "10px",
-                    }}
-                  >
-                    <div
-                      style={{
-                        lineHeight: "0.25em",
-                        fontFamily: "proxima-nova,Helvetica,Arial,sans-serif",
-                        fontWeight: "400",
-                        color: "#0e1630",
-                      }}
-                    >
-                      <h5>beshir dekebo</h5>
-                      <p>Ethiopia, Addis Ababa</p>
-                      <hr className="caf-my-10"></hr>
-                      <p>Software Engineer</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  marginLeft: "40px",
-                }}
-              >
-                <div>
-                  <ProfessionalExperienceCard />
-                </div>
-              </div>
-
-              <hr className="caf-my-10"></hr>
-            </div>
+        <div
+          style={{
+            marginTop: "50px",
+            borderBottom: "1px solid rgba(0,0,0,.1)",
+            display: "flex",
+            paddingBottom: "1rem",
+            marginBottom: "50px",
+          }}
+          className="col-lg-8"
+        >
+          <div style={{}} className="col-lg-4">
+            <p
+              style={{
+                fontFamily: " museo-slab,Helvetica,Arial,sans-serif",
+                fontSize: "1.5rem",
+                fontWeight: 600,
+                lineHeight: "1.2",
+              }}
+            >
+              Experience
+            </p>
           </div>
+
+          <div style={{}} className="col-lg-8">
+            <p>Professional Experience</p>
+            <p>
+              <ul style={{ paddingLeft: "1rem" }}>
+                <li
+                  style={{
+                    fontSize: "1.25rem",
+                    fontWeight: "600",
+                    color: "#0e1630",
+                  }}
+                >
+                  Database Analyst
+                </li>
+                <p
+                  style={{
+                    fontSize: "1rem",
+                    fontWeight: "500",
+                  }}
+                >
+                  Febraury 20 - March 21
+                </p>
+              </ul>
+            </p>
+            <a
+              style={{ paddingRight: "2rem", paddingLeft: "2rem" }}
+              className="btn-outline-sm"
+            >
+              Edit
+            </a>
+          </div>
+        </div>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <a style={{ marginRight: "10px" }} className="btn-outline-sm">
+            Edit Your Profile
+          </a>
+          <a className="btn-solid-sm">Submit Application</a>
         </div>
       </div>
-    </>
+    </div>
   );
 }

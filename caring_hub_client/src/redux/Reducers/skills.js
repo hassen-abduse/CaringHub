@@ -9,16 +9,16 @@ export const Skills = (state = {
     case actionTypes.SKILLS_LOADING:
       return {
         ...state,
-        isLoading: false,
+        isLoading: true,
         errMess: null,
-        skills: action.payload
+        skills: []
       }
     case actionTypes.ADD_SKILLS:
       return {
         ...state,
-        isLoading: true,
+        isLoading: false,
         errMess: null,
-        skills: []
+        skills: action.payload
       }
     case actionTypes.SKILLS_FAILED:
       return {
@@ -30,6 +30,8 @@ export const Skills = (state = {
     case actionTypes.ADD_SKILL_ITEM:
       return {
         ...state,
+        isLoading: false,
+        errMess: null,
         skills: state.skills.concat(action.payload)
       }
     default:

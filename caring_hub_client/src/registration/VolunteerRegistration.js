@@ -8,6 +8,17 @@ import Demo from "../organization/components/ImageUploadComponent";
 import "../organization/components/JobPostDescription.css";
 import VolunteerFileUpload from "./VolunteerFileUpload";
 
+const mapStateToProps = state => {
+  return {
+    Registration: state.Registration,
+    Skills: state.Skills,
+    Causes: state.Causes,
+  }
+}
+const mapDispatchToProps = (dispatch) => ({
+  registerVolunteer: (data) => dispatch(registerVolunteer(data)),
+})
+
 const { RangePicker } = DatePicker;
 const rangeConfig = {
   rules: [
@@ -20,15 +31,31 @@ const rangeConfig = {
 };
 const OPTIONS = ["Teaching", "Event Organizing", "Developing", "Marketing"];
 
+<<<<<<< HEAD
 export default function VolunteerRegistration() {
   const [visible, setVisible] = useState(false);
+=======
+function VolunteerRegistration(props) {
+>>>>>>> 02fa639af8ed9f761dc258a1ce78c687507cbdcc
   const { Option } = Select;
   const [selectedItems, setSelectedItems] = useState([]);
   const handleChange = (selectedItems) => {
     setSelectedItems(selectedItems);
   };
   const onFinish = (values) => {
-    console.log("Success:", values);
+    props.registerVolunteer({
+      firstName:values.firstName,
+      lastName: values.lastName,
+      username: values.username,
+      phoneNumber: values.prefix + values.phone,
+      emailAddress: values.email,
+      skillSets: [],
+      causeAreas: [],
+      password: values.password,
+      address: {
+        city: values.city
+      }
+    })
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -189,7 +216,7 @@ export default function VolunteerRegistration() {
 
                     <Form.Item
                       label="First Name"
-                      name="first-name"
+                      name="firstName"
                       rules={[
                         {
                           required: true,
@@ -202,11 +229,24 @@ export default function VolunteerRegistration() {
 
                     <Form.Item
                       label="Last Name"
-                      name="last-name"
+                      name="lastName"
                       rules={[
                         {
                           required: true,
                           message: "Please input your your last name!",
+                        },
+                      ]}
+                    >
+                      <Input />
+                    </Form.Item>
+
+                    <Form.Item
+                      label="User Name"
+                      name="username"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please input your user name!",
                         },
                       ]}
                     >
@@ -572,3 +612,5 @@ export default function VolunteerRegistration() {
     </div>
   );
 }
+
+export default connect(mapStateToProps, mapDispatchToProps) (VolunteerRegistration)

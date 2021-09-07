@@ -1,27 +1,15 @@
 import React from "react";
 import Container from "@material-ui/core/Container";
-import { ProjectCard } from "./ProjectCard";
-import { Grid, Box } from "@material-ui/core";
+import ProjectCard from "./ProjectCard";
+import { Grid } from "@material-ui/core";
 
-export default function CardHolder() {
+export default function CardHolder({ results }) {
   return (
     <Container>
       <Grid container spacing={3}>
-        <Grid item md={4}>
-          <ProjectCard />
-        </Grid>
-        <Grid item md={4}>
-          <ProjectCard />
-        </Grid>
-        <Grid item md={4}>
-          <ProjectCard />
-        </Grid>
-        <Grid item md={4}>
-          <ProjectCard />
-        </Grid>
-        <Grid item md={4}>
-          <ProjectCard />
-        </Grid>
+        {results.map((item) => (
+          <ProjectCard key={item._id} project={item} />
+        ))}
       </Grid>
     </Container>
   );

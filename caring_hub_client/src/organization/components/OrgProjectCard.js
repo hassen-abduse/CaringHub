@@ -4,13 +4,13 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import { Button } from "@material-ui/core";
 export const OrgProjectCard = () => {
   return (
-    <div class="cards-2 bg-gray">
+    <div class="cards-2 ">
       <div class="container">
         <div class="row">
-          <div class="col-lg-12">
+          <div class="col-md-12">
             <div
               style={{
-                width: "540px",
+                width: "100%",
               }}
               class="card"
             >

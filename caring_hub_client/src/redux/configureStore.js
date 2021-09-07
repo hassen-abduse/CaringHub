@@ -10,6 +10,7 @@ import { HelpRequests } from './Reducers/helpRequests'
 import { Applications } from './Reducers/applications'
 import { Users } from './Reducers/users'
 import { Skills } from './Reducers/skills'
+import { Registration } from './Reducers/registration'
 
 export const __store__ = () => {
   const store = createStore(
@@ -22,7 +23,8 @@ export const __store__ = () => {
       HelpRequests,
       Users,
       Skills,
-      Causes
+      Causes,
+      Registration
     }),
     // to log state and changes to state by actions
     applyMiddleware(thunk, logger)

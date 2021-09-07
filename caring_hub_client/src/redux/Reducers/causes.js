@@ -9,16 +9,16 @@ export const Causes = (state = {
     case actionTypes.CAUSES_LOADING:
       return {
         ...state,
-        isLoading: false,
+        isLoading: true,
         errMess: null,
-        causes: action.payload
+        causes: []
       }
     case actionTypes.ADD_CAUSES:
       return {
         ...state,
-        isLoading: true,
+        isLoading: false,
         errMess: null,
-        causes: []
+        causes: action.payload
       }
     case actionTypes.CAUSES_FAILED:
       return {
@@ -30,6 +30,8 @@ export const Causes = (state = {
     case actionTypes.ADD_CAUSE_ITEM:
       return {
         ...state,
+        isLoading: false,
+        errMess: null,
         causes: state.causes.concat(action.payload)
       }
     default:
