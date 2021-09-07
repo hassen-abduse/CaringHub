@@ -3,10 +3,12 @@ import Container from "@material-ui/core/Container";
 import { Modal } from "antd";
 import { Form, Input, Button, DatePicker, InputNumber, Select } from "antd";
 import { InfoCircleOutlined } from "@ant-design/icons";
+import { registerVolunteer} from '../redux/ActionCreators/registrationActions'
 import TextArea from "antd/lib/input/TextArea";
 import Demo from "../organization/components/ImageUploadComponent";
 import "../organization/components/JobPostDescription.css";
 import VolunteerFileUpload from "./VolunteerFileUpload";
+import { connect } from "react-redux";
 
 const mapStateToProps = state => {
   return {
@@ -31,12 +33,8 @@ const rangeConfig = {
 };
 const OPTIONS = ["Teaching", "Event Organizing", "Developing", "Marketing"];
 
-<<<<<<< HEAD
-export default function VolunteerRegistration() {
-  const [visible, setVisible] = useState(false);
-=======
 function VolunteerRegistration(props) {
->>>>>>> 02fa639af8ed9f761dc258a1ce78c687507cbdcc
+  const [visible, setVisible] = useState(false);
   const { Option } = Select;
   const [selectedItems, setSelectedItems] = useState([]);
   const handleChange = (selectedItems) => {
