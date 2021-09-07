@@ -10,7 +10,7 @@ import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
-import { Box, Grid, ListItem, Link, Icon } from "@material-ui/core";
+import { Grid, ListItem, Link } from "@material-ui/core";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import Badge from "@material-ui/core/Badge";
@@ -18,15 +18,16 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
 import MailIcon from "@material-ui/icons/Mail";
-import MainPage from "./pages/Layout/MainPage";
 import MessageRounded from "@material-ui/icons/MessageRounded";
 import NotificationImportant from "@material-ui/icons/NotificationImportant";
 import SettingsIcon from "@material-ui/icons/Settings";
 import LanguageIcon from "@material-ui/icons/Language";
 import Admin from "./components/Admin";
-import ProfileImage from "../assets/img/profile2.jpg";
 import { blue } from "@material-ui/core/colors";
 import Multiselect from "multiselect-react-dropdown";
+import MainAdminRouter from "./MainAdminRouter";
+import User from "./components/User";
+import AccountMenu from "./components/AccountMenu";
 
 const drawerWidth = 240;
 
@@ -34,12 +35,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
   },
-  ProfileImg: {
-    width: "40px",
-    height: "40px",
-    borderRadius: "50%",
-    cursor: "pointer",
-  },
+
   appBar: {
     transition: theme.transitions.create(["margin", "width"], {
       easing: theme.transitions.easing.sharp,
@@ -162,16 +158,8 @@ export default function AdminDashboard() {
                     </Badge>
                   </Link>
                 </ListItem>
-
                 <ListItem>
-                  <SettingsIcon />
-                </ListItem>
-                <ListItem>
-                  <img
-                    className={classes.ProfileImg}
-                    src={ProfileImage}
-                    alt="profileImage"
-                  />
+                  <AccountMenu />
                 </ListItem>
               </List>
             </Grid>
@@ -204,7 +192,7 @@ export default function AdminDashboard() {
         </div>
         <Divider />
         <List>
-          <Link href="/org/dashboard">
+          <Link href="/admin/dashboard">
             <ListItem>
               <ListItemIcon>
                 <InboxIcon />
@@ -212,7 +200,15 @@ export default function AdminDashboard() {
               <ListItemText>Dashboard</ListItemText>
             </ListItem>
           </Link>
-          <Link href="/org/projects">
+          <Link href="/admin/organizations">
+            <ListItem>
+              <ListItemIcon>
+                <InboxIcon />
+              </ListItemIcon>
+              <ListItemText>Organizations</ListItemText>
+            </ListItem>
+          </Link>
+          <Link href="/admin/projects">
             <ListItem>
               <ListItemIcon>
                 <InboxIcon />
@@ -220,7 +216,7 @@ export default function AdminDashboard() {
               <ListItemText>Projects</ListItemText>
             </ListItem>
           </Link>
-          <Link href="/org/applicants">
+          <Link href="/admin/applicants">
             <ListItem>
               <ListItemIcon>
                 <InboxIcon />
@@ -228,7 +224,7 @@ export default function AdminDashboard() {
               <ListItemText>Applicants</ListItemText>
             </ListItem>
           </Link>
-          <Link href="/org/volunteers">
+          <Link href="/admin/volunteers">
             <ListItem>
               <ListItemIcon>
                 <InboxIcon />
@@ -239,14 +235,30 @@ export default function AdminDashboard() {
         </List>
         <Divider />
         <List>
-          {["messages", "Trash", "Spam"].map((text, index) => (
-            <ListItem button key={text}>
+          <Link href="/admin/skillSets">
+            <ListItem>
               <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                <InboxIcon />
               </ListItemIcon>
-              <ListItemText primary={text} />
+              <ListItemText>Skill sets</ListItemText>
             </ListItem>
-          ))}
+          </Link>
+          <Link href="/admin/evaluationCriterias">
+            <ListItem>
+              <ListItemIcon>
+                <InboxIcon />
+              </ListItemIcon>
+              <ListItemText>Evaluation criaterias</ListItemText>
+            </ListItem>
+          </Link>
+          <Link href="/admin/causeAreas">
+            <ListItem>
+              <ListItemIcon>
+                <InboxIcon />
+              </ListItemIcon>
+              <ListItemText>cause areas</ListItemText>
+            </ListItem>
+          </Link>
         </List>
       </Drawer>
       <main
@@ -254,8 +266,8 @@ export default function AdminDashboard() {
           [classes.contentShift]: open,
         })}
       >
-        <div className={classes.drawerHeader}></div>
-        <MainPage />
+        <div className={classes.drawerHeader}>Hey</div>
+        <MainAdminRouter />
       </main>
     </div>
   );
