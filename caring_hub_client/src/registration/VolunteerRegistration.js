@@ -36,10 +36,8 @@ const OPTIONS = ["Teaching", "Event Organizing", "Developing", "Marketing"];
 function VolunteerRegistration(props) {
   const [visible, setVisible] = useState(false);
   const { Option } = Select;
-  const [selectedItems, setSelectedItems] = useState([]);
-  const handleChange = (selectedItems) => {
-    setSelectedItems(selectedItems);
-  };
+  const [selectedSkills, setSelectedSkills] = useState([]);
+  const [selectedCauses, setSelectedCauses] = useState([]);
   const onFinish = (values) => {
     props.registerVolunteer({
       firstName:values.firstName,
@@ -47,8 +45,8 @@ function VolunteerRegistration(props) {
       username: values.username,
       phoneNumber: values.prefix + values.phone,
       emailAddress: values.email,
-      skillSets: [],
-      causeAreas: [],
+      skillSets: selectedSkills,
+      causeAreas: selectedCauses,
       password: values.password,
       address: {
         city: values.city
@@ -78,8 +76,8 @@ function VolunteerRegistration(props) {
     { id: "5", name: "Marketing" },
     { id: "6", name: "Event Hosting" },
   ];
-  const [data, setDate] = useState(options);
-  const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
+  // const [data, setDate] = useState(options);
+  // const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
 
   const prefixSelector = (
     <Form.Item name="prefix" noStyle>
@@ -93,8 +91,9 @@ function VolunteerRegistration(props) {
       </Select>
     </Form.Item>
   );
-
+  
   return (
+    
     <div style={{ backgroundColor: "#EEEEEE" }}>
       <Container style={{ backgroundColor: "#EEEEEE" }}>
         <Modal
@@ -458,13 +457,13 @@ function VolunteerRegistration(props) {
                         <Select
                           mode="multiple"
                           placeholder="Inserted are removed"
-                          value={selectedItems}
-                          onChange={handleChange}
+                          value={selectedSkills}
+                          onChange={setSelectedSkills}
                           style={{ width: "100%" }}
                         >
-                          {filteredOptions.map((item) => (
-                            <Select.Option key={item} value={item}>
-                              {item}
+                          {props.Skills.skills.map((item) => (
+                            <Select.Option key={item._id} value={item._id}>
+                              {item.name}
                             </Select.Option>
                           ))}
                         </Select>
@@ -561,13 +560,13 @@ function VolunteerRegistration(props) {
                         <Select
                           mode="multiple"
                           placeholder="Inserted are removed"
-                          value={selectedItems}
-                          onChange={handleChange}
+                          value={selectedCauses}
+                          onChange={setSelectedCauses}
                           style={{ width: "100%" }}
                         >
-                          {filteredOptions.map((item) => (
-                            <Select.Option key={item} value={item}>
-                              {item}
+                          {props.Causes.causes.map((item) => (
+                            <Select.Option key={item._id} value={item._id}>
+                              {item.name}
                             </Select.Option>
                           ))}
                         </Select>
