@@ -21,16 +21,11 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 function HeroBox(props) {
-  // const onSearch = async (text) => {
-  //   const results = await MovieSource.get("/", {
-  //     params: { s: text, i: "tt3896198", apiKey: "821d565d" },
-  //   });
+  const [query, setQuery] = useState("");
+  const filteredProjects = props.Projects.projects.filter((pro) =>
+    pro.name.toLowerCase().includes(query.toLowerCase())
+  );
 
-  //   setState((prevState) => {
-  //     return { ...prevState, results: results };
-  //   });
-  // };
-  // console.log(props.Projects.projects);
   return (
     <Box>
       <div
@@ -71,9 +66,9 @@ function HeroBox(props) {
           </p>
         </div>
         {/* <SearchPanel onSearch={onSearch} /> */}
-        <SearchPanel />
+        <SearchPanel value={query} onChange={(e) => setQuery(e.target.value)} />
       </div>
-      <CardHolder results={props.Projects.projects} />
+      <CardHolder results={filteredProjects} />
     </Box>
   );
 }

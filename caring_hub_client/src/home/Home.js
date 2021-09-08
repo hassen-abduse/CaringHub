@@ -264,17 +264,17 @@ function Home() {
                     class="accordion-button"
                     type="button"
                     data-bs-toggle="collapse"
-                    data-bs-target="#collapseOne"
+                    data-bs-target="#collapseFour"
                     aria-expanded="true"
-                    aria-controls="collapseOne"
+                    aria-controls="collapseFour"
                   >
                     Range of Skills and Experience
                   </button>
                 </div>
                 <div
-                  id="collapseOne"
+                  id="collapseFour"
                   class="accordion-collapse collapse show"
-                  aria-labelledby="headingOne"
+                  aria-labelledby="headingFour"
                   data-bs-parent="#accordionExample"
                 >
                   <div class="accordion-body">

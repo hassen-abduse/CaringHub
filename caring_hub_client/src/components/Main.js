@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Switch, Route, withRouter, Redirect } from "react-router-dom";
+import { useLocation } from "react-router";
 import Header from "./Header";
 import jwtDecode from "jwt-decode";
 import Footer from "../home/Footer";
@@ -75,13 +76,15 @@ class Main extends Component {
   }
 
   render() {
-    const decoded = this.props.auth.token ? jwtDecode(this.props.auth.token) : { role: '' }
+    const route = window.location.pathname;
+    const decoded = this.props.auth.token
+      ? jwtDecode(this.props.auth.token)
+      : { role: "" };
     return (
       <React.Fragment>
-        <AppBar />
+        {route !== "/login" && <AppBar />}
         <div>
           <Switch>
-
             <Route exact path="/index">
               <Home />
             </Route>
@@ -152,7 +155,7 @@ class Main extends Component {
             <Redirect to="/index" />
           </Switch>
         </div>
-        <Footer />
+        {route !== "/login" && <Footer />}
       </React.Fragment>
     );
   }

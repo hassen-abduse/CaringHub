@@ -43,13 +43,18 @@ export default function ProjectCard(props) {
                 </p>
                 <div class="testimonial-author">{project.name}</div>
 
-                <p class="testimonial-text">
-                  {
-                    project.description     
-                  } </p>
+                <p
+                  style={{ maxHeight: "180px", overflow: "hidden" }}
+                  class="testimonial-text"
+                >
+                  {project.description}{" "}
+                </p>
                 <div>
                   <span class="nav-item">
-                    <Link class="btn-solid-sm" to={`/volunteer/jobDescription/${project._id}`}>
+                    <Link
+                      class="btn-solid-sm"
+                      to={`/volunteer/jobDescription/${project._id}`}
+                    >
                       Check
                     </Link>
                   </span>
