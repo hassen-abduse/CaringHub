@@ -13,6 +13,7 @@ import TableSortLabel from "@material-ui/core/TableSortLabel";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
+import Divider from "@material-ui/core/Divider";
 import Checkbox from "@material-ui/core/Checkbox";
 import { Button, Grid } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
@@ -23,62 +24,24 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import { Modal } from "antd";
-
+// import AcceptApplicant from "./AcceptApplicant";
+// import DeclineApplicant from "./DeclineApplicant";
 import ClearIcon from "@material-ui/icons/Clear";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
-import ApplicantDetail from "./ApplicantDetail";
-import ShowApplicantOrgDialog from "./ShowApplicantOrgDialog";
 
-function createData(firstName, lastName, phone, email, address, skill, areas) {
-  return { firstName, lastName, phone, email, address, skill, areas };
+import AddEvaluation from "./AddEvaluation";
+// import ShowVolunteersDialog from "../volunteers/ShowVolunteersDialog";
+
+function createData(evaluationName, evaluationDescription) {
+  return { evaluationName, evaluationDescription };
 }
 
 const rows = [
-  createData(
-    "Mehammed",
-    "Teshome",
-    "0923191253",
-    "checoslbches@gmail.com",
-    "addis ababa",
-    "it",
-    "tech"
-  ),
-  createData(
-    "Mehammed",
-    "Teshome",
-    "0923191253",
-    "checoslbches@gmail.com",
-    "addis ababa",
-    "it",
-    "tech"
-  ),
-  createData(
-    "Mehammed",
-    "Teshome",
-    "0923191253",
-    "checoslbches@gmail.com",
-    "addis ababa",
-    "it",
-    "tech"
-  ),
-  createData(
-    "Mehammed",
-    "Teshome",
-    "0923191253",
-    "checoslbches@gmail.com",
-    "addis ababa",
-    "it",
-    "tech"
-  ),
-  createData(
-    "Mehammed",
-    "Teshome",
-    "0923191253",
-    "checoslbches@gmail.com",
-    "addis ababa",
-    "it",
-    "tech"
-  ),
+  createData("punctuality", "volunteers usage of time "),
+  createData("punctuality", "volunteers usage of time "),
+  createData("punctuality", "volunteers usage of time "),
+  createData("punctuality", "volunteers usage of time "),
+  createData("punctuality", "volunteers usage of time "),
 ];
 
 function descendingComparator(a, b, orderBy) {
@@ -109,25 +72,23 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
-    id: "Full-Name",
+    id: "evaluation-name",
     numeric: false,
     disablePadding: true,
-    label: "Full Name",
+    label: "Evaluation Name",
   },
 
-  { id: "address", numeric: true, disablePadding: false, label: "address" },
-
   {
-    id: "areas",
+    id: "evaluation-description",
     numeric: true,
     disablePadding: false,
-    label: "applied to project- ",
+    label: "Evaluation description ",
   },
   {
-    id: "verify",
+    id: "actions",
     numeric: false,
     disablePadding: false,
-    label: "Verify applicants ",
+    label: "actions ",
   },
 ];
 
@@ -210,6 +171,7 @@ const useToolbarStyles = makeStyles((theme) => ({
 const EnhancedTableToolbar = (props) => {
   const classes = useToolbarStyles();
   const { numSelected } = props;
+  const [visible, setVisible] = useState(false);
 
   return (
     <Toolbar
@@ -217,46 +179,57 @@ const EnhancedTableToolbar = (props) => {
         [classes.highlight]: numSelected > 0,
       })}
     >
-      {numSelected > 0 ? (
-        <Typography
-          className={classes.title}
-          color="inherit"
-          variant="subtitle1"
-          component="div"
-        >
-          {numSelected} selected
-        </Typography>
-      ) : (
-        <Typography
-          className={classes.title}
-          variant="h6"
-          id="tableTitle"
-          component="div"
-        >
-          Applicants
-        </Typography>
-      )}
+      <Typography
+        className={classes.title}
+        variant="h6"
+        id="tableTitle"
+        component="div"
+      >
+        Evaluations
+      </Typography>
 
-      {numSelected > 0 ? (
-        <div className={classes.headerTooltip}>
-          <Tooltip title="accept selected applicants">
-            <IconButton aria-label="delete">
-              <DoneAllIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="decline selected applicants">
-            <IconButton aria-label="delete">
-              <ClearIcon />
-            </IconButton>
-          </Tooltip>
-        </div>
-      ) : (
-        <Tooltip title="Filter list">
-          <IconButton aria-label="filter list">
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
-      )}
+      <Grid
+        style={{
+          width: "150px",
+          borderRadius: "5px",
+        }}
+      >
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => setVisible(true)}
+        >
+          Add Evaluation
+        </Button>
+        <Modal
+          title="add skill set"
+          centered
+          visible={visible}
+          onOk={() => setVisible(false)}
+          onCancel={() => setVisible(false)}
+          width={1000}
+          footer={[
+            <Button
+              key="back"
+              size="large"
+              color="primary"
+              onClick={() => setVisible(false)}
+            >
+              Add
+            </Button>,
+            <Button
+              key="back"
+              size="large"
+              color="primary"
+              onClick={() => setVisible(false)}
+            >
+              cancel
+            </Button>,
+          ]}
+        >
+          <AddEvaluation />
+        </Modal>
+      </Grid>
     </Toolbar>
   );
 };
@@ -290,7 +263,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Applicants() {
+export default function EvaluationCriterias() {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
@@ -356,7 +329,7 @@ export default function Applicants() {
   return (
     <div className="container">
       <Modal
-        title="Applicant Organizations Information"
+        title="Applicant Information"
         centered
         visible={visible}
         // mask={false}
@@ -373,11 +346,11 @@ export default function Applicants() {
             color="primary"
             onClick={() => setVisible(false)}
           >
-            View documents
+            View Profile
           </Button>,
         ]}
       >
-        <ShowApplicantOrgDialog />
+        {/* <ShowVolunteersDialog /> */}
       </Modal>
       <div className={classes.root}>
         <Paper className={classes.paper}>
@@ -424,12 +397,13 @@ export default function Applicants() {
                           scope="row"
                           onClick={() => setVisible(true)}
                         >
-                          {row.firstName + " " + row.lastName}
+                          {row.evaluationName}
                         </TableCell>
 
-                        <TableCell align="left">{row.address}</TableCell>
+                        <TableCell align="left">
+                          {row.evaluationDescription}
+                        </TableCell>
 
-                        <TableCell align="left">{row.areas}</TableCell>
                         <TableCell
                           style={{
                             display: "flex",
@@ -450,23 +424,55 @@ export default function Applicants() {
                               item
                               style={{
                                 // backgroundColor: "green",
-                                borderRadius: "5px",
+                                borderRadius: "10px",
                               }}
                             >
-                              <Button variant="contained" color="primary">
-                                Accept
+                              <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={() => setVisible(true)}
+                              >
+                                Edit
                               </Button>
+                              <Modal
+                                title="add skill set"
+                                centered
+                                visible={visible}
+                                onOk={() => setVisible(false)}
+                                onCancel={() => setVisible(false)}
+                                width={1000}
+                                footer={[
+                                  <Button
+                                    key="back"
+                                    size="large"
+                                    color="primary"
+                                    onClick={() => setVisible(false)}
+                                  >
+                                    Update
+                                  </Button>,
+                                  <Button
+                                    key="back"
+                                    size="large"
+                                    color="primary"
+                                    onClick={() => setVisible(false)}
+                                  >
+                                    cancel
+                                  </Button>,
+                                ]}
+                              >
+                                <AddEvaluation />
+                              </Modal>
                             </Grid>
 
                             <Grid
                               item
                               style={{
-                                backgroundColor: "red",
+                                // backgroundColor: "red",
                                 borderRadius: "5px",
                               }}
                             >
                               <Button variant="contained" color="secondary">
-                                Decline
+                                Delete
                               </Button>
                             </Grid>
                           </Grid>
