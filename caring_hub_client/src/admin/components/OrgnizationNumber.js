@@ -9,9 +9,13 @@ import Typography from "@material-ui/core/Typography";
 const useStyles = makeStyles({
   root: {
     minWidth: 275,
-    backgroundColor: "green",
+    backgroundColor: " #045de9",
+
+    backgroundImage:
+      "linear-gradient(124deg, rgba(4,93,224,1) 0%, rgba(9,198,249,1) 100%)",
+
     padding: "12px",
-    borderRadius: "20px",
+    borderRadius: "10px",
     boxShadow: "2px",
   },
   bullet: {
@@ -21,12 +25,19 @@ const useStyles = makeStyles({
   },
   title: {
     fontSize: 14,
+    color: "white",
   },
   numbers: {
     fontSize: "3em",
+    color: "white",
+    fontWeight: "bolder",
   },
   pos: {
-    marginBottom: 12,
+    // marginBottom: 12,
+    color: "white",
+    marginTop: 10,
+
+    fontWeight: "bold",
   },
 });
 
@@ -37,13 +48,6 @@ export default function OrganizationNumber() {
   return (
     <Card className={classes.root}>
       <CardContent>
-        <Typography
-          className={classes.title}
-          color="textSecondary"
-          gutterBottom
-        >
-          Organizations
-        </Typography>
         <Typography variant="h1" className={classes.numbers}>
           100
         </Typography>
@@ -53,7 +57,11 @@ export default function OrganizationNumber() {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button href={"/admin/organizations"} size="small">
+        <Button
+          href={"/admin/organizations"}
+          size="small"
+          style={{ color: "white", fontSize: "1em" }}
+        >
           explore Volunteers
         </Button>
       </CardActions>
