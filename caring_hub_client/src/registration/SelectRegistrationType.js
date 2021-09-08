@@ -1,7 +1,7 @@
 import React from "react";
-import { ProjectCard } from "../volunteer/components/ProjectCard";
 import volunteerIllustration from "../assets/img/illustration-volunteer.svg";
 import organizationIllustration from "../assets/img/illustration-organization.svg";
+import { Link } from "react-router-dom";
 
 export default function SelectRegistrationType() {
   return (
@@ -36,7 +36,7 @@ export default function SelectRegistrationType() {
                 <h4 className="text-center  p-5 ">
                   Which type of account would you like?
                 </h4>
-                <a className="m-2" href="/volunteerRegistration">
+                <Link className="m-2" to="/volunteerRegistration">
                   <div class="card">
                     <div>
                       <img
@@ -60,8 +60,8 @@ export default function SelectRegistrationType() {
 
                     <div class="gradient-floor blue-to-purple"></div>
                   </div>
-                </a>
-                <a className="m-2" href="/organizationRegistration">
+                </Link>
+                <Link className="m-2" href="/organizationRegistration">
                   <div class="card">
                     <div>
                       <img
@@ -85,23 +85,7 @@ export default function SelectRegistrationType() {
 
                     <div class="gradient-floor blue-to-purple"></div>
                   </div>
-                </a>
-                {/* <div class="card">
-                <img
-                  class="quotes"
-                  src="assets/images/quotes.svg"
-                  alt="alternative"
-                />
-                <div class="card-body">
-                  <p class="testimonial-text">
-                    Suspendisse vitae enim arcu. Aliqu convallis risus a felis
-                    blandit, at mollis nisi bibendum aliquam noto ricos
-                  </p>
-                  <div class="testimonial-author">Susane Blake</div>
-                  <div class="occupation">General Manager, Presentop</div>
-                </div>
-                <div class="gradient-floor purple-to-green"></div>
-              </div> */}
+                </Link>
               </div>
             </div>
           </div>

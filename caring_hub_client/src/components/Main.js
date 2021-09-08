@@ -128,7 +128,7 @@ class Main extends Component {
             {decoded.role === "Org" && (
               <>
                 <Route exact path="/">
-                  <Profile />
+                  <Profile orgId={decoded._id}/>
                 </Route>
                 <Route exact path="/organization/postProject">
                   <PostProject />

@@ -80,7 +80,7 @@ function AppBar(props) {
             id="navbarsExampleDefault"
           >
             <ul class="navbar-nav ms-auto navbar-nav-scroll">
-              {decoded.role === "" && (
+              {/* {decoded.role === "" && (
                 <li class="nav-item">
                   <Link
                     class={route === "/" ? "nav-link active" : "nav-link"}
@@ -90,7 +90,7 @@ function AppBar(props) {
                     Home
                   </Link>
                 </li>
-              )}
+              )} */}
               {decoded.role === "Vol" && (
                 <ul class="navbar-nav navbar-nav-scroll">
                   <li class="nav-item">
@@ -155,14 +155,14 @@ function AppBar(props) {
                   <li class="nav-item">
                     <Link
                       class={
-                        route === "/organization/volunteers"
+                        route === "/organization/postProject"
                           ? "nav-link active"
                           : "nav-link"
                       }
                       aria-current="page"
-                      to="/organization/volunteers"
+                      to="/organization/postProject"
                     >
-                      Volunteers
+                      Post Project
                     </Link>
                   </li>
 
@@ -198,9 +198,9 @@ function AppBar(props) {
             )}
             {decoded.role === "" && (
               <span class="nav-item" style={{ marginLeft: "2px" }}>
-                <a class="btn-outline-sm" href="/register">
+                <Link class="btn-outline-sm" to="/register">
                   Register
-                </a>
+                </Link>
               </span>
             )}
             {decoded._id !== "" && (

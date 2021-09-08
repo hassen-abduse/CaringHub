@@ -3,8 +3,8 @@ import "./login.css";
 import { connect } from "react-redux";
 import { loginUser } from "../redux/ActionCreators/authActions";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import { Redirect } from "react-router-dom";
-
+import { Link, Redirect } from "react-router-dom";
+import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
 const mapStateToProps = (state) => {
   return {
     auth: state.auth,
@@ -24,8 +24,8 @@ class Login extends React.Component {
     };
     this.login = this.login.bind(this);
   }
-  async login() {
-    await this.props.loginUser({
+  login() {
+    this.props.loginUser({
       username: this.state.username,
       password: this.state.password,
     });
@@ -38,13 +38,16 @@ class Login extends React.Component {
     return (
       <div>
         <div
-          style={{ maxWidth: "550px", marginTop: "60px" }}
+          style={{ maxWidth: "550px", marginTop: "50px" }}
           class="container-fluid px-1 px-md-5 px-lg-1 px-xl-5 py-5 mx-auto"
         >
-          <div
-            class="card card0 border-0"
-            style={{ paddingTop: "50px", paddingBottom: "50px" }}
-          >
+          <div class="card card0 border-0" style={{ paddingBottom: "50px" }}>
+            {" "}
+            <div style={{ padding: "10px", marginBottom: "25px" }}>
+              <Link to="/index">
+                <KeyboardBackspaceIcon />
+              </Link>
+            </div>
             <div class="row d-flex">
               <div class="col">
                 <div class="card2 card border-0 px-4 py-5">
@@ -99,14 +102,23 @@ class Login extends React.Component {
                       type="submit"
                       class="btn btn-primary text-center"
                     >
-                      Login
-                    </button>{" "}
+                      {this.props.auth.isLoading === true
+                        ? "Please wait..."
+                        : "Login"}
+                    </button>
+                    {this.props.auth.errMess && (
+                      <p style={{ color: "#f00", textAlign: "center" }}>
+                        {this.props.auth.errMess}
+                      </p>
+                    )}
                   </div>
                   <div class="row mb-4 px-3">
                     {" "}
                     <small class="font-weight-bold">
                       Don't have an account?{" "}
-                      <a class="text-danger ">Register</a>
+                      <Link to="/register" class="text-danger ">
+                        Register
+                      </Link>
                     </small>{" "}
                   </div>
                 </div>
