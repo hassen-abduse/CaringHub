@@ -2,7 +2,6 @@ import React from "react";
 import Typography from "@material-ui/core/Typography";
 import Image from "../../assets/img/2.jpg";
 import { Container } from "@material-ui/core";
-import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
@@ -10,11 +9,13 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import { Grid, Box } from "@material-ui/core";
-import { ProjectCard } from "./ProjectCard";
 import CardHolder from "./CardHolder";
 import { useParams } from "react-router-dom";
+import jwtDecode from "jwt-decode";
 import { useEffect, useState } from "react";
 import { baseUrl } from "../../redux/shared/baseUrl";
+import { postApplication } from "../../redux/ActionCreators/appActions";
+import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,7 +30,17 @@ function renderItem(item) {
       {item.name}
     </p>)
 }
-export const DescriptionCard = () => {
+
+const mapStateToProps = (state) => {
+  return {
+    auth: state.auth,
+    NetRequest: state.NetRequest
+  }
+}
+const mapDispatchToProps = (dispatch) => ({
+  postApplication: (data) => dispatch(postApplication(data)),
+})
+function DescriptionCard(props) {
   const classes = useStyles();
   const { id } = useParams()
   const [project, setProject] = useState({})
@@ -51,6 +62,9 @@ export const DescriptionCard = () => {
   //     renderItem(cause)
   //   )
   // })
+  const decoded = props.auth.token ? jwtDecode(props.auth.token) : { role: '', _id: '' }
+  console.log(decoded._id)
+  console.log(project._id)
   return (
     <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
       <div className="container">
@@ -72,7 +86,7 @@ export const DescriptionCard = () => {
             <div class="row">
               <div style={{ padding: 0 }} class="col-lg-6 col-xl-6">
                 <div class="image-container">
-                  <img class="img-fluid" src={Image} alt="alternative" />
+                  <img class="img-fluid" width='100%' height='100%' src={project.image} alt="alternative" />
                 </div>
               </div>
 
@@ -81,25 +95,53 @@ export const DescriptionCard = () => {
                   <h2>Causes</h2>
                   {
                     project.causeAreas &&
-                    project.causeAreas.map(cause=> {
+                    project.causeAreas.map(cause => {
                       return (renderItem(cause))
                     })
                   }
                   <h2>Skills</h2>
                   {
-                    project.skillSets && 
+                    project.skillSets &&
                     project.skillSets.map(
                       skill => {
-                        return(renderItem(skill))
+                        return (renderItem(skill))
                       }
                     )
                   }
                   <p>Posted on: {project.createdAt}</p>
                   <p>Starts on: {project.startDate}</p>
                   <p>Ends on: {project.endDate}</p>
-                  <a style={{ margin: "5px" }} class="btn-solid-reg" href="#">
-                    Apply
-                  </a>
+                  {
+                    props.NetRequest.isLoading === true &&
+                    <p>Submitting Application...</p>
+                  }
+                  {
+                    props.NetRequest.status && 
+                    <p>{props.NetRequest.status}</p>
+                  }
+                  {
+                    props.NetRequest.errMess && 
+                    <p>{props.NetRequest.errMess}</p>
+                  }
+                  {
+                    decoded._id !== '' &&
+                    <button
+                      style={{ margin: "5px" }} class="btn-solid-reg"
+                      onClick={() => props.postApplication({
+                        volunteer: decoded._id,
+                        project: project._id
+                      })} >
+                      Apply
+                      
+                    </button>
+                  }
+                  {
+                   decoded._id === '' && 
+                    <a
+                      style={{ margin: "5px" }} class="btn-solid-reg" href='/login'>
+                      Login to Apply
+                    </a>
+                  }
                 </div>
               </div>
             </div>
@@ -178,3 +220,5 @@ export const DescriptionCard = () => {
     </Container>
   );
 };
+
+export default connect(mapStateToProps, mapDispatchToProps)(DescriptionCard)
