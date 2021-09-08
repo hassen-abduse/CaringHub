@@ -24,8 +24,8 @@ class Login extends React.Component {
     }
     this.login = this.login.bind(this)
   }
-  async login() {
-    await this.props.loginUser({
+  login() {
+    this.props.loginUser({
       username: this.state.username,
       password: this.state.password
     })
@@ -33,6 +33,7 @@ class Login extends React.Component {
 
   }
   render() {
+
     if (this.props.auth.isAuthenticated) {
       return <Redirect to="/" />
     }
@@ -87,13 +88,23 @@ class Login extends React.Component {
                       onChange={(e) => this.setState({ password: e.target.value })}
                     />{" "}
                   </div>
-                
+
                   <div class="row mb-3 px-3">
                     {" "}
-                    <button 
-                      style={{width:'100%'}}
+                    {
+                      this.props.auth.errMess && 
+                      <p style={{color:'#f00', textAlign:'center'}}>{this.props.auth.errMess}</p>
+                    }
+                    <button
+                      style={{ width: '100%' }}
                       onClick={this.login} type="submit" class="btn btn-primary text-center">
-                      Login
+                      {
+                        this.props.auth.isLoading === true
+                        ?
+                        'Please wait...'
+                        :
+                        'Login'
+                      }
                     </button>{" "}
                   </div>
                   <div class="row mb-4 px-3">

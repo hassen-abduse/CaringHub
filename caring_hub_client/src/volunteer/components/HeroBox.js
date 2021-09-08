@@ -5,20 +5,20 @@ import SearchProject from "./SearchProject";
 
 import SearchPanel from "./SearchPanel";
 import { ProjectCard } from "./ProjectCard";
-import { fetchProjects } from '../../redux/ActionCreators/projectActions'
+import { fetchProjects } from "../../redux/ActionCreators/projectActions";
 import CardHolder from "./CardHolder";
 import MovieSource from "./MovieSource";
-import {connect} from 'react-redux'
+import { connect } from "react-redux";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-      Projects: state.Projects
-  }
-}
+    Projects: state.Projects,
+  };
+};
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchProjects: () => dispatch(fetchProjects())
-})
+  fetchProjects: () => dispatch(fetchProjects()),
+});
 
 function HeroBox(props) {
   // const onSearch = async (text) => {
@@ -30,7 +30,7 @@ function HeroBox(props) {
   //     return { ...prevState, results: results };
   //   });
   // };
-  console.log(props.Projects.projects)
+  // console.log(props.Projects.projects);
   return (
     <Box>
       <div
@@ -70,7 +70,8 @@ function HeroBox(props) {
             We think this projects could be a great suit for you{" "}
           </p>
         </div>
-        {/* </div><SearchPanel onSearch={onSearch} /> */}
+        {/* <SearchPanel onSearch={onSearch} /> */}
+        <SearchPanel />
       </div>
       <CardHolder results={props.Projects.projects} />
     </Box>

@@ -1,5 +1,6 @@
 import * as actionTypes from '../actionTypes'
 import { baseUrl } from '../shared/baseUrl'
+import { netRequest, receivedResponse, receiveError } from './NetActions';
 
 export const appsLoading = () => ({
     type: actionTypes.APPS_LOADING
@@ -42,11 +43,13 @@ export const fetchApplications = () => (dispatch) => {
 }
 
 export const postApplication = (formData) => (dispatch) => {
+    dispatch(netRequest(formData))
     const bearer = 'Bearer ' + localStorage.getItem('token')
     return fetch(baseUrl + 'applications', {
         method: 'POST',
         body: JSON.stringify(formData),
         headers: {
+            'Content-Type':'application/json',
             'Authorization': bearer
         }
 
@@ -66,8 +69,11 @@ export const postApplication = (formData) => (dispatch) => {
                 throw errMess
             })
         .then(response => response.json())
-        .then(response => dispatch(addAppItem(response)))
-        .catch(error => alert('APPLICATION COULD NOT BE POSTED: ' + error))
+        .then(response => {
+            dispatch(addAppItem(response.app))
+            dispatch(receivedResponse(response))}
+            )
+        .catch(error => dispatch(receiveError(error.message)))
 }
 
 export const deleteApplication = (appId) => (dispatch) => {

@@ -21,17 +21,6 @@ const mapDispatchToProps = (dispatch) => ({
   registerVolunteer: (data) => dispatch(registerVolunteer(data)),
 })
 
-const { RangePicker } = DatePicker;
-const rangeConfig = {
-  rules: [
-    {
-      type: "array",
-      required: true,
-      message: "Please select time!",
-    },
-  ],
-};
-const OPTIONS = ["Teaching", "Event Organizing", "Developing", "Marketing"];
 
 function VolunteerRegistration(props) {
   const [visible, setVisible] = useState(false);
@@ -68,17 +57,7 @@ function VolunteerRegistration(props) {
     return e && e.fileList;
   };
 
-  const options = [
-    { id: "1", name: "web development" },
-    { id: "2", name: "graphics designer" },
-    { id: "3", name: "social work" },
-    { id: "4", name: "Teaching" },
-    { id: "5", name: "Marketing" },
-    { id: "6", name: "Event Hosting" },
-  ];
-  // const [data, setDate] = useState(options);
-  // const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
-
+  
   const prefixSelector = (
     <Form.Item name="prefix" noStyle>
       <Select

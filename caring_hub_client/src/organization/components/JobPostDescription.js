@@ -8,6 +8,8 @@ import { InfoCircleOutlined } from "@ant-design/icons";
 import TextArea from "antd/lib/input/TextArea";
 import UploadMedia from "../components/UploadMedia";
 import { Modal } from "antd";
+import { postProject } from "../../redux/ActionCreators/projectActions";
+import { connect } from 'react-redux'
 
 const { RangePicker } = DatePicker;
 const rangeConfig = {
@@ -19,15 +21,33 @@ const rangeConfig = {
     },
   ],
 };
-const OPTIONS = ["Teaching", "Event Organizing", "Developing", "Marketing"];
 
-export default function JobPostDescription() {
-  const [selectedItems, setSelectedItems] = useState([]);
-  const handleChange = (selectedItems) => {
-    setSelectedItems(selectedItems);
-  };
+const mapStateToProps = (state) => {
+  return {
+    Skills: state.Skills,
+    Causes: state.Causes,
+    NetRequest: state.NetRequest
+  }
+}
+const mapDispatchToProps = (dispatch) => ({
+  postProject: (data) => dispatch(postProject(data)),
+})
+function JobPostDescription(props) {
+  const [selectedSkills, setSelectedSkills] = useState([]);
+  const [selectedCauses, setSelectedCauses] = useState([]);
   const onFinish = (values) => {
-    console.log("Success:", values);
+    const project = {
+      name: values.name,
+      description: values.description,
+      startDate: values.start_end_date[0]._d,
+      endDate: values.start_end_date[1]._d,
+      location: {city: values.city},
+      skillSets: selectedSkills,
+      causeAreas: selectedCauses
+
+    }
+    console.log(project)
+    props.postProject()
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -44,17 +64,7 @@ export default function JobPostDescription() {
     return e && e.fileList;
   };
 
-  const options = [
-    { id: "1", name: "web development" },
-    { id: "2", name: "graphics designer" },
-    { id: "3", name: "social work" },
-    { id: "4", name: "Teaching" },
-    { id: "5", name: "Marketing" },
-    { id: "6", name: "Event Hosting" },
-  ];
   const [visible, setVisible] = useState(false);
-  const [data, setDate] = useState(options);
-  const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
   return (
     <Container>
       <Modal
@@ -155,7 +165,7 @@ export default function JobPostDescription() {
                   </label>
                   <br></br>
                   <br></br>
-                  <label>Give your Opportunity a title and contact:</label>
+                  <label>Give your Opportunity a title: </label>
 
                   {/* <div style={{ display: "flex", flexDirection: "column" }}>
                   <div style={{ marginTop: "10px" }}>
@@ -169,25 +179,13 @@ export default function JobPostDescription() {
                 </div> */}
 
                   <Form.Item
+                    style={{marginTop: '20px'}}
                     label="Title"
-                    name="title"
+                    name="name"
                     rules={[
                       {
                         required: true,
                         message: "Please input your Title!",
-                      },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-
-                  <Form.Item
-                    label="Contact Address"
-                    name="contact_address"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input your contact adress!",
                       },
                     ]}
                   >
@@ -302,7 +300,7 @@ export default function JobPostDescription() {
                   </label>
                   <br></br>
                   <br></br>
-                  <label>Give your Opportunity Date and Time:</label>
+                  <label>Give your Opportunity Date: </label>
                   {/* 
                 <div
                   style={{
@@ -323,6 +321,7 @@ export default function JobPostDescription() {
              
               */}
                   <Form.Item
+                    style={{marginTop:'20px'}}
                     name="start_end_date"
                     label="Select Start and End Date"
                     {...rangeConfig}
@@ -330,20 +329,6 @@ export default function JobPostDescription() {
                     <RangePicker />
                   </Form.Item>
                   <br></br>
-                  <div style={{ marginTop: "10px" }}>
-                    <Form.Item
-                      rules={[
-                        {
-                          required: true,
-                          message: "Please input number of volunteers!",
-                        },
-                      ]}
-                      name="num_of_volunteers"
-                      label="Number of volunteers"
-                    >
-                      <InputNumber min={1} />
-                    </Form.Item>
-                  </div>
 
                   <br></br>
                 </div>
@@ -477,13 +462,13 @@ export default function JobPostDescription() {
                       <Select
                         mode="multiple"
                         placeholder="Inserted are removed"
-                        value={selectedItems}
-                        onChange={handleChange}
+                        value={selectedSkills}
+                        onChange={setSelectedSkills}
                         style={{ width: "100%" }}
                       >
-                        {filteredOptions.map((item) => (
-                          <Select.Option key={item} value={item}>
-                            {item}
+                        {props.Skills.skills.map((item) => (
+                          <Select.Option key={item._id} value={item._id}>
+                            {item.name}
                           </Select.Option>
                         ))}
                       </Select>
@@ -554,13 +539,13 @@ export default function JobPostDescription() {
                       <Select
                         mode="multiple"
                         placeholder="Inserted are removed"
-                        value={selectedItems}
-                        onChange={handleChange}
+                        value={selectedCauses}
+                        onChange={setSelectedCauses}
                         style={{ width: "100%" }}
                       >
-                        {filteredOptions.map((item) => (
-                          <Select.Option key={item} value={item}>
-                            {item}
+                        {props.Causes.causes.map((item) => (
+                          <Select.Option key={item._id} value={item._id}>
+                            {item.name}
                           </Select.Option>
                         ))}
                       </Select>
@@ -601,3 +586,5 @@ export default function JobPostDescription() {
     </Container>
   );
 }
+
+export default connect(mapStateToProps, mapDispatchToProps) (JobPostDescription)

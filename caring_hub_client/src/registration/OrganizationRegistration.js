@@ -6,30 +6,36 @@ import { InfoCircleOutlined } from "@ant-design/icons";
 import TextArea from "antd/lib/input/TextArea";
 import Demo from "../organization/components/ImageUploadComponent";
 import "../organization/components/JobPostDescription.css";
-
+import { connect } from "react-redux";
+import { registerOrg } from "../redux/ActionCreators/registrationActions";
 import OrgFileUpload from "./OrgFileUpload";
 
-const { RangePicker } = DatePicker;
-const rangeConfig = {
-  rules: [
-    {
-      type: "array",
-      required: true,
-      message: "Please select time!",
-    },
-  ],
-};
-const OPTIONS = ["Teaching", "Event Organizing", "Developing", "Marketing"];
 
-export default function OrganizationRegistration() {
+
+const mapStateToProps = state => {
+  return {
+    Registration: state.Registration,
+    Skills: state.Skills,
+    Causes: state.Causes,
+  }
+}
+const mapDispatchToProps = (dispatch) => ({
+  registerOrg: (data) => dispatch(registerOrg(data)),
+})
+function OrganizationRegistration(props) {
   const [visible, setVisible] = useState(false);
   const { Option } = Select;
-  const [selectedItems, setSelectedItems] = useState([]);
-  const handleChange = (selectedItems) => {
-    setSelectedItems(selectedItems);
-  };
+
   const onFinish = (values) => {
-    console.log("Success:", values);
+    props.registerOrg({
+      name:values.name,
+      username:values.username,
+      phoneNumber:values.phone,
+      emailAddress:values.email,
+      address: { city: values.city},
+      mission: values.mission,
+      password: values.password
+    })
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -46,17 +52,7 @@ export default function OrganizationRegistration() {
     return e && e.fileList;
   };
 
-  const options = [
-    { id: "1", name: "web development" },
-    { id: "2", name: "graphics designer" },
-    { id: "3", name: "social work" },
-    { id: "4", name: "Teaching" },
-    { id: "5", name: "Marketing" },
-    { id: "6", name: "Event Hosting" },
-  ];
-  const [data, setDate] = useState(options);
-  const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
-
+ 
   const prefixSelector = (
     <Form.Item name="prefix" noStyle>
       <Select
@@ -232,7 +228,18 @@ export default function OrganizationRegistration() {
                     >
                       <Input />
                     </Form.Item>
-
+                    <Form.Item
+                      label="Username"
+                      name="username"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please input username!",
+                        },
+                      ]}
+                    >
+                      <Input />
+                    </Form.Item>
                     <Form.Item
                       name="password"
                       label="Password"
@@ -379,12 +386,12 @@ export default function OrganizationRegistration() {
                         letterSpacing: ".09em",
                       }}
                     >
-                      Organization Description
+                      Organization Mission
                     </label>
                     <br></br>
                     <br></br>
                     <label>
-                      Write a brief Description about your Organization:{" "}
+                      Write a brief mission of your Organization:{" "}
                       <span
                         style={{
                           color: "red",
@@ -396,7 +403,7 @@ export default function OrganizationRegistration() {
                     <br></br>
                     <br></br>
                     <Form.Item
-                      name="description"
+                      name="mission"
                       rules={[
                         {
                           required: true,
@@ -424,84 +431,9 @@ export default function OrganizationRegistration() {
                     width: "100%",
                   }}
                 ></div>
-                <br></br>
+                {/* <br></br> */}
                 {/* causes  */}
-                <div
-                  style={{
-                    // backgroundColor: "#eee",
-                    // padding: "30px 25px",
-                    border: "1px solid #E6E6E6",
-                    borderRadius: "10px",
-                    boxShadow: "1px 2px 6px 0 #d6d6d6",
-                    width: "100%",
-                  }}
-                >
-                  <div
-                    style={{
-                      padding: "24px 38px",
-                      backgroundColor: "white",
-                    }}
-                  >
-                    <span
-                      style={{
-                        backgroundColor: "#0B697F",
-                      }}
-                    ></span>
-                    <label
-                      style={{
-                        color: "#0B697F",
-                        position: "relative",
-                        top: " -6px",
-                        left: "0",
-                        paddingLeft: "5px",
-                        fontSize: "1em",
-                        textTransform: "uppercase",
-                        letterSpacing: ".09em",
-                      }}
-                    >
-                      Cause Area
-                    </label>
-                    <br></br>
-                    <br></br>
-                    <label>
-                      Give a Cause Area of your Organization:{" "}
-                      <span
-                        style={{
-                          color: "red",
-                        }}
-                      >
-                        *
-                      </span>
-                    </label>
-                    <div>
-                      <Form.Item
-                        name="causes"
-                        rules={[
-                          {
-                            required: true,
-                            message: "Please input cause requirments!",
-                          },
-                        ]}
-                      >
-                        <Select
-                          mode="multiple"
-                          placeholder="Inserted are removed"
-                          value={selectedItems}
-                          onChange={handleChange}
-                          style={{ width: "100%" }}
-                        >
-                          {filteredOptions.map((item) => (
-                            <Select.Option key={item} value={item}>
-                              {item}
-                            </Select.Option>
-                          ))}
-                        </Select>
-                      </Form.Item>
-                    </div>
-                    <br></br>
-                  </div>
                 </div>
-              </div>
             </Container>
             <div
               style={{
@@ -512,13 +444,6 @@ export default function OrganizationRegistration() {
                 marginRight: "20%",
               }}
             >
-              {/* <Button
-            variant="contained"
-            style={{ backgroundColor: "#FFDB15" }}
-            href="/volunteer/reviewApplication"
-          >
-            Post
-          </Button> */}
               <Button
                 style={{ marginBottom: "2rem" }}
                 type="primary"
@@ -536,3 +461,4 @@ export default function OrganizationRegistration() {
   );
 }
 //
+export default connect(mapStateToProps, mapDispatchToProps)(OrganizationRegistration)

@@ -80,8 +80,7 @@ function AppBar(props) {
                     <Link
                       class="nav-link"
                       aria-current="page"
-                      to="/volunteer/dashboard"
-                    >
+                      to={`/volunteer/dashboard/${decoded._id}`}>
                       Dashboard
                     </Link>
                   </li>
@@ -126,12 +125,12 @@ function AppBar(props) {
                   <li class="nav-item">
                     <Link
                       class={
-                        route === "/organization/volunteers" ? "nav-link active" : "nav-link"
+                        route === "/organization/postProject" ? "nav-link active" : "nav-link"
                       }
                       aria-current="page"
-                      to="/organization/volunteers"
+                      to="/organization/postProject"
                     >
-                      Volunteers
+                      Post Project
                     </Link>
                   </li>
 

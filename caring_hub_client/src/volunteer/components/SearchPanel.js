@@ -1,36 +1,50 @@
 import React from "react";
-import { useState } from "react";
-
-function SearchPanel(props) {
-  const { onSearch } = props;
-
-  const [searchText, setSearchText] = useState("");
-
-  const handleInput = (e) => {
-    const text = e.target.value;
-    setSearchText(text);
+import "./search.css";
+class Search extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      query: "",
+      results: {},
+      loading: false,
+      message: "",
+    };
+  }
+  handleOnInputChange = (event) => {
+    const query = event.target.value;
+    this.setState({ query, loading: true, message: "" });
   };
+  render() {
+    return (
+      <div className="container">
+        {/*Heading*/}
 
-  const handleEnterKeyPressed = (e) => {
-    if (e.key === "Enter") {
-      onSearch(searchText);
-    }
-  };
-
-  return (
-    <div style={{ display: "flex", justifyContent: "center" }}>
-      <div className="row control m-4">
-        <input
-          className="input "
-          onChange={handleInput}
-          onKeyPress={handleEnterKeyPressed}
-          type="text"
-          value={searchText}
-          placeholder="Search your movies"
-        />
+        {/*Search Input*/}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <div>
+            <label
+              style={{ width: "450px" }}
+              className="search-label mb-5"
+              htmlFor="search-input"
+            >
+              <input
+                type="text"
+                value=""
+                id="search-input"
+                placeholder="Search..."
+                onChange={this.handleOnInputChange}
+              />
+              <i className="fa fa-search search-icon" />
+            </label>
+          </div>
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 }
-
-export default SearchPanel;
+export default Search;

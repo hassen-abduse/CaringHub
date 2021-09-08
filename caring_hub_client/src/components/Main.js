@@ -7,7 +7,7 @@ import Footer from "../home/Footer";
 import Dashboard from "../volunteer/pages/dashboard/Dashboard";
 import FindProject from "../volunteer/pages/find-project/FindProject";
 import ReviewApplication from "../volunteer/pages/review-application/ReviewApplication";
-import { DescriptionCard } from "../volunteer/components/JobDescriptionCard";
+import DescriptionCard from "../volunteer/components/JobDescriptionCard";
 import Home from "../home/Home";
 import Landing from "../volunteer/pages/landing/Landing";
 import { fetchApplications } from "../redux/ActionCreators/appActions";
@@ -63,7 +63,6 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 class Main extends Component {
-  state = { role: "guest" };
   componentDidMount() {
     this.props.fetchApplications();
     this.props.fetchCauses();
@@ -108,7 +107,7 @@ class Main extends Component {
                 <Route exact path="/">
                   <Landing />
                 </Route>
-                <Route exact path="/volunteer/dashboard">
+                <Route exact path="/volunteer/dashboard/:volId">
                   <Dashboard />
                 </Route>
                 <Route exact path="/volunteer/findProject">
@@ -126,7 +125,7 @@ class Main extends Component {
             {decoded.role === "Org" && (
               <>
                 <Route exact path="/">
-                  <Profile />
+                  <Profile orgId={decoded._id}/>
                 </Route>
                 <Route exact path="/organization/postProject">
                   <PostProject />
