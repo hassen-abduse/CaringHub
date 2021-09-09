@@ -30,7 +30,7 @@ export default function UploadMedia() {
     >
       <div
         style={{
-          padding: "24px 38px",
+          padding: "30px 25px",
           backgroundColor: "white",
         }}
       >
@@ -45,7 +45,7 @@ export default function UploadMedia() {
             position: "relative",
             top: " -6px",
             left: "0",
-            paddingLeft: "5px",
+           // paddingLeft: "5px",
             fontSize: "1em",
             textTransform: "uppercase",
             letterSpacing: ".09em",

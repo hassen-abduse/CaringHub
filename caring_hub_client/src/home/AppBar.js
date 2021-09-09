@@ -177,13 +177,13 @@ function AppBar(props) {
                       to="/organization/applicants"
                     >
                       Applicants{" "}
-                      <Badge
+                      {/* <Badge
                         // className="site-badge-count-109"
                         count={2}
                         style={{
                           backgroundColor: "#0092FF",
                         }}
-                      />
+                      /> */}
                     </Link>
                   </li>
                 </ul>

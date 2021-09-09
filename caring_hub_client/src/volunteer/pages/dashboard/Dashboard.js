@@ -30,6 +30,7 @@ export default function Dashboard() {
             alt="Image placeholder"
             src="https://demos.creative-tim.com/argon-dashboard-pro/assets/img/theme/team-4.jpg"
           ></img>
+          
         </div>
         <div className="col-lg-3">
           <h4

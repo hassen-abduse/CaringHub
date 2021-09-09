@@ -35,19 +35,24 @@ const mapDispatchToProps = (dispatch) => ({
 function JobPostDescription(props) {
   const [selectedSkills, setSelectedSkills] = useState([]);
   const [selectedCauses, setSelectedCauses] = useState([]);
+  const [file, setSelectedFile] = useState(null)
   const onFinish = (values) => {
-    const project = {
-      name: values.name,
-      description: values.description,
-      startDate: values.start_end_date[0]._d,
-      endDate: values.start_end_date[1]._d,
-      location: {city: values.city},
-      skillSets: selectedSkills,
-      causeAreas: selectedCauses
 
-    }
-    console.log(project)
-    props.postProject()
+    var project = new FormData()
+
+    project.append("name", values.name)
+    project.append('description', values.description)
+    project.append('startDate', values.start_end_date[0]._d)
+    project.append('endDate', values.start_end_date[1]._d)
+    project.append('location', JSON.stringify({ city: values.city }))
+    project.append('skillSets', selectedSkills)
+    project.append('causeAreas', selectedCauses)
+    project.append('projectImage', file)
+
+    for (var key of project.entries()) {
+      console.log(key[0] + ', ' + key[1]);
+  }
+    props.postProject(project)
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -179,7 +184,7 @@ function JobPostDescription(props) {
                 </div> */}
 
                   <Form.Item
-                    style={{marginTop: '20px'}}
+                    style={{ marginTop: '20px' }}
                     label="Title"
                     name="name"
                     rules={[
@@ -321,7 +326,7 @@ function JobPostDescription(props) {
              
               */}
                   <Form.Item
-                    style={{marginTop:'20px'}}
+                    style={{ marginTop: '20px' }}
                     name="start_end_date"
                     label="Select Start and End Date"
                     {...rangeConfig}
@@ -554,6 +559,72 @@ function JobPostDescription(props) {
                   <br></br>
                 </div>
               </div>
+              <br></br>
+              <div
+                style={{
+                  backgroundColor: "#eee",
+                  padding: "30px 25px",
+                  border: "1px solid #E6E6E6",
+                  borderRadius: "10px",
+                  boxShadow: "1px 2px 6px 0 #d6d6d6",
+                  width: "100%",
+                }}
+              >
+                <div
+                  style={{
+                    padding: "24px 38px",
+                    backgroundColor: "white",
+                  }}
+                >
+                  <span
+                    style={{
+                      backgroundColor: "#0B697F",
+                    }}
+                  ></span>
+                  <label
+                    style={{
+                      color: "#0B697F",
+                      position: "relative",
+                      top: " -6px",
+                      left: "0",
+                      paddingLeft: "5px",
+                      fontSize: "1em",
+                      textTransform: "uppercase",
+                      letterSpacing: ".09em",
+                    }}
+                  >
+                    MEDIA
+                  </label>
+                  <br></br>
+                  <br></br>
+                  <label>
+                    Upload an image :{" "}
+                    <span
+                      style={{
+                        color: "red",
+                      }}
+                    >
+                      *
+                    </span>
+                  </label>
+                  <div>
+                    <Form.Item
+                      label="Project Image"
+                      name="projectImage"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please input your city!",
+                        },
+                      ]}
+                    >
+                      <Input type='file' name='uploadImage' onChange={(e) => setSelectedFile(e.target.files[0])} />
+
+                    </Form.Item>
+                  </div>
+                  <br></br>
+                </div>
+              </div>
             </div>
           </Container>
           <div
@@ -576,15 +647,15 @@ function JobPostDescription(props) {
               type="primary"
               htmlType="submit"
               onClick
-              onClick={() => setVisible(true)}
+              //onClick={() => setVisible(true)}
             >
               Submit
             </Button>
           </div>
         </div>
       </Form>
-    </Container>
+    </Container >
   );
 }
 
-export default connect(mapStateToProps, mapDispatchToProps) (JobPostDescription)
+export default connect(mapStateToProps, mapDispatchToProps)(JobPostDescription)

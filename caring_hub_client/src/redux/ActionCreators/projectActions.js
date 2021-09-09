@@ -45,10 +45,9 @@ export const postProject = (formData) => (dispatch) => {
     const bearer = 'Bearer ' + localStorage.getItem('token')
     return fetch(baseUrl + 'projects', {
         method: 'POST',
-        body: JSON.stringify(formData),
+        body: formData,
         headers: {
-            'Content-Type':'application/json',
-            'Authorization': bearer
+            'Authorization': bearer,
         }
 
     })
