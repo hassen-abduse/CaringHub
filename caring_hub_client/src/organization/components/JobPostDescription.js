@@ -49,9 +49,7 @@ function JobPostDescription(props) {
     project.append('causeAreas', selectedCauses)
     project.append('projectImage', file)
 
-    for (var key of project.entries()) {
-      console.log(key[0] + ', ' + key[1]);
-  }
+
     props.postProject(project)
   };
 
@@ -59,43 +57,8 @@ function JobPostDescription(props) {
     console.log("Failed:", errorInfo);
   };
 
-  const normFile = (e) => {
-    console.log("Upload event:", e);
-
-    if (Array.isArray(e)) {
-      return e;
-    }
-
-    return e && e.fileList;
-  };
-
-  const [visible, setVisible] = useState(false);
   return (
     <Container>
-      <Modal
-        title="Upload Files"
-        centered
-        visible={visible}
-        // mask={false}
-        maskStyle={{
-          backgroundColor: "rgba(0, 0, 0, 0.25)",
-        }}
-        onOk={() => setVisible(false)}
-        onCancel={() => setVisible(false)}
-        width={700}
-        footer={[
-          <Button
-            key="back"
-            size="large"
-            color="primary"
-            onClick={() => setVisible(false)}
-          >
-            Done
-          </Button>,
-        ]}
-      >
-        <UploadMedia />
-      </Modal>
       <Form
         name="basic"
         initialValues={{
@@ -636,18 +599,9 @@ function JobPostDescription(props) {
               marginRight: "20%",
             }}
           >
-            {/* <Button
-            variant="contained"
-            style={{ backgroundColor: "#FFDB15" }}
-            href="/volunteer/reviewApplication"
-          >
-            Post
-          </Button> */}
             <Button
               type="primary"
               htmlType="submit"
-              onClick
-              //onClick={() => setVisible(true)}
             >
               Submit
             </Button>

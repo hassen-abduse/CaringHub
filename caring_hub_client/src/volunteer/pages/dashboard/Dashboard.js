@@ -28,7 +28,7 @@ export default function Dashboard() {
           <img
             style={{ borderRadius: "100%", width: "80px", height: "80px" }}
             alt="Image placeholder"
-            src="https://demos.creative-tim.com/argon-dashboard-pro/assets/img/theme/team-4.jpg"
+            src={volunteer.profilePicture? volunteer.profilePicture:"https://demos.creative-tim.com/argon-dashboard-pro/assets/img/theme/team-4.jpg"}
           ></img>
           
         </div>
@@ -152,6 +152,9 @@ export default function Dashboard() {
 
           <h6 className="mt-4 mb-0 teal">Phone Number</h6>
           <p>{volunteer.phoneNumber}</p>
+          
+          <h6 className="mt-4 mb-0 teal">My Resume</h6>
+          <a href={volunteer.resume}>My Resume</a>
         </div>
         <div style={{}} class="col-lg-4">
           <h4 className="teal">Background</h4>
