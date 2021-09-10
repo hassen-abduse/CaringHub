@@ -154,7 +154,7 @@ export default function Dashboard() {
           <p>{volunteer.phoneNumber}</p>
           
           <h6 className="mt-4 mb-0 teal">My Resume</h6>
-          <a href={volunteer.resume}>My Resume</a>
+          <a type='application/pdf' href={volunteer.resume}>My Resume</a>
         </div>
         <div style={{}} class="col-lg-4">
           <h4 className="teal">Background</h4>
