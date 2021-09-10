@@ -188,7 +188,6 @@ export default function Dashboard() {
           <h4 className="teal">Location</h4>
 
           <h6 className="teal">Address</h6>
-          <p className="m-0">Shegole</p>
           <p className="m-0">{volunteer.address.city}</p>
           <p className="m-0">Ethiopia</p>
 

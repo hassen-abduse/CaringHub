@@ -45,11 +45,10 @@ function JobPostDescription(props) {
     project.append('startDate', values.start_end_date[0]._d)
     project.append('endDate', values.start_end_date[1]._d)
     project.append('location', JSON.stringify({ city: values.city }))
-    project.append('skillSets', selectedSkills)
-    project.append('causeAreas', selectedCauses)
+    project.append('skillSets', JSON.stringify(selectedSkills))
+    project.append('causeAreas', JSON.stringify(selectedCauses))
     project.append('projectImage', file)
-
-
+    
     props.postProject(project)
   };
 

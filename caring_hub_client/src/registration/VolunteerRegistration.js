@@ -35,8 +35,8 @@ function VolunteerRegistration(props) {
     volunteer.append('username', values.username)
     volunteer.append('phoneNumber', values.prefix + values.phone)
     volunteer.append('emailAddress', values.email)
-    volunteer.append('skillSets', selectedSkills)
-    volunteer.append('causeAreas', selectedCauses)
+    volunteer.append('skillSets', JSON.stringify(selectedSkills))
+    volunteer.append('causeAreas', JSON.stringify(selectedCauses))
     volunteer.append('password', values.password)
     volunteer.append('address', JSON.stringify({ city: values.city }))
     volunteer.append('VolPP', profile)
@@ -48,8 +48,6 @@ function VolunteerRegistration(props) {
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
-
-
 
   const prefixSelector = (
     <Form.Item name="prefix" noStyle>

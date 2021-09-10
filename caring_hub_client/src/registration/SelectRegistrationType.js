@@ -61,7 +61,7 @@ export default function SelectRegistrationType() {
                     <div class="gradient-floor blue-to-purple"></div>
                   </div>
                 </Link>
-                <Link className="m-2" href="/organizationRegistration">
+                <Link className="m-2" to="/organizationRegistration">
                   <div class="card">
                     <div>
                       <img

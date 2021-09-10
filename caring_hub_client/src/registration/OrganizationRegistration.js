@@ -8,10 +8,6 @@ import Demo from "../organization/components/ImageUploadComponent";
 import "../organization/components/JobPostDescription.css";
 import { connect } from "react-redux";
 import { registerOrg } from "../redux/ActionCreators/registrationActions";
-import OrgFileUpload from "./OrgFileUpload";
-
-
-
 const mapStateToProps = state => {
   return {
     Registration: state.Registration,
@@ -23,36 +19,28 @@ const mapDispatchToProps = (dispatch) => ({
   registerOrg: (data) => dispatch(registerOrg(data)),
 })
 function OrganizationRegistration(props) {
-  const [visible, setVisible] = useState(false);
   const { Option } = Select;
-
+  const [logo, setLogo] = useState(null)
+  const [legalDoc, setLegalDoc] = useState(null)
   const onFinish = (values) => {
-    props.registerOrg({
-      name:values.name,
-      username:values.username,
-      phoneNumber:values.phone,
-      emailAddress:values.email,
-      address: { city: values.city},
-      mission: values.mission,
-      password: values.password
-    })
+    const org = new FormData()
+    org.append('name', values.name)
+    org.append('username', values.username)
+    org.append('phoneNumber', values.phone)
+    org.append('emailAddress', values.email)
+    org.append('address', JSON.stringify({ city: values.city }))
+    org.append('mission', values.mission)
+    org.append('password', values.password)
+    org.append('logo', logo)
+    org.append('legalDoc', legalDoc)
+    
+    props.registerOrg(org)
   };
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
 
-  const normFile = (e) => {
-    console.log("Upload event:", e);
-
-    if (Array.isArray(e)) {
-      return e;
-    }
-
-    return e && e.fileList;
-  };
-
- 
   const prefixSelector = (
     <Form.Item name="prefix" noStyle>
       <Select
@@ -68,30 +56,6 @@ function OrganizationRegistration(props) {
   return (
     <div style={{ backgroundColor: "#EEEEEE" }}>
       <Container style={{ backgroundColor: "#EEEEEE" }}>
-        <Modal
-          title="Upload Files"
-          centered
-          visible={visible}
-          // mask={false}
-          maskStyle={{
-            backgroundColor: "rgba(0, 0, 0, 0.25)",
-          }}
-          onOk={() => setVisible(false)}
-          onCancel={() => setVisible(false)}
-          width={700}
-          footer={[
-            <Button
-              key="back"
-              size="large"
-              color="primary"
-              onClick={() => setVisible(false)}
-            >
-              Done
-            </Button>,
-          ]}
-        >
-          <OrgFileUpload />
-        </Modal>
         <Form
           labelCol={{ span: 6 }}
           wrapperCol={{ span: 12 }}
@@ -172,16 +136,6 @@ function OrganizationRegistration(props) {
                       Give your Organizations Basic Informations :
                     </label>
 
-                    {/* <div style={{ display: "flex", flexDirection: "column" }}>
-                  <div style={{ marginTop: "10px" }}>
-                    <label>Title</label> &nbsp;
-                    <input type="text" className="inputs" />
-                  </div>
-                  <div style={{ marginTop: "10px" }}>
-                    <label>Contact</label>
-                    <input type="text" className="inputs" />
-                  </div>
-                </div> */}
 
                     <Form.Item
                       label="Organization Name"
@@ -418,22 +372,100 @@ function OrganizationRegistration(props) {
                   </div>
                 </div>
                 <br></br>
-                {/* media */}
-                <br></br>
-                {/* logo */}
                 <div
                   style={{
-                    // backgroundColor: "#eee",
-                    // padding: "30px 25px",
                     border: "1px solid #E6E6E6",
                     borderRadius: "10px",
                     boxShadow: "1px 2px 6px 0 #d6d6d6",
                     width: "100%",
                   }}
                 ></div>
-                {/* <br></br> */}
-                {/* causes  */}
+                <div
+                  style={{
+                    border: "1px solid #E6E6E6",
+                    borderRadius: "10px",
+                    boxShadow: "1px 2px 6px 0 #d6d6d6",
+                    width: "100%",
+                  }}
+                >
+                  <div
+                    style={{
+                      padding: "24px 38px",
+                      backgroundColor: "white",
+                    }}
+                  >
+                    <span
+                      style={{
+                        backgroundColor: "#0B697F",
+                      }}
+                    ></span>
+                    <label
+                      style={{
+                        color: "#0B697F",
+                        position: "relative",
+                        top: " -6px",
+                        left: "0",
+                        paddingLeft: "5px",
+                        fontSize: "1em",
+                        textTransform: "uppercase",
+                        letterSpacing: ".09em",
+                      }}
+                    >
+                      MEDIA
+                    </label>
+                    <br></br>
+                    <br></br>
+                    <label>
+                      Upload your Logo :{" "}
+                      <span
+                        style={{
+                          color: "red",
+                        }}
+                      >
+                        *
+                      </span>
+                    </label>
+                    <div>
+                      <Form.Item
+                        name="logo"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Please input logo!",
+                          },
+                        ]}
+                      >
+                        <Input type='file' name='logo' onChange={(e) => setLogo(e.target.files[0])} />
+
+                      </Form.Item>
+
+                      <label>
+                        Upload a Legal Doc :{" "}
+                        <span
+                          style={{
+                            color: "red",
+                          }}
+                        >
+                          *
+                        </span>
+                      </label>
+                      <Form.Item
+                        name="legalDoc"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Please input your legal doc!",
+                          },
+                        ]}
+                      >
+                        <Input type='file' name='legalDoc' onChange={(e) => setLegalDoc(e.target.files[0])} />
+
+                      </Form.Item>
+                    </div>
+                    <br></br>
+                  </div>
                 </div>
+              </div>
             </Container>
             <div
               style={{
@@ -449,7 +481,6 @@ function OrganizationRegistration(props) {
                 type="primary"
                 htmlType="submit"
                 className="btn-solid-reg"
-                onClick={() => setVisible(true)}
               >
                 Submit
               </Button>

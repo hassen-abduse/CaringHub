@@ -5,6 +5,7 @@ import { loginUser } from "../redux/ActionCreators/authActions";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import { Link, Redirect } from "react-router-dom";
 import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
+import { CircularProgress } from "@material-ui/core";
 const mapStateToProps = (state) => {
   return {
     auth: state.auth,
@@ -103,7 +104,7 @@ class Login extends React.Component {
                       class="btn btn-primary text-center"
                     >
                       {this.props.auth.isLoading === true
-                        ? "Please wait..."
+                        ?<CircularProgress color='#fff' size={'20px'}></CircularProgress>
                         : "Login"}
                     </button>
                     {this.props.auth.errMess && (

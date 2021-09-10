@@ -191,13 +191,13 @@ function AppBar(props) {
             </ul>
             {decoded.role == "" && (
               <span class="nav-item">
-                <Link class="btn-solid-sm" to="/login">
+                <Link class="btn-solid-sm " to="/login">
                   Login
                 </Link>
               </span>
             )}
             {decoded.role === "" && (
-              <span class="nav-item" style={{ marginLeft: "2px" }}>
+              <span class="nav-item" style={{ marginLeft: "10px" }}>
                 <Link class="btn-outline-sm" to="/register">
                   Register
                 </Link>
