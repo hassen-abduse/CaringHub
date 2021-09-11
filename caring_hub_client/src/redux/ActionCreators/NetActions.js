@@ -7,10 +7,10 @@ export const netRequest = (data) => {
     }
   }
   
-  export const receivedResponse = (response) => {
+  export const receivedResponse = () => {
     return {
       type: actionTypes.NET_REQUEST_SUCCESS,
-      status: response.statusMessage
+      success: true
     }
   }
   export const receiveError = (message) => {

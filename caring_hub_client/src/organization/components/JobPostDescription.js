@@ -7,9 +7,17 @@ import { Form, Input, Button, DatePicker, InputNumber, Select } from "antd";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import TextArea from "antd/lib/input/TextArea";
 import UploadMedia from "../components/UploadMedia";
-import { Modal } from "antd";
 import { postProject } from "../../redux/ActionCreators/projectActions";
 import { connect } from 'react-redux'
+import Fade from '@material-ui/core/Fade';
+import Modal from '@material-ui/core/Modal';
+import { makeStyles } from '@material-ui/core/styles';
+import { CircularProgress, DialogTitle, Box } from "@material-ui/core";
+import { Alert, AlertTitle } from '@material-ui/lab';
+import { Redirect } from "react-router-dom";
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+
 
 const { RangePicker } = DatePicker;
 const rangeConfig = {
@@ -32,14 +40,42 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => ({
   postProject: (data) => dispatch(postProject(data)),
 })
+
+const useStyles = makeStyles((theme) => ({
+  modal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  paper: {
+    backgroundColor: theme.palette.background.paper,
+    border: '2px solid #000',
+    boxShadow: theme.shadows[5],
+    width: '50%',
+    padding: theme.spacing(0, 3, 3, 3),
+  },
+}));
+
+
 function JobPostDescription(props) {
   const [selectedSkills, setSelectedSkills] = useState([]);
   const [selectedCauses, setSelectedCauses] = useState([]);
   const [file, setSelectedFile] = useState(null)
+  const [open, setOpen] = useState(false)
+  const classes = useStyles()
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const onFinish = (values) => {
-
+    props.NetRequest.errMess = null
+    props.NetRequest.success = false
     var project = new FormData()
-
     project.append("name", values.name)
     project.append('description', values.description)
     project.append('startDate', values.start_end_date[0]._d)
@@ -48,16 +84,72 @@ function JobPostDescription(props) {
     project.append('skillSets', JSON.stringify(selectedSkills))
     project.append('causeAreas', JSON.stringify(selectedCauses))
     project.append('projectImage', file)
-    
     props.postProject(project)
+    handleOpen()
   };
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
 
+
+
   return (
     <Container>
+      <Modal
+        className={classes.modal}
+        open={open}
+        disableBackdropClick
+        disableEscapeKeyDown
+        onClose={handleClose}
+        closeAfterTransition
+      >
+        <Fade in={open}>
+          <div className={classes.paper}>
+            {props.NetRequest.isLoading === false ?
+              <DialogTitle>
+                <Box display="flex" justifyContent='flex-end'>
+                  <Box>
+                    <IconButton onClick={handleClose}>
+                      <CloseIcon />
+                    </IconButton>
+                  </Box>
+                </Box>
+              </DialogTitle>
+              : null
+            }
+            {
+              props.NetRequest.isLoading === true ?
+                <div style={{ padding: '20px', paddingTop: '40px', paddingLeft: '40px' }}>
+                  <div>
+                    <CircularProgress />
+                    <br></br>
+                    <strong>Please wait...</strong>
+                  </div>
+
+
+                </div>
+                : null
+            }
+            {
+              props.NetRequest.errMess &&
+
+              <Alert style={{ padding: '20px' }} severity="error">
+                <AlertTitle style={{ fontWeight: 'bold' }}>Error</AlertTitle>
+                <strong>{props.NetRequest.errMess}</strong>
+              </Alert>
+            }
+            {
+              props.NetRequest.success === true ?
+                <Alert style={{ padding: '20px' }} severity="success">
+                  <AlertTitle style={{ fontWeight: 'bold' }}>Success</AlertTitle>
+                  <strong>Successfully Posted!</strong>
+                </Alert>
+                : null
+            }
+          </div>
+        </Fade>
+      </Modal>
       <Form
         name="basic"
         initialValues={{

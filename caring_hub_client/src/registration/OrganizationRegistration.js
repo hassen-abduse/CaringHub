@@ -1,13 +1,21 @@
 import React, { useState } from "react";
 import Container from "@material-ui/core/Container";
-import { Modal } from "antd";
 import { Form, Input, Button, DatePicker, InputNumber, Select } from "antd";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import TextArea from "antd/lib/input/TextArea";
 import Demo from "../organization/components/ImageUploadComponent";
 import "../organization/components/JobPostDescription.css";
 import { connect } from "react-redux";
+import Modal from '@material-ui/core/Modal';
+import { CircularProgress, DialogTitle, Box } from "@material-ui/core";
+import { Alert, AlertTitle } from '@material-ui/lab';
+import Fade from '@material-ui/core/Fade';
+import { makeStyles } from '@material-ui/core/styles';
+import { Redirect } from "react-router-dom";
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 import { registerOrg } from "../redux/ActionCreators/registrationActions";
+
 const mapStateToProps = state => {
   return {
     Registration: state.Registration,
@@ -18,11 +26,41 @@ const mapStateToProps = state => {
 const mapDispatchToProps = (dispatch) => ({
   registerOrg: (data) => dispatch(registerOrg(data)),
 })
+
+const useStyles = makeStyles((theme) => ({
+  modal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  paper: {
+    backgroundColor: theme.palette.background.paper,
+    border: '2px solid #000',
+    boxShadow: theme.shadows[5],
+    width: '50%',
+    padding: theme.spacing(0, 3, 3, 3),
+  },
+}));
+
+
 function OrganizationRegistration(props) {
+
   const { Option } = Select;
   const [logo, setLogo] = useState(null)
   const [legalDoc, setLegalDoc] = useState(null)
+  const [open, setOpen] = useState(false)
+  const classes = useStyles()
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const onFinish = (values) => {
+    props.Registration.errMess = null
     const org = new FormData()
     org.append('name', values.name)
     org.append('username', values.username)
@@ -33,11 +71,14 @@ function OrganizationRegistration(props) {
     org.append('password', values.password)
     org.append('logo', logo)
     org.append('legalDoc', legalDoc)
-    
     props.registerOrg(org)
+    console.log(open)
+    handleOpen()
   };
 
   const onFinishFailed = (errorInfo) => {
+   // handleOpen()
+    //console.log(open)
     console.log("Failed:", errorInfo);
   };
 
@@ -53,8 +94,64 @@ function OrganizationRegistration(props) {
       </Select>
     </Form.Item>
   );
+
+  if (props.Registration.success === true) {
+
+    return <Redirect to='/login' />
+  }
   return (
     <div style={{ backgroundColor: "#EEEEEE" }}>
+      <Modal
+        className={classes.modal}
+        open={open}
+        disableBackdropClick
+        disableEscapeKeyDown
+        onClose={handleClose}
+        closeAfterTransition
+      >
+        <Fade in={open}>
+          <div className={classes.paper}>
+                <DialogTitle>
+                  <Box display="flex" justifyContent='flex-end'>
+                    <Box>
+                      <IconButton onClick={handleClose}>
+                        <CloseIcon />
+                      </IconButton>
+                    </Box>
+                  </Box>
+                </DialogTitle>
+            {
+              props.Registration.isLoading === true ?
+                <div style={{ padding: '20px', paddingLeft:'40px'}}>
+                  <div>
+                    <CircularProgress />
+                    <br></br>
+                    <strong>Please wait...</strong>
+                  </div>
+
+
+                </div>
+                : null
+            }
+            {
+              props.Registration.errMess &&
+
+              <Alert style={{ padding: '20px' }} severity="error">
+                <AlertTitle style={{ fontWeight: 'bold' }}>Error</AlertTitle>
+                <strong>{props.Registration.errMess}</strong>
+              </Alert>
+            }
+            {
+              props.Registration.success === true ?
+                <Alert style={{ padding: '20px' }} severity="success">
+                  <AlertTitle style={{ fontWeight: 'bold' }}>Success</AlertTitle>
+                  <strong>Registration Succesfull!</strong>
+                </Alert>
+                : null
+            }
+          </div>
+        </Fade>
+      </Modal>
       <Container style={{ backgroundColor: "#EEEEEE" }}>
         <Form
           labelCol={{ span: 6 }}

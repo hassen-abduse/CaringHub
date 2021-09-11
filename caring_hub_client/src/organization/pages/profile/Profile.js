@@ -3,20 +3,70 @@ import { Badge, Rate } from "antd";
 import { useParams } from "react-router";
 import { useState, useEffect } from "react";
 import { baseUrl } from "../../../redux/shared/baseUrl";
+import { Alert, AlertTitle } from '@material-ui/lab';
+import { CircularProgress, Container } from "@material-ui/core";
 
-export default function Profile(props) {
-  const orgId = props.orgId
+export default function Profile() {
+  const { orgId } = useParams()
   const [org, setOrg] = useState({ address: {} })
-
+  const [isLoaded, setIsLoaded] = useState(false)
+  const [error, setError] = useState(null)
   useEffect(async () => {
-    const response = await fetch(baseUrl + 'orgs/' + orgId)
-    if (response.ok) {
-      const data = await response.json()
-      setOrg(data)
-    }
+    fetch(baseUrl + 'orgs/' + orgId)
+    .then(response => {
+      if (response.ok) {
+        return response
+      }
+      else {
+        const error = new Error('Error ' + response.status + ':' + response.statusText)
+        error.response = response
+        throw error
+      }
+    },
+      error => {
+        const errorM = new Error(error.message)
+        throw errorM
+      })
+    .then(response => response.json())
+    .then(response => {
+      setOrg(response)
+      setIsLoaded(true)
+    })
+    .catch(error => {
+      setError(error.message)
+      setIsLoaded(true)
+    })
 
   }, [])
-  return (
+  if (error) return (
+    <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
+      <div className='container'>
+        <div className='row' style={{ display:'flex', justifyContent: 'center',}}>
+          <Alert style={{margin: '50px',padding: '50px'}}severity="error">
+            <AlertTitle style={{fontWeight:'bold'}}>Error</AlertTitle>
+            <strong>{error}</strong>
+          </Alert>
+        </div>
+      </div>
+
+    </Container >
+
+  )
+  else if (!isLoaded) return (
+    <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
+      <div class='container'>
+        <div className='row'>
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '100px', marginBottom: '75px' }}>
+            <CircularProgress size={'50px'} />
+
+          </div>
+          <p style={{ textAlign: 'center', fontSize: '25px', fontWeight: 'bold' }}>Loading...</p>
+        </div>
+      </div>
+    </Container>
+  )
+
+  else return (
     <div style={{ marginTop: "100px" }} className="container">
       <div style={{}} className="row">
         <div

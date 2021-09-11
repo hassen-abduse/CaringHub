@@ -105,13 +105,17 @@ class Main extends Component {
               <OrganizationRegistration />
             </Route>
 
+            <Route exact path="/organization/dashboard/:orgId">
+              <Profile />
+            </Route>
+            <Route exact path="/volunteer/dashboard/:volId">
+              <Dashboard />
+            </Route>
+
             {decoded.role === "Vol" && (
               <>
                 <Route exact path="/">
                   <Landing />
-                </Route>
-                <Route exact path="/volunteer/dashboard/:volId">
-                  <Dashboard />
                 </Route>
                 <Route exact path="/volunteer/findProject">
                   <FindProject />
@@ -128,14 +132,10 @@ class Main extends Component {
             {decoded.role === "Org" && (
               <>
                 <Route exact path="/">
-                  <Profile orgId={decoded._id}/>
+                  <Home />
                 </Route>
                 <Route exact path="/organization/postProject">
                   <PostProject />
-                </Route>
-
-                <Route exact path="/organization/volunteers">
-                  <Volunteers />
                 </Route>
                 <Route exact path="/organization/volunteers">
                   <Volunteers />

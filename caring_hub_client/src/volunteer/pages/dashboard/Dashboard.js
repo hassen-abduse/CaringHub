@@ -1,8 +1,10 @@
-import { Button, Container, Grid, Paper, Typography } from "@material-ui/core";
+import { Button, Grid, Paper, Typography } from "@material-ui/core";
 import React, { Component } from "react";
 import ProfileCard from "../../components/ProfileCard";
 import SentApplicationCard from "../../components/SentApplicationCard";
 import Img from "../../../assets/img/bg2.jpg";
+import { CircularProgress, Container } from "@material-ui/core";
+import { Alert, AlertTitle } from '@material-ui/lab';
 import { Badge, Rate } from "antd";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
@@ -10,27 +12,75 @@ import { baseUrl } from "../../../redux/shared/baseUrl";
 
 export default function Dashboard() {
   const { volId } = useParams()
-  const [volunteer, setVolunteer] = useState({skillSets: [], address:{}})
-
+  const [volunteer, setVolunteer] = useState({ skillSets: [], address: {} })
+  const [isLoaded, setIsLoaded] = useState(false)
+  const [error, setError] = useState(null)
   useEffect(async () => {
-    const response = await fetch(baseUrl + 'volunteers/' + volId)
-    if (response.ok) {
-      const data = await response.json()
-      setVolunteer(data)
-    }
+    fetch(baseUrl + 'volunteers/' + volId)
+      .then(response => {
+        if (response.ok) {
+          return response
+        }
+        else {
+          const error = new Error('Error ' + response.status + ':' + response.statusText)
+          error.response = response
+          throw error
+        }
+      },
+        error => {
+          const errorM = new Error(error.message)
+          throw errorM
+        })
+      .then(response => response.json())
+      .then(response => {
+        setVolunteer(response)
+        setIsLoaded(true)
+      })
+      .catch(error => {
+        setError(error.message)
+        setIsLoaded(true)
+      })
 
   }, [])
-  console.log(volunteer)
-  return (
+  if (error) return (
+    <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
+      <div className='container'>
+        <div className='row' style={{ display: 'flex', justifyContent: 'center', }}>
+          <Alert style={{ margin: '50px', padding: '50px' }} severity="error">
+            <AlertTitle style={{ fontWeight: 'bold' }}>Error</AlertTitle>
+            <strong>{error}</strong>
+          </Alert>
+        </div>
+      </div>
+
+    </Container >
+
+  )
+  else if (!isLoaded) return (
+    <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
+      <div class='container'>
+        <div className='row'>
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '100px', marginBottom: '75px' }}>
+            <CircularProgress size={'50px'} />
+
+          </div>
+          <p style={{ textAlign: 'center', fontSize: '25px', fontWeight: 'bold' }}>Loading...</p>
+        </div>
+      </div>
+    </Container>
+  )
+
+
+  else return (
     <div style={{ marginTop: "100px" }} className="container">
       <div style={{}} className="row">
         <div className="col-lg-1 pr-2">
           <img
             style={{ borderRadius: "100%", width: "80px", height: "80px" }}
             alt="Image placeholder"
-            src={volunteer.profilePicture? volunteer.profilePicture:"https://demos.creative-tim.com/argon-dashboard-pro/assets/img/theme/team-4.jpg"}
+            src={volunteer.profilePicture ? volunteer.profilePicture : "https://demos.creative-tim.com/argon-dashboard-pro/assets/img/theme/team-4.jpg"}
           ></img>
-          
+
         </div>
         <div className="col-lg-3">
           <h4
@@ -152,7 +202,7 @@ export default function Dashboard() {
 
           <h6 className="mt-4 mb-0 teal">Phone Number</h6>
           <p>{volunteer.phoneNumber}</p>
-          
+
           <h6 className="mt-4 mb-0 teal">My Resume</h6>
           <a type='application/pdf' href={volunteer.resume}>My Resume</a>
         </div>
