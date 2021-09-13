@@ -5,39 +5,34 @@ import SearchProject from "./SearchProject";
 
 import SearchPanel from "./SearchPanel";
 import { ProjectCard } from "./ProjectCard";
-import { fetchProjects } from '../../redux/ActionCreators/projectActions'
+import { fetchProjects } from "../../redux/ActionCreators/projectActions";
 import CardHolder from "./CardHolder";
 import MovieSource from "./MovieSource";
-import {connect} from 'react-redux'
+import { connect } from "react-redux";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-      Projects: state.Projects
-  }
-}
+    Projects: state.Projects,
+  };
+};
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchProjects: () => dispatch(fetchProjects())
-})
+  fetchProjects: () => dispatch(fetchProjects()),
+});
 
 function HeroBox(props) {
-  // const onSearch = async (text) => {
-  //   const results = await MovieSource.get("/", {
-  //     params: { s: text, i: "tt3896198", apiKey: "821d565d" },
-  //   });
+  const [query, setQuery] = useState("");
+  const filteredProjects = props.Projects.projects.filter((pro) =>
+    pro.name.toLowerCase().includes(query.toLowerCase())
+  );
 
-  //   setState((prevState) => {
-  //     return { ...prevState, results: results };
-  //   });
-  // };
-  console.log(props.Projects.projects)
   return (
     <Box>
       <div
         class="bg-image p-5 text-center shadow-1-strong rounded text-white"
         style={{
           marginBottom: 0,
-          minHeight: "400px",
+          minHeight: "250px",
           // backgroundImage: `url(${Imge})`,
           backgroundColor: "#191E31",
         }}
@@ -70,9 +65,10 @@ function HeroBox(props) {
             We think this projects could be a great suit for you{" "}
           </p>
         </div>
-        {/* </div><SearchPanel onSearch={onSearch} /> */}
+        {/* <SearchPanel onSearch={onSearch} /> */}
+        <SearchPanel value={query} onChange={(e) => setQuery(e.target.value)} />
       </div>
-      <CardHolder results={props.Projects.projects} />
+      <CardHolder results={filteredProjects} />
     </Box>
   );
 }

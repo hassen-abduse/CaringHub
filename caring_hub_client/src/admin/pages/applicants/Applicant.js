@@ -27,6 +27,7 @@ import { Modal } from "antd";
 import ClearIcon from "@material-ui/icons/Clear";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
 import ApplicantDetail from "./ApplicantDetail";
+import ShowApplicantOrgDialog from "./ShowApplicantOrgDialog";
 
 function createData(firstName, lastName, phone, email, address, skill, areas) {
   return { firstName, lastName, phone, email, address, skill, areas };
@@ -147,19 +148,10 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding="checkbox">
-          <Checkbox
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{ "aria-label": "select all desserts" }}
-          />
-        </TableCell>
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={headCell.numeric ? "right" : "left"}
-            padding={headCell.disablePadding ? "none" : "normal"}
+            align={headCell.id === "verify" ? "center" : "left"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
@@ -241,7 +233,7 @@ const EnhancedTableToolbar = (props) => {
           id="tableTitle"
           component="div"
         >
-          Applicant Organizations
+          Applicants
         </Typography>
       )}
 
@@ -362,148 +354,149 @@ export default function Applicants() {
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
   const [visible, setVisible] = useState(false);
   return (
-    <div className={classes.root}>
-      <Paper className={classes.paper}>
-        <EnhancedTableToolbar numSelected={selected.length} />
-        <TableContainer>
-          <Table
-            className={classes.table}
-            aria-labelledby="tableTitle"
-            size={dense ? "small" : "medium"}
-            aria-label="enhanced table"
+    <div className="container">
+      <Modal
+        title="Applicant Organizations Information"
+        centered
+        visible={visible}
+        // mask={false}
+        maskStyle={{
+          backgroundColor: "rgba(0, 0, 0, 0.25)",
+        }}
+        // onOk={() => setVisible(false)}
+        onCancel={() => setVisible(false)}
+        width={1000}
+        footer={[
+          <Button
+            key="back"
+            size="large"
+            color="primary"
+            onClick={() => setVisible(false)}
           >
-            <EnhancedTableHead
-              classes={classes}
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={rows.length}
-            />
-            <TableBody>
-              {stableSort(rows, getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  const isItemSelected = isSelected(index);
-                  const labelId = `enhanced-table-checkbox-${index}`;
+            View documents
+          </Button>,
+        ]}
+      >
+        <ShowApplicantOrgDialog />
+      </Modal>
+      <div className={classes.root}>
+        <Paper className={classes.paper}>
+          <EnhancedTableToolbar numSelected={selected.length} />
+          <TableContainer>
+            <Table
+              className={classes.table}
+              aria-labelledby="tableTitle"
+              size={dense ? "small" : "medium"}
+              aria-label="enhanced table"
+            >
+              <EnhancedTableHead
+                classes={classes}
+                numSelected={selected.length}
+                order={order}
+                orderBy={orderBy}
+                onSelectAllClick={handleSelectAllClick}
+                onRequestSort={handleRequestSort}
+                rowCount={rows.length}
+              />
+              <TableBody style={{ paddingLeft: "20px" }}>
+                {stableSort(rows, getComparator(order, orderBy))
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row, index) => {
+                    const isItemSelected = isSelected(index);
+                    const labelId = `enhanced-table-checkbox-${index}`;
 
-                  return (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={index}
-                      selected={isItemSelected}
-                    >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={isItemSelected}
-                          inputProps={{ "aria-labelledby": labelId }}
-                          onClick={(event) => handleClick(event, index)}
-                        />
-                      </TableCell>
-                      <TableCell
-                        component="th"
-                        id={labelId}
-                        scope="row"
-                        padding="none"
+                    return (
+                      <TableRow
+                        hover
+                        role="checkbox"
+                        aria-checked={isItemSelected}
+                        tabIndex={-1}
+                        // onClick={() => setVisible(true)}
+                        key={index}
+                        selected={isItemSelected}
                       >
-                        {row.firstName + " " + row.lastName}
-                      </TableCell>
-
-                      <TableCell align="right">{row.address}</TableCell>
-
-                      <TableCell align="right">{row.areas}</TableCell>
-                      <TableCell>
-                        <Grid
-                          container
+                        <TableCell
                           style={{
-                            margin: "10px",
-                            alignContent: "center",
-                            justifyContent: "space-between",
-                            width: "200px",
-                            marginLeft: "30px",
+                            cursor: "pointer",
+                          }}
+                          component="th"
+                          id={labelId}
+                          scope="row"
+                          onClick={() => setVisible(true)}
+                        >
+                          {row.firstName + " " + row.lastName}
+                        </TableCell>
+
+                        <TableCell align="left">{row.address}</TableCell>
+
+                        <TableCell align="left">{row.areas}</TableCell>
+                        <TableCell
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
                           }}
                         >
                           <Grid
-                            item
+                            container
                             style={{
-                              backgroundColor: "green",
-                              borderRadius: "5px",
+                              margin: "10px",
+                              alignContent: "center",
+                              justifyContent: "space-between",
+                              width: "200px",
+                              marginLeft: "30px",
                             }}
                           >
-                            <Button
-                              type="primary"
-                              onClick={() => setVisible(true)}
-                              style={{}}
+                            <Grid
+                              item
+                              style={{
+                                // backgroundColor: "green",
+                                borderRadius: "5px",
+                              }}
                             >
-                              accept
-                            </Button>
-                            <Modal
-                              title="Applicant Detail"
-                              centered
-                              visible={visible}
-                              onOk={() => setVisible(false)}
-                              onCancel={() => setVisible(false)}
-                              width={1000}
+                              <Button variant="contained" color="primary">
+                                Accept
+                              </Button>
+                            </Grid>
+
+                            <Grid
+                              item
+                              style={{
+                                backgroundColor: "red",
+                                borderRadius: "5px",
+                              }}
                             >
-                              <ApplicantDetail />
-                            </Modal>
+                              <Button variant="contained" color="secondary">
+                                Decline
+                              </Button>
+                            </Grid>
                           </Grid>
-                          <Grid
-                            item
-                            style={{
-                              backgroundColor: "red",
-                              borderRadius: "5px",
-                            }}
-                          >
-                            <Button
-                              type="primary"
-                              onClick={() => setVisible(true)}
-                              style={{}}
-                            >
-                              Decline
-                            </Button>
-                            <Modal
-                              title="Applicant Detail"
-                              centered
-                              visible={visible}
-                              onOk={() => setVisible(false)}
-                              onCancel={() => setVisible(false)}
-                              width={1000}
-                            >
-                              <ApplicantDetail />
-                            </Modal>
-                          </Grid>
-                        </Grid>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                {emptyRows > 0 && (
+                  <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
+                    <TableCell colSpan={6} />
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={rows.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </Paper>
+        <FormControlLabel
+          control={<Switch checked={dense} onChange={handleChangeDense} />}
+          label="Dense padding"
         />
-      </Paper>
-      <FormControlLabel
-        control={<Switch checked={dense} onChange={handleChangeDense} />}
-        label="Dense padding"
-      />
+      </div>
     </div>
   );
 }

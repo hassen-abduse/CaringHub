@@ -1,14 +1,23 @@
 import React, { useState } from "react";
 import Container from "@material-ui/core/Container";
-import { Modal } from "antd";
 import { Form, Input, Button, DatePicker, InputNumber, Select } from "antd";
 import { InfoCircleOutlined } from "@ant-design/icons";
-import { registerVolunteer} from '../redux/ActionCreators/registrationActions'
+import { registerVolunteer } from '../redux/ActionCreators/registrationActions'
 import TextArea from "antd/lib/input/TextArea";
 import Demo from "../organization/components/ImageUploadComponent";
 import "../organization/components/JobPostDescription.css";
 import VolunteerFileUpload from "./VolunteerFileUpload";
 import { connect } from "react-redux";
+import Modal from '@material-ui/core/Modal';
+import Backdrop from '@material-ui/core/Backdrop';
+import Fade from '@material-ui/core/Fade';
+import { makeStyles } from '@material-ui/core/styles';
+import { CircularProgress, DialogTitle, Box } from "@material-ui/core";
+import { Alert, AlertTitle } from '@material-ui/lab';
+
+import { Redirect } from "react-router-dom";
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 
 const mapStateToProps = state => {
   return {
@@ -21,63 +30,60 @@ const mapDispatchToProps = (dispatch) => ({
   registerVolunteer: (data) => dispatch(registerVolunteer(data)),
 })
 
-const { RangePicker } = DatePicker;
-const rangeConfig = {
-  rules: [
-    {
-      type: "array",
-      required: true,
-      message: "Please select time!",
-    },
-  ],
-};
-const OPTIONS = ["Teaching", "Event Organizing", "Developing", "Marketing"];
+const useStyles = makeStyles((theme) => ({
+  modal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  paper: {
+    backgroundColor: theme.palette.background.paper,
+    border: '2px solid #000',
+    boxShadow: theme.shadows[5],
+    width: '50%',
+    padding: theme.spacing(0, 3, 3, 3),
+  },
+}));
 
 function VolunteerRegistration(props) {
-  const [visible, setVisible] = useState(false);
   const { Option } = Select;
   const [selectedSkills, setSelectedSkills] = useState([]);
   const [selectedCauses, setSelectedCauses] = useState([]);
+  const [profile, setProfile] = useState(null)
+  const [resume, setResume] = useState(null)
+  const [open, setOpen] = useState(false)
+  const classes = useStyles()
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const onFinish = (values) => {
-    props.registerVolunteer({
-      firstName:values.firstName,
-      lastName: values.lastName,
-      username: values.username,
-      phoneNumber: values.prefix + values.phone,
-      emailAddress: values.email,
-      skillSets: selectedSkills,
-      causeAreas: selectedCauses,
-      password: values.password,
-      address: {
-        city: values.city
-      }
-    })
+    props.Registration.errMess = null
+    const volunteer = new FormData()
+    volunteer.append('firstName', values.firstName)
+    volunteer.append('lastName', values.lastName)
+    volunteer.append('username', values.username)
+    volunteer.append('phoneNumber', values.prefix + values.phone)
+    volunteer.append('emailAddress', values.email)
+    volunteer.append('skillSets', JSON.stringify(selectedSkills))
+    volunteer.append('causeAreas', JSON.stringify(selectedCauses))
+    volunteer.append('password', values.password)
+    volunteer.append('address', JSON.stringify({ city: values.city }))
+    volunteer.append('VolPP', profile)
+    volunteer.append('doc', resume)
+    props.registerVolunteer(volunteer)
+    handleOpen()
+
   };
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
+
   };
-
-  const normFile = (e) => {
-    console.log("Upload event:", e);
-
-    if (Array.isArray(e)) {
-      return e;
-    }
-
-    return e && e.fileList;
-  };
-
-  const options = [
-    { id: "1", name: "web development" },
-    { id: "2", name: "graphics designer" },
-    { id: "3", name: "social work" },
-    { id: "4", name: "Teaching" },
-    { id: "5", name: "Marketing" },
-    { id: "6", name: "Event Hosting" },
-  ];
-  // const [data, setDate] = useState(options);
-  // const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
 
   const prefixSelector = (
     <Form.Item name="prefix" noStyle>
@@ -91,35 +97,72 @@ function VolunteerRegistration(props) {
       </Select>
     </Form.Item>
   );
-  
+
+  if (props.Registration.success === true) {
+
+    return <Redirect to='/login' />
+  }
+
   return (
-    
+
     <div style={{ backgroundColor: "#EEEEEE" }}>
+      <Modal
+        className={classes.modal}
+        open={open}
+        disableBackdropClick
+        disableEscapeKeyDown
+        onClose={handleClose}
+        closeAfterTransition
+      >
+        <Fade in={open}>
+          <div className={classes.paper}>
+            {
+              props.Registration.isLoading === false ?
+                <DialogTitle>
+                  <Box display="flex" justifyContent='flex-end'>
+                    <Box>
+                      <IconButton onClick={handleClose}>
+                        <CloseIcon />
+                      </IconButton>
+                    </Box>
+                  </Box>
+                </DialogTitle>
+                : null
+            }
+            {
+              props.Registration.isLoading === true ?
+                <div style={{ padding: '20px', paddingTop:'40px', paddingLeft:'40px'}}>
+                  <div>
+                    <CircularProgress />
+                    <br></br>
+                    <strong>Please wait...</strong>
+                  </div>
+
+
+                </div>
+                : null
+            }
+            {
+              props.Registration.errMess &&
+
+              <Alert style={{ padding: '20px' }} severity="error">
+                <AlertTitle style={{ fontWeight: 'bold' }}>Error</AlertTitle>
+                <strong>{props.Registration.errMess}</strong>
+              </Alert>
+            }
+            {
+              props.Registration.success === true ?
+                <Alert style={{ padding: '20px' }} severity="success">
+                  <AlertTitle style={{ fontWeight: 'bold' }}>Success</AlertTitle>
+                  <strong>Registration Succesfull!</strong>
+                </Alert>
+                : null
+            }
+          </div>
+        </Fade>
+      </Modal>
+
       <Container style={{ backgroundColor: "#EEEEEE" }}>
-        <Modal
-          title="Upload Files"
-          centered
-          visible={visible}
-          // mask={false}
-          maskStyle={{
-            backgroundColor: "rgba(0, 0, 0, 0.25)",
-          }}
-          onOk={() => setVisible(false)}
-          onCancel={() => setVisible(false)}
-          width={700}
-          footer={[
-            <Button
-              key="back"
-              size="large"
-              color="primary"
-              onClick={() => setVisible(false)}
-            >
-              Done
-            </Button>,
-          ]}
-        >
-          <VolunteerFileUpload />
-        </Modal>
         <Form
           labelCol={{ span: 6 }}
           wrapperCol={{ span: 12 }}
@@ -200,16 +243,6 @@ function VolunteerRegistration(props) {
                       Give your Basic Informations :
                     </label>
 
-                    {/* <div style={{ display: "flex", flexDirection: "column" }}>
-                  <div style={{ marginTop: "10px" }}>
-                    <label>Title</label> &nbsp;
-                    <input type="text" className="inputs" />
-                  </div>
-                  <div style={{ marginTop: "10px" }}>
-                    <label>Contact</label>
-                    <input type="text" className="inputs" />
-                  </div>
-                </div> */}
 
                     <Form.Item
                       label="First Name"
@@ -573,6 +606,93 @@ function VolunteerRegistration(props) {
                       </Form.Item>
                     </div>
                     <br></br>
+
+                  </div>
+                  <br></br>
+                  <div
+                    style={{
+                      border: "1px solid #E6E6E6",
+                      borderRadius: "10px",
+                      boxShadow: "1px 2px 6px 0 #d6d6d6",
+                      width: "100%",
+                    }}
+                  >
+                    <div
+                      style={{
+                        padding: "24px 38px",
+                        backgroundColor: "white",
+                      }}
+                    >
+                      <span
+                        style={{
+                          backgroundColor: "#0B697F",
+                        }}
+                      ></span>
+                      <label
+                        style={{
+                          color: "#0B697F",
+                          position: "relative",
+                          top: " -6px",
+                          left: "0",
+                          paddingLeft: "5px",
+                          fontSize: "1em",
+                          textTransform: "uppercase",
+                          letterSpacing: ".09em",
+                        }}
+                      >
+                        MEDIA
+                      </label>
+                      <br></br>
+                      <br></br>
+                      <label>
+                        Upload your Profile Picture :{" "}
+                        <span
+                          style={{
+                            color: "red",
+                          }}
+                        >
+                          *
+                        </span>
+                      </label>
+                      <div>
+                        <Form.Item
+                          name="volPP"
+                          rules={[
+                            {
+                              required: true,
+                              message: "Please input profile picture!",
+                            },
+                          ]}
+                        >
+                          <Input type='file' name='volPP' onChange={(e) => setProfile(e.target.files[0])} />
+
+                        </Form.Item>
+
+                        <label>
+                          Upload your Resume :{" "}
+                          <span
+                            style={{
+                              color: "red",
+                            }}
+                          >
+                            *
+                          </span>
+                        </label>
+                        <Form.Item
+                          name="volResume"
+                          rules={[
+                            {
+                              required: true,
+                              message: "Please input your resume!",
+                            },
+                          ]}
+                        >
+                          <Input type='file' name='volResume' onChange={(e) => setResume(e.target.files[0])} />
+
+                        </Form.Item>
+                      </div>
+                      <br></br>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -580,25 +700,16 @@ function VolunteerRegistration(props) {
             <div
               style={{
                 display: "flex",
-
                 justifyContent: "flex-end",
-                marginTop: "30px",
-                marginRight: "20%",
+                marginTop: "20px",
+                marginRight: "17%",
               }}
             >
-              {/* <Button
-            variant="contained"
-            style={{ backgroundColor: "#FFDB15" }}
-            href="/volunteer/reviewApplication"
-          >
-            Post
-          </Button> */}
               <Button
                 style={{ marginBottom: "2rem" }}
                 type="primary"
                 htmlType="submit"
                 className="btn-solid-reg"
-                onClick={() => setVisible(true)}
               >
                 Submit
               </Button>
@@ -610,4 +721,4 @@ function VolunteerRegistration(props) {
   );
 }
 
-export default connect(mapStateToProps, mapDispatchToProps) (VolunteerRegistration)
+export default connect(mapStateToProps, mapDispatchToProps)(VolunteerRegistration)

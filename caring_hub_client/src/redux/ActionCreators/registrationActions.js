@@ -62,11 +62,7 @@ export const registerVolunteer = (formData) => (dispatch) => {
 
   return fetch(baseUrl + 'volunteers/register', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(formData)
-
+    body: formData
   })
     .then(response => {
       if (response.ok) {
@@ -98,10 +94,7 @@ export const registerOrg = (formData) => (dispatch) => {
 
   return fetch(baseUrl + 'orgs/register', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(formData)
+    body: formData
 
   })
     .then(response => {

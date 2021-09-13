@@ -3,7 +3,7 @@ import * as actionTypes from '../actionTypes'
 export const NetRequest = (state = {
   isLoading: false,
   errMess: null,
-  status: null,
+  success: false,
   data: null
 }, action) => {
   switch (action.type) {
@@ -12,13 +12,13 @@ export const NetRequest = (state = {
         ...state,
         isLoading: true,
         data: action.data,
-        status: null
+        success: false
       }
     case actionTypes.NET_REQUEST_SUCCESS:
       return {
         ...state,
         isLoading: false,
-        status: action.status,
+        success: action.success,
         errMess: null,
         data: null
       }
@@ -27,6 +27,7 @@ export const NetRequest = (state = {
         ...state,
         isLoading: false,
         errMess: action.errMess,
+        success: false,
         status: null
       }
     default:

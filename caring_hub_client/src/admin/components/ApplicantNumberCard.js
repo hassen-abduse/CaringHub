@@ -9,9 +9,10 @@ import Typography from "@material-ui/core/Typography";
 const useStyles = makeStyles({
   root: {
     minWidth: 275,
-    backgroundColor: "#DA0EAC",
+    backgroundImage: "linear-gradient(315deg, #ef5734 0%, #ffcc2f 74%)",
+
     padding: "12px",
-    borderRadius: "20px",
+    borderRadius: "10px",
     boxShadow: "2px",
   },
   bullet: {
@@ -21,12 +22,19 @@ const useStyles = makeStyles({
   },
   title: {
     fontSize: 14,
+    color: "white",
   },
   numbers: {
     fontSize: "3em",
+    color: "white",
+    fontWeight: "bolder",
   },
   pos: {
-    marginBottom: 12,
+    // marginBottom: 12,
+    color: "white",
+    marginTop: 10,
+
+    fontWeight: "bold",
   },
 });
 
@@ -36,13 +44,6 @@ export default function ApplicantNumberCard() {
   return (
     <Card className={classes.root}>
       <CardContent>
-        <Typography
-          className={classes.title}
-          color="textSecondary"
-          gutterBottom
-        >
-          Applicants
-        </Typography>
         <Typography variant="h1" className={classes.numbers}>
           100
         </Typography>
@@ -52,7 +53,11 @@ export default function ApplicantNumberCard() {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button href={"/admin/applicants"} size="small">
+        <Button
+          href={"/admin/applicants"}
+          size="small"
+          style={{ color: "white", fontSize: "1em" }}
+        >
           explore Applicants
         </Button>
       </CardActions>

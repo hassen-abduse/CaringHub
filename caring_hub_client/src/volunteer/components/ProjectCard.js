@@ -39,17 +39,22 @@ export default function ProjectCard(props) {
               />
               <div class="card-body">
                 <p style={{ color: "#0092FF" }} class="testimonial-text">
-                  {project.startDate}
+                {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).format(new Date(project.createdAt))}
                 </p>
                 <div class="testimonial-author">{project.name}</div>
 
-                <p class="testimonial-text">
-                  {
-                    project.description     
-                  } </p>
+                <p
+                  style={{ maxHeight: "180px", overflow: "hidden" }}
+                  class="testimonial-text"
+                >
+                  {project.description}{" "}
+                </p>
                 <div>
                   <span class="nav-item">
-                    <Link class="btn-solid-sm" to={`/volunteer/jobDescription/${project._id}`}>
+                    <Link
+                      class="btn-solid-sm"
+                      to={`/volunteer/jobDescription/${project._id}`}
+                    >
                       Check
                     </Link>
                   </span>

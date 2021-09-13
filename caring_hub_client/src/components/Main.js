@@ -1,13 +1,14 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Switch, Route, withRouter, Redirect } from "react-router-dom";
+import { useLocation } from "react-router";
 import Header from "./Header";
 import jwtDecode from "jwt-decode";
 import Footer from "../home/Footer";
 import Dashboard from "../volunteer/pages/dashboard/Dashboard";
 import FindProject from "../volunteer/pages/find-project/FindProject";
 import ReviewApplication from "../volunteer/pages/review-application/ReviewApplication";
-import { DescriptionCard } from "../volunteer/components/JobDescriptionCard";
+import DescriptionCard from "../volunteer/components/JobDescriptionCard";
 import Home from "../home/Home";
 import Landing from "../volunteer/pages/landing/Landing";
 import { fetchApplications } from "../redux/ActionCreators/appActions";
@@ -63,7 +64,6 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 class Main extends Component {
-  state = { role: "guest" };
   componentDidMount() {
     this.props.fetchApplications();
     this.props.fetchCauses();
@@ -76,13 +76,15 @@ class Main extends Component {
   }
 
   render() {
-    const decoded = this.props.auth.token ? jwtDecode(this.props.auth.token) : { role: '' }
+    const route = window.location.pathname;
+    const decoded = this.props.auth.token
+      ? jwtDecode(this.props.auth.token)
+      : { role: "" };
     return (
       <React.Fragment>
-        <AppBar />
+        {route !== "/login" && <AppBar />}
         <div>
           <Switch>
-
             <Route exact path="/index">
               <Home />
             </Route>
@@ -103,13 +105,17 @@ class Main extends Component {
               <OrganizationRegistration />
             </Route>
 
+            <Route exact path="/organization/dashboard/:orgId">
+              <Profile />
+            </Route>
+            <Route exact path="/volunteer/dashboard/:volId">
+              <Dashboard />
+            </Route>
+
             {decoded.role === "Vol" && (
               <>
                 <Route exact path="/">
                   <Landing />
-                </Route>
-                <Route exact path="/volunteer/dashboard">
-                  <Dashboard />
                 </Route>
                 <Route exact path="/volunteer/findProject">
                   <FindProject />
@@ -126,14 +132,10 @@ class Main extends Component {
             {decoded.role === "Org" && (
               <>
                 <Route exact path="/">
-                  <Profile />
+                  <Home />
                 </Route>
                 <Route exact path="/organization/postProject">
                   <PostProject />
-                </Route>
-
-                <Route exact path="/organization/volunteers">
-                  <Volunteers />
                 </Route>
                 <Route exact path="/organization/volunteers">
                   <Volunteers />
@@ -153,7 +155,7 @@ class Main extends Component {
             <Redirect to="/index" />
           </Switch>
         </div>
-        <Footer />
+        {route !== "/login" && <Footer />}
       </React.Fragment>
     );
   }

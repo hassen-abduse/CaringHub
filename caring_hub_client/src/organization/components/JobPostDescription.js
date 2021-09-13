@@ -7,7 +7,17 @@ import { Form, Input, Button, DatePicker, InputNumber, Select } from "antd";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import TextArea from "antd/lib/input/TextArea";
 import UploadMedia from "../components/UploadMedia";
-import { Modal } from "antd";
+import { postProject } from "../../redux/ActionCreators/projectActions";
+import { connect } from 'react-redux'
+import Fade from '@material-ui/core/Fade';
+import Modal from '@material-ui/core/Modal';
+import { makeStyles } from '@material-ui/core/styles';
+import { CircularProgress, DialogTitle, Box } from "@material-ui/core";
+import { Alert, AlertTitle } from '@material-ui/lab';
+import { Redirect } from "react-router-dom";
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+
 
 const { RangePicker } = DatePicker;
 const rangeConfig = {
@@ -19,67 +29,126 @@ const rangeConfig = {
     },
   ],
 };
-const OPTIONS = ["Teaching", "Event Organizing", "Developing", "Marketing"];
 
-export default function JobPostDescription() {
-  const [selectedItems, setSelectedItems] = useState([]);
-  const handleChange = (selectedItems) => {
-    setSelectedItems(selectedItems);
+const mapStateToProps = (state) => {
+  return {
+    Skills: state.Skills,
+    Causes: state.Causes,
+    NetRequest: state.NetRequest
+  }
+}
+const mapDispatchToProps = (dispatch) => ({
+  postProject: (data) => dispatch(postProject(data)),
+})
+
+const useStyles = makeStyles((theme) => ({
+  modal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  paper: {
+    backgroundColor: theme.palette.background.paper,
+    border: '2px solid #000',
+    boxShadow: theme.shadows[5],
+    width: '50%',
+    padding: theme.spacing(0, 3, 3, 3),
+  },
+}));
+
+
+function JobPostDescription(props) {
+  const [selectedSkills, setSelectedSkills] = useState([]);
+  const [selectedCauses, setSelectedCauses] = useState([]);
+  const [file, setSelectedFile] = useState(null)
+  const [open, setOpen] = useState(false)
+  const classes = useStyles()
+
+  const handleOpen = () => {
+    setOpen(true);
   };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const onFinish = (values) => {
-    console.log("Success:", values);
+    props.NetRequest.errMess = null
+    props.NetRequest.success = false
+    var project = new FormData()
+    project.append("name", values.name)
+    project.append('description', values.description)
+    project.append('startDate', values.start_end_date[0]._d)
+    project.append('endDate', values.start_end_date[1]._d)
+    project.append('location', JSON.stringify({ city: values.city }))
+    project.append('skillSets', JSON.stringify(selectedSkills))
+    project.append('causeAreas', JSON.stringify(selectedCauses))
+    project.append('projectImage', file)
+    props.postProject(project)
+    handleOpen()
   };
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
 
-  const normFile = (e) => {
-    console.log("Upload event:", e);
 
-    if (Array.isArray(e)) {
-      return e;
-    }
 
-    return e && e.fileList;
-  };
-
-  const options = [
-    { id: "1", name: "web development" },
-    { id: "2", name: "graphics designer" },
-    { id: "3", name: "social work" },
-    { id: "4", name: "Teaching" },
-    { id: "5", name: "Marketing" },
-    { id: "6", name: "Event Hosting" },
-  ];
-  const [visible, setVisible] = useState(false);
-  const [data, setDate] = useState(options);
-  const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
   return (
     <Container>
       <Modal
-        title="Upload Files"
-        centered
-        visible={visible}
-        // mask={false}
-        maskStyle={{
-          backgroundColor: "rgba(0, 0, 0, 0.25)",
-        }}
-        onOk={() => setVisible(false)}
-        onCancel={() => setVisible(false)}
-        width={700}
-        footer={[
-          <Button
-            key="back"
-            size="large"
-            color="primary"
-            onClick={() => setVisible(false)}
-          >
-            Done
-          </Button>,
-        ]}
+        className={classes.modal}
+        open={open}
+        disableBackdropClick
+        disableEscapeKeyDown
+        onClose={handleClose}
+        closeAfterTransition
       >
-        <UploadMedia />
+        <Fade in={open}>
+          <div className={classes.paper}>
+            {props.NetRequest.isLoading === false ?
+              <DialogTitle>
+                <Box display="flex" justifyContent='flex-end'>
+                  <Box>
+                    <IconButton onClick={handleClose}>
+                      <CloseIcon />
+                    </IconButton>
+                  </Box>
+                </Box>
+              </DialogTitle>
+              : null
+            }
+            {
+              props.NetRequest.isLoading === true ?
+                <div style={{ padding: '20px', paddingTop: '40px', paddingLeft: '40px' }}>
+                  <div>
+                    <CircularProgress />
+                    <br></br>
+                    <strong>Please wait...</strong>
+                  </div>
+
+
+                </div>
+                : null
+            }
+            {
+              props.NetRequest.errMess &&
+
+              <Alert style={{ padding: '20px' }} severity="error">
+                <AlertTitle style={{ fontWeight: 'bold' }}>Error</AlertTitle>
+                <strong>{props.NetRequest.errMess}</strong>
+              </Alert>
+            }
+            {
+              props.NetRequest.success === true ?
+                <Alert style={{ padding: '20px' }} severity="success">
+                  <AlertTitle style={{ fontWeight: 'bold' }}>Success</AlertTitle>
+                  <strong>Successfully Posted!</strong>
+                </Alert>
+                : null
+            }
+          </div>
+        </Fade>
       </Modal>
       <Form
         name="basic"
@@ -155,7 +224,7 @@ export default function JobPostDescription() {
                   </label>
                   <br></br>
                   <br></br>
-                  <label>Give your Opportunity a title and contact:</label>
+                  <label>Give your Opportunity a title: </label>
 
                   {/* <div style={{ display: "flex", flexDirection: "column" }}>
                   <div style={{ marginTop: "10px" }}>
@@ -169,25 +238,13 @@ export default function JobPostDescription() {
                 </div> */}
 
                   <Form.Item
+                    style={{ marginTop: '20px' }}
                     label="Title"
-                    name="title"
+                    name="name"
                     rules={[
                       {
                         required: true,
                         message: "Please input your Title!",
-                      },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-
-                  <Form.Item
-                    label="Contact Address"
-                    name="contact_address"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input your contact adress!",
                       },
                     ]}
                   >
@@ -302,7 +359,7 @@ export default function JobPostDescription() {
                   </label>
                   <br></br>
                   <br></br>
-                  <label>Give your Opportunity Date and Time:</label>
+                  <label>Give your Opportunity Date: </label>
                   {/* 
                 <div
                   style={{
@@ -323,6 +380,7 @@ export default function JobPostDescription() {
              
               */}
                   <Form.Item
+                    style={{ marginTop: '20px' }}
                     name="start_end_date"
                     label="Select Start and End Date"
                     {...rangeConfig}
@@ -330,20 +388,6 @@ export default function JobPostDescription() {
                     <RangePicker />
                   </Form.Item>
                   <br></br>
-                  <div style={{ marginTop: "10px" }}>
-                    <Form.Item
-                      rules={[
-                        {
-                          required: true,
-                          message: "Please input number of volunteers!",
-                        },
-                      ]}
-                      name="num_of_volunteers"
-                      label="Number of volunteers"
-                    >
-                      <InputNumber min={1} />
-                    </Form.Item>
-                  </div>
 
                   <br></br>
                 </div>
@@ -477,13 +521,13 @@ export default function JobPostDescription() {
                       <Select
                         mode="multiple"
                         placeholder="Inserted are removed"
-                        value={selectedItems}
-                        onChange={handleChange}
+                        value={selectedSkills}
+                        onChange={setSelectedSkills}
                         style={{ width: "100%" }}
                       >
-                        {filteredOptions.map((item) => (
-                          <Select.Option key={item} value={item}>
-                            {item}
+                        {props.Skills.skills.map((item) => (
+                          <Select.Option key={item._id} value={item._id}>
+                            {item.name}
                           </Select.Option>
                         ))}
                       </Select>
@@ -554,16 +598,82 @@ export default function JobPostDescription() {
                       <Select
                         mode="multiple"
                         placeholder="Inserted are removed"
-                        value={selectedItems}
-                        onChange={handleChange}
+                        value={selectedCauses}
+                        onChange={setSelectedCauses}
                         style={{ width: "100%" }}
                       >
-                        {filteredOptions.map((item) => (
-                          <Select.Option key={item} value={item}>
-                            {item}
+                        {props.Causes.causes.map((item) => (
+                          <Select.Option key={item._id} value={item._id}>
+                            {item.name}
                           </Select.Option>
                         ))}
                       </Select>
+                    </Form.Item>
+                  </div>
+                  <br></br>
+                </div>
+              </div>
+              <br></br>
+              <div
+                style={{
+                  backgroundColor: "#eee",
+                  padding: "30px 25px",
+                  border: "1px solid #E6E6E6",
+                  borderRadius: "10px",
+                  boxShadow: "1px 2px 6px 0 #d6d6d6",
+                  width: "100%",
+                }}
+              >
+                <div
+                  style={{
+                    padding: "24px 38px",
+                    backgroundColor: "white",
+                  }}
+                >
+                  <span
+                    style={{
+                      backgroundColor: "#0B697F",
+                    }}
+                  ></span>
+                  <label
+                    style={{
+                      color: "#0B697F",
+                      position: "relative",
+                      top: " -6px",
+                      left: "0",
+                      paddingLeft: "5px",
+                      fontSize: "1em",
+                      textTransform: "uppercase",
+                      letterSpacing: ".09em",
+                    }}
+                  >
+                    MEDIA
+                  </label>
+                  <br></br>
+                  <br></br>
+                  <label>
+                    Upload an image :{" "}
+                    <span
+                      style={{
+                        color: "red",
+                      }}
+                    >
+                      *
+                    </span>
+                  </label>
+                  <div>
+                    <Form.Item
+                      label="Project Image"
+                      name="projectImage"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please input your city!",
+                        },
+                      ]}
+                    >
+                      <Input type='file' name='uploadImage' onChange={(e) => setSelectedFile(e.target.files[0])} />
+
                     </Form.Item>
                   </div>
                   <br></br>
@@ -580,24 +690,17 @@ export default function JobPostDescription() {
               marginRight: "20%",
             }}
           >
-            {/* <Button
-            variant="contained"
-            style={{ backgroundColor: "#FFDB15" }}
-            href="/volunteer/reviewApplication"
-          >
-            Post
-          </Button> */}
             <Button
               type="primary"
               htmlType="submit"
-              onClick
-              onClick={() => setVisible(true)}
             >
               Submit
             </Button>
           </div>
         </div>
       </Form>
-    </Container>
+    </Container >
   );
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(JobPostDescription)

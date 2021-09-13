@@ -1,5 +1,6 @@
 import * as actionTypes from '../actionTypes'
 import { baseUrl } from '../shared/baseUrl'
+import { netRequest, receivedResponse, receiveError } from './NetActions';
 
 export const projectsLoading = () => ({
     type: actionTypes.PROJECTS_LOADING
@@ -42,12 +43,13 @@ export const fetchProjects = () => (dispatch) => {
 }
 
 export const postProject = (formData) => (dispatch) => {
+    dispatch(netRequest(formData))
     const bearer = 'Bearer ' + localStorage.getItem('token')
     return fetch(baseUrl + 'projects', {
         method: 'POST',
-        body: JSON.stringify(formData),
+        body: formData,
         headers: {
-            'Authorization': bearer
+            'Authorization': bearer,
         }
 
     })
@@ -66,8 +68,12 @@ export const postProject = (formData) => (dispatch) => {
                 throw errMess
             })
         .then(response => response.json())
-        .then(response => dispatch(addProjectItem(response)))
-        .catch(error => alert('PROJECT COULD NOT BE POSTED: ' + error))
+        .then(response => {
+            dispatch(addProjectItem(response))
+            dispatch(receivedResponse(true))
+            })
+
+        .catch(error => dispatch(receiveError(error.message)))
 }
 
 export const deleteProject = (projectId) => (dispatch) => {

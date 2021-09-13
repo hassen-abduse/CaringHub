@@ -1,61 +1,86 @@
 import React, { useState } from "react";
 import Container from "@material-ui/core/Container";
-import { Modal } from "antd";
 import { Form, Input, Button, DatePicker, InputNumber, Select } from "antd";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import TextArea from "antd/lib/input/TextArea";
 import Demo from "../organization/components/ImageUploadComponent";
 import "../organization/components/JobPostDescription.css";
+import { connect } from "react-redux";
+import Modal from '@material-ui/core/Modal';
+import { CircularProgress, DialogTitle, Box } from "@material-ui/core";
+import { Alert, AlertTitle } from '@material-ui/lab';
+import Fade from '@material-ui/core/Fade';
+import { makeStyles } from '@material-ui/core/styles';
+import { Redirect } from "react-router-dom";
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import { registerOrg } from "../redux/ActionCreators/registrationActions";
 
-import OrgFileUpload from "./OrgFileUpload";
+const mapStateToProps = state => {
+  return {
+    Registration: state.Registration,
+    Skills: state.Skills,
+    Causes: state.Causes,
+  }
+}
+const mapDispatchToProps = (dispatch) => ({
+  registerOrg: (data) => dispatch(registerOrg(data)),
+})
 
-const { RangePicker } = DatePicker;
-const rangeConfig = {
-  rules: [
-    {
-      type: "array",
-      required: true,
-      message: "Please select time!",
-    },
-  ],
-};
-const OPTIONS = ["Teaching", "Event Organizing", "Developing", "Marketing"];
+const useStyles = makeStyles((theme) => ({
+  modal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  paper: {
+    backgroundColor: theme.palette.background.paper,
+    border: '2px solid #000',
+    boxShadow: theme.shadows[5],
+    width: '50%',
+    padding: theme.spacing(0, 3, 3, 3),
+  },
+}));
 
-export default function OrganizationRegistration() {
-  const [visible, setVisible] = useState(false);
+
+function OrganizationRegistration(props) {
+
   const { Option } = Select;
-  const [selectedItems, setSelectedItems] = useState([]);
-  const handleChange = (selectedItems) => {
-    setSelectedItems(selectedItems);
+  const [logo, setLogo] = useState(null)
+  const [legalDoc, setLegalDoc] = useState(null)
+  const [open, setOpen] = useState(false)
+  const classes = useStyles()
+
+  const handleOpen = () => {
+    setOpen(true);
   };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const onFinish = (values) => {
-    console.log("Success:", values);
+    props.Registration.errMess = null
+    const org = new FormData()
+    org.append('name', values.name)
+    org.append('username', values.username)
+    org.append('phoneNumber', values.phone)
+    org.append('emailAddress', values.email)
+    org.append('address', JSON.stringify({ city: values.city }))
+    org.append('mission', values.mission)
+    org.append('password', values.password)
+    org.append('logo', logo)
+    org.append('legalDoc', legalDoc)
+    props.registerOrg(org)
+    console.log(open)
+    handleOpen()
   };
 
   const onFinishFailed = (errorInfo) => {
+   // handleOpen()
+    //console.log(open)
     console.log("Failed:", errorInfo);
   };
-
-  const normFile = (e) => {
-    console.log("Upload event:", e);
-
-    if (Array.isArray(e)) {
-      return e;
-    }
-
-    return e && e.fileList;
-  };
-
-  const options = [
-    { id: "1", name: "web development" },
-    { id: "2", name: "graphics designer" },
-    { id: "3", name: "social work" },
-    { id: "4", name: "Teaching" },
-    { id: "5", name: "Marketing" },
-    { id: "6", name: "Event Hosting" },
-  ];
-  const [data, setDate] = useState(options);
-  const filteredOptions = OPTIONS.filter((o) => !selectedItems.includes(o));
 
   const prefixSelector = (
     <Form.Item name="prefix" noStyle>
@@ -69,33 +94,65 @@ export default function OrganizationRegistration() {
       </Select>
     </Form.Item>
   );
+
+  if (props.Registration.success === true) {
+
+    return <Redirect to='/login' />
+  }
   return (
     <div style={{ backgroundColor: "#EEEEEE" }}>
+      <Modal
+        className={classes.modal}
+        open={open}
+        disableBackdropClick
+        disableEscapeKeyDown
+        onClose={handleClose}
+        closeAfterTransition
+      >
+        <Fade in={open}>
+          <div className={classes.paper}>
+                <DialogTitle>
+                  <Box display="flex" justifyContent='flex-end'>
+                    <Box>
+                      <IconButton onClick={handleClose}>
+                        <CloseIcon />
+                      </IconButton>
+                    </Box>
+                  </Box>
+                </DialogTitle>
+            {
+              props.Registration.isLoading === true ?
+                <div style={{ padding: '20px', paddingLeft:'40px'}}>
+                  <div>
+                    <CircularProgress />
+                    <br></br>
+                    <strong>Please wait...</strong>
+                  </div>
+
+
+                </div>
+                : null
+            }
+            {
+              props.Registration.errMess &&
+
+              <Alert style={{ padding: '20px' }} severity="error">
+                <AlertTitle style={{ fontWeight: 'bold' }}>Error</AlertTitle>
+                <strong>{props.Registration.errMess}</strong>
+              </Alert>
+            }
+            {
+              props.Registration.success === true ?
+                <Alert style={{ padding: '20px' }} severity="success">
+                  <AlertTitle style={{ fontWeight: 'bold' }}>Success</AlertTitle>
+                  <strong>Registration Succesfull!</strong>
+                </Alert>
+                : null
+            }
+          </div>
+        </Fade>
+      </Modal>
       <Container style={{ backgroundColor: "#EEEEEE" }}>
-        <Modal
-          title="Upload Files"
-          centered
-          visible={visible}
-          // mask={false}
-          maskStyle={{
-            backgroundColor: "rgba(0, 0, 0, 0.25)",
-          }}
-          onOk={() => setVisible(false)}
-          onCancel={() => setVisible(false)}
-          width={700}
-          footer={[
-            <Button
-              key="back"
-              size="large"
-              color="primary"
-              onClick={() => setVisible(false)}
-            >
-              Done
-            </Button>,
-          ]}
-        >
-          <OrgFileUpload />
-        </Modal>
         <Form
           labelCol={{ span: 6 }}
           wrapperCol={{ span: 12 }}
@@ -176,16 +233,6 @@ export default function OrganizationRegistration() {
                       Give your Organizations Basic Informations :
                     </label>
 
-                    {/* <div style={{ display: "flex", flexDirection: "column" }}>
-                  <div style={{ marginTop: "10px" }}>
-                    <label>Title</label> &nbsp;
-                    <input type="text" className="inputs" />
-                  </div>
-                  <div style={{ marginTop: "10px" }}>
-                    <label>Contact</label>
-                    <input type="text" className="inputs" />
-                  </div>
-                </div> */}
 
                     <Form.Item
                       label="Organization Name"
@@ -232,7 +279,18 @@ export default function OrganizationRegistration() {
                     >
                       <Input />
                     </Form.Item>
-
+                    <Form.Item
+                      label="Username"
+                      name="username"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please input username!",
+                        },
+                      ]}
+                    >
+                      <Input />
+                    </Form.Item>
                     <Form.Item
                       name="password"
                       label="Password"
@@ -379,12 +437,12 @@ export default function OrganizationRegistration() {
                         letterSpacing: ".09em",
                       }}
                     >
-                      Organization Description
+                      Organization Mission
                     </label>
                     <br></br>
                     <br></br>
                     <label>
-                      Write a brief Description about your Organization:{" "}
+                      Write a brief mission of your Organization:{" "}
                       <span
                         style={{
                           color: "red",
@@ -396,7 +454,7 @@ export default function OrganizationRegistration() {
                     <br></br>
                     <br></br>
                     <Form.Item
-                      name="description"
+                      name="mission"
                       rules={[
                         {
                           required: true,
@@ -411,25 +469,16 @@ export default function OrganizationRegistration() {
                   </div>
                 </div>
                 <br></br>
-                {/* media */}
-                <br></br>
-                {/* logo */}
                 <div
                   style={{
-                    // backgroundColor: "#eee",
-                    // padding: "30px 25px",
                     border: "1px solid #E6E6E6",
                     borderRadius: "10px",
                     boxShadow: "1px 2px 6px 0 #d6d6d6",
                     width: "100%",
                   }}
                 ></div>
-                <br></br>
-                {/* causes  */}
                 <div
                   style={{
-                    // backgroundColor: "#eee",
-                    // padding: "30px 25px",
                     border: "1px solid #E6E6E6",
                     borderRadius: "10px",
                     boxShadow: "1px 2px 6px 0 #d6d6d6",
@@ -459,12 +508,12 @@ export default function OrganizationRegistration() {
                         letterSpacing: ".09em",
                       }}
                     >
-                      Cause Area
+                      MEDIA
                     </label>
                     <br></br>
                     <br></br>
                     <label>
-                      Give a Cause Area of your Organization:{" "}
+                      Upload your Logo :{" "}
                       <span
                         style={{
                           color: "red",
@@ -475,27 +524,39 @@ export default function OrganizationRegistration() {
                     </label>
                     <div>
                       <Form.Item
-                        name="causes"
+                        name="logo"
                         rules={[
                           {
                             required: true,
-                            message: "Please input cause requirments!",
+                            message: "Please input logo!",
                           },
                         ]}
                       >
-                        <Select
-                          mode="multiple"
-                          placeholder="Inserted are removed"
-                          value={selectedItems}
-                          onChange={handleChange}
-                          style={{ width: "100%" }}
+                        <Input type='file' name='logo' onChange={(e) => setLogo(e.target.files[0])} />
+
+                      </Form.Item>
+
+                      <label>
+                        Upload a Legal Doc :{" "}
+                        <span
+                          style={{
+                            color: "red",
+                          }}
                         >
-                          {filteredOptions.map((item) => (
-                            <Select.Option key={item} value={item}>
-                              {item}
-                            </Select.Option>
-                          ))}
-                        </Select>
+                          *
+                        </span>
+                      </label>
+                      <Form.Item
+                        name="legalDoc"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Please input your legal doc!",
+                          },
+                        ]}
+                      >
+                        <Input type='file' name='legalDoc' onChange={(e) => setLegalDoc(e.target.files[0])} />
+
                       </Form.Item>
                     </div>
                     <br></br>
@@ -512,19 +573,11 @@ export default function OrganizationRegistration() {
                 marginRight: "20%",
               }}
             >
-              {/* <Button
-            variant="contained"
-            style={{ backgroundColor: "#FFDB15" }}
-            href="/volunteer/reviewApplication"
-          >
-            Post
-          </Button> */}
               <Button
                 style={{ marginBottom: "2rem" }}
                 type="primary"
                 htmlType="submit"
                 className="btn-solid-reg"
-                onClick={() => setVisible(true)}
               >
                 Submit
               </Button>
@@ -536,3 +589,4 @@ export default function OrganizationRegistration() {
   );
 }
 //
+export default connect(mapStateToProps, mapDispatchToProps)(OrganizationRegistration)

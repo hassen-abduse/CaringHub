@@ -1,36 +1,36 @@
 import React from "react";
-import { useState } from "react";
-
-function SearchPanel(props) {
-  const { onSearch } = props;
-
-  const [searchText, setSearchText] = useState("");
-
-  const handleInput = (e) => {
-    const text = e.target.value;
-    setSearchText(text);
-  };
-
-  const handleEnterKeyPressed = (e) => {
-    if (e.key === "Enter") {
-      onSearch(searchText);
-    }
-  };
-
+import "./search.css";
+function Search({ value, onChange }) {
   return (
-    <div style={{ display: "flex", justifyContent: "center" }}>
-      <div className="row control m-4">
-        <input
-          className="input "
-          onChange={handleInput}
-          onKeyPress={handleEnterKeyPressed}
-          type="text"
-          value={searchText}
-          placeholder="Search your movies"
-        />
+    <div className="container">
+      {/*Heading*/}
+
+      {/*Search Input*/}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        <div>
+          <label
+            style={{ width: "450px" }}
+            className="search-label mb-5"
+            htmlFor="search-input"
+          >
+            <input
+              type="text"
+              value={value}
+              id="search-input"
+              placeholder="Search..."
+              onChange={onChange}
+            />
+            <i className="fa fa-search search-icon" />
+          </label>
+        </div>
       </div>
     </div>
   );
 }
 
-export default SearchPanel;
+export default Search;

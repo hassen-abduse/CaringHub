@@ -10,9 +10,10 @@ import Divider from "@material-ui/core/Divider";
 const useStyles = makeStyles({
   root: {
     minWidth: 275,
-    backgroundColor: "#84D87B",
+    backgroundImage: "linear-gradient(315deg, #feae96 0%, #f53844 74%)",
+
     padding: "12px",
-    borderRadius: "20px",
+    borderRadius: "10px",
     boxShadow: "2px",
   },
   bullet: {
@@ -22,12 +23,19 @@ const useStyles = makeStyles({
   },
   title: {
     fontSize: 14,
+    color: "white",
   },
   numbers: {
     fontSize: "3em",
+    color: "white",
+    fontWeight: "bolder",
   },
   pos: {
-    marginBottom: 12,
+    // marginBottom: 12,
+    color: "white",
+    marginTop: 10,
+
+    fontWeight: "bold",
   },
 });
 
@@ -37,13 +45,6 @@ export default function ProjectNumberCard() {
   return (
     <Card className={classes.root}>
       <CardContent>
-        <Typography
-          className={classes.title}
-          color="textSecondary"
-          gutterBottom
-        >
-          projects
-        </Typography>
         <Divider />
         <Typography variant="h1" className={classes.numbers}>
           100
@@ -54,7 +55,12 @@ export default function ProjectNumberCard() {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button href={"/admin/projects"}>explore projects</Button>
+        <Button
+          href={"/admin/projects"}
+          style={{ color: "white", fontSize: "1em" }}
+        >
+          explore projects
+        </Button>
       </CardActions>
     </Card>
   );
