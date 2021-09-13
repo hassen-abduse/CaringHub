@@ -384,7 +384,7 @@ export default function CauseAreas() {
                         role="checkbox"
                         aria-checked={isItemSelected}
                         tabIndex={-1}
-                        // onClick={() => setVisible(true)}
+                        onClick={() => setVisible(true)}
                         key={index}
                         selected={isItemSelected}
                       >
@@ -435,7 +435,7 @@ export default function CauseAreas() {
                                 Edit
                               </Button>
                               <Modal
-                                title="add skill set"
+                                title="add cause"
                                 centered
                                 visible={visible}
                                 onOk={() => setVisible(false)}

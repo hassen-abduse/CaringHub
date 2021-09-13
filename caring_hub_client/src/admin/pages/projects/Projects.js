@@ -23,6 +23,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import { Modal } from "antd";
+import ProjectDetail from "./ProjectDetail";
 
 function createData(
   projectName,
@@ -402,14 +403,14 @@ export default function Projects() {
                           show projects
                         </Button>
                         <Modal
-                          title="evaluate volunteer"
+                          title="project detail"
                           centered
                           visible={visible}
                           onOk={() => setVisible(false)}
                           onCancel={() => setVisible(false)}
                           width={1000}
                         >
-                          {/* <VolunteerDetail /> */}
+                          <ProjectDetail />
                         </Modal>
                       </TableCell>
                     </TableRow>

@@ -14,7 +14,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 import Checkbox from "@material-ui/core/Checkbox";
-import { Button } from "@material-ui/core";
+import { Button, Grid } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -23,56 +23,60 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import { Modal } from "antd";
+import OrgDetail from "./OrgDetail";
+import RemoveOrg from "./RemoveOrg";
 
-function createData(firstName, lastName, phone, email, address, skill, areas) {
-  return { firstName, lastName, phone, email, address, skill, areas };
+function createData(
+  org_name,
+  email,
+  phone,
+  causeArea,
+  locations,
+  legalDocument
+) {
+  return { org_name, email, phone, causeArea, locations, legalDocument };
 }
 
 const rows = [
   createData(
-    "Mehammed",
-    "Teshome",
+    "Addis ababa university",
+    "aau@gmail.com",
     "0923191253",
-    "checoslbches@gmail.com",
+    "educational",
     "addis ababa",
-    "it",
-    "tech"
+    "True"
   ),
   createData(
-    "Mehammed",
-    "Teshome",
+    "AAu",
+    "aau@gmail.com",
     "0923191253",
-    "checoslbches@gmail.com",
+    "educational",
     "addis ababa",
-    "it",
-    "tech"
+    "True"
   ),
   createData(
-    "Mehammed",
-    "Teshome",
+    "AAu",
+    "aau@gmail.com",
     "0923191253",
-    "checoslbches@gmail.com",
+    "educational",
     "addis ababa",
-    "it",
-    "tech"
+    "True"
   ),
   createData(
-    "Mehammed",
-    "Teshome",
+    "AAu",
+    "aau@gmail.com",
     "0923191253",
-    "checoslbches@gmail.com",
+    "educational",
     "addis ababa",
-    "it",
-    "tech"
+    "True"
   ),
   createData(
-    "Mehammed",
-    "Teshome",
+    "AAu",
+    "aau@gmail.com",
     "0923191253",
-    "checoslbches@gmail.com",
+    "educational",
     "addis ababa",
-    "it",
-    "tech"
+    "True"
   ),
 ];
 
@@ -104,34 +108,35 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
-    id: "First-Name",
+    id: "org_Name",
     numeric: false,
-    disablePadding: true,
-    label: "First Name",
-  },
-  {
-    id: "Last-Name",
-    numeric: true,
     disablePadding: false,
-    label: "Last Name",
+    label: "Org Name",
   },
+
   {
     id: "phone",
     numeric: true,
     disablePadding: false,
     label: "Phone Number",
   },
-  { id: "email", numeric: true, disablePadding: false, label: "Emain address" },
+  { id: "email", numeric: true, disablePadding: false, label: "Email address" },
   { id: "address", numeric: true, disablePadding: false, label: "address" },
-  { id: "skill", numeric: true, disablePadding: false, label: "skill" },
+
   {
-    id: "areas",
+    id: "cause-areas",
     numeric: true,
     disablePadding: false,
     label: "Areas to work on ",
   },
   {
-    id: "actions",
+    id: "legalDoc",
+    numeric: false,
+    disablePadding: false,
+    label: "Legal Document ",
+  },
+  {
+    id: "locations",
     numeric: false,
     disablePadding: false,
     label: "Actions ",
@@ -155,14 +160,6 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding="checkbox">
-          <Checkbox
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{ "aria-label": "select all desserts" }}
-          />
-        </TableCell>
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
@@ -232,39 +229,14 @@ const EnhancedTableToolbar = (props) => {
         [classes.highlight]: numSelected > 0,
       })}
     >
-      {numSelected > 0 ? (
-        <Typography
-          className={classes.title}
-          color="inherit"
-          variant="subtitle1"
-          component="div"
-        >
-          {numSelected} selected
-        </Typography>
-      ) : (
-        <Typography
-          className={classes.title}
-          variant="h6"
-          id="tableTitle"
-          component="div"
-        >
-          Organization
-        </Typography>
-      )}
-
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton aria-label="delete">
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <Tooltip title="Filter list">
-          <IconButton aria-label="filter list">
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
-      )}
+      <Typography
+        className={classes.title}
+        variant="h6"
+        id="tableTitle"
+        component="div"
+      >
+        Organization
+      </Typography>
     </Toolbar>
   );
 };
@@ -361,6 +333,13 @@ export default function Organizations() {
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
   const [visible, setVisible] = useState(false);
+  const handleOpen = () => {
+    setVisible(true);
+  };
+
+  const handleClose = () => {
+    setVisible(false);
+  };
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
@@ -389,52 +368,44 @@ export default function Organizations() {
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={index}
-                      selected={isItemSelected}
-                    >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={isItemSelected}
-                          inputProps={{ "aria-labelledby": labelId }}
-                          onClick={(event) => handleClick(event, index)}
-                        />
-                      </TableCell>
-                      <TableCell
-                        component="th"
-                        id={labelId}
-                        scope="row"
-                        padding="none"
+                    <>
+                      <TableRow
+                        // clicking the row set the modal visible
+                        onClick={() => setVisible(true)}
+                        hover
+                        role="checkbox"
+                        aria-checked={isItemSelected}
+                        tabIndex={-1}
+                        key={index}
+                        selected={isItemSelected}
                       >
-                        {row.firstName}
-                      </TableCell>
+                        <TableCell align="right">{row.org_name}</TableCell>
+                        <TableCell align="right">{row.phone}</TableCell>
+                        <TableCell align="right">{row.email}</TableCell>
+                        <TableCell align="right">{row.locations}</TableCell>
+                        <TableCell align="right">{row.causeArea}</TableCell>
+                        <TableCell align="center">
+                          {row.legalDocument}
+                        </TableCell>
+                        <TableCell display="flex">
+                          <Button type="primary">show details</Button>
+                        </TableCell>
+                      </TableRow>
 
-                      <TableCell align="right">{row.lastName}</TableCell>
-                      <TableCell align="right">{row.phone}</TableCell>
-                      <TableCell align="right">{row.email}</TableCell>
-                      <TableCell align="right">{row.address}</TableCell>
-                      <TableCell align="right">{row.skill}</TableCell>
-                      <TableCell align="right">{row.areas}</TableCell>
-                      <TableCell>
-                        <Button type="primary" onClick={() => setVisible(true)}>
-                          show Organization
-                        </Button>
-                        <Modal
-                          title="evaluate volunteer"
-                          centered
-                          visible={visible}
-                          onOk={() => setVisible(false)}
-                          onCancel={() => setVisible(false)}
-                          width={1000}
-                        >
-                          {/* <VolunteerDetail /> */}
-                        </Modal>
-                      </TableCell>
-                    </TableRow>
+                      {/* this modal pops up when the row is cliked*/}
+                      <Modal
+                        // closable
+                        title="Organization Detail..."
+                        centered
+                        onClose={handleClose}
+                        visible={visible}
+                        onOk={() => setVisible(false)}
+                        onCancel={() => setVisible(false)}
+                        width={1000}
+                      >
+                        <OrgDetail />
+                      </Modal>
+                    </>
                   );
                 })}
               {emptyRows > 0 && (

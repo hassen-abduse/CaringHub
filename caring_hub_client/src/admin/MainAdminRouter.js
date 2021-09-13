@@ -9,9 +9,9 @@ import Applicants from "./pages/applicants/Applicant";
 import Organizations from "./pages/orgs/Organizations";
 import Profile from "./pages/profile/Profile";
 import Projects from "./pages/projects/Projects";
-import CauseAreas from "./pages/CauseArea";
-import EvaluationCriterias from "./pages/EvaluationCriterias";
-import SkillSets from "./pages/SkillSet";
+import CauseAreas from "./pages/causeAreas/CauseArea";
+import EvaluationCriterias from "./pages/evaluation/EvaluationCriterias";
+import SkillSets from "./pages/skillSet/SkillSet";
 
 const useStyles = makeStyles({
   MainPage: {},
