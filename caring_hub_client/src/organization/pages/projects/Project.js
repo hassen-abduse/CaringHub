@@ -12,13 +12,14 @@ export default function Project() {
       style={{
         display: "flex",
         justifyContent: "center",
+        marginTop:'20px'
       }}
     >
       <div style={{ display: "flex", flexDirection: "column" }}>
-        <div>
-          <h1>My Job Posts</h1>
-        </div>
         <div style={{ display: "flex" }}>
+          <div>
+            <h5>My Job Posts</h5>
+          </div>
           <OrgProjectCard />
           <OrgProjectCard />
         </div>

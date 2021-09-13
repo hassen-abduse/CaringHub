@@ -173,7 +173,7 @@ function AppBar(props) {
                     </Link>
                   </li>
 
-                  <li class="nav-item">
+                  {/* <li class="nav-item">
                     <Link
                       class={
                         route === "/organization/applicants"
@@ -190,9 +190,9 @@ function AppBar(props) {
                         style={{
                           backgroundColor: "#0092FF",
                         }}
-                      /> */}
+                      /> *
                     </Link>
-                  </li>
+                  </li> */}
                 </ul>
               )}
             </ul>

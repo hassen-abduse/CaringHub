@@ -28,7 +28,6 @@ export const NetRequest = (state = {
         isLoading: false,
         errMess: action.errMess,
         success: false,
-        status: null
       }
     default:
       return state
