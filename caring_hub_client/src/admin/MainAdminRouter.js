@@ -1,7 +1,6 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core";
 
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter , Switch, Route } from "react-router-dom";
 
 import Volunteers from "./pages/volunteers/Volunteer";
 import Dashboard from "./pages/dashboard/Dashboard";
@@ -13,50 +12,42 @@ import CauseAreas from "./pages/causeAreas/CauseArea";
 import EvaluationCriterias from "./pages/evaluation/EvaluationCriterias";
 import SkillSets from "./pages/skillSet/SkillSet";
 
-const useStyles = makeStyles({
-  MainPage: {},
-  fullList: {
-    width: "auto",
-  },
-});
 export default function MainAdminRouter() {
-  const classes = useStyles;
   return (
-    <Router>
-      <div className={classes.MainPage}>
-        <Switch>
-          <Route exact path="/admin/projects">
-            <Projects />
-          </Route>
-          <Route exact path="/admin/volunteers">
-            <Volunteers />
-          </Route>
-          <Route exact path="/admin/Dashboard">
-            <Dashboard />
-          </Route>
-          <Route exact path="/admin/profile">
-            <Profile />
-          </Route>
-          <Route exact path="/admin/applicants">
-            <Applicants />
-          </Route>
-          <Route exact path="/admin/organizations">
-            <Organizations />
-          </Route>
-          <Route exact path="/admin/causeAreas">
-            <CauseAreas />
-          </Route>
-          <Route exact path="/admin/skillSets">
-            <SkillSets />
-          </Route>
-          <Route exact path="/admin/evaluationCriterias">
-            <EvaluationCriterias />
-          </Route>
-          <Route exact path="/admin">
-            <Dashboard />
-          </Route>
-        </Switch>
-      </div>
-    </Router>
+    <BrowserRouter>
+    <Switch>
+      <Route exact path="/admin/projects">
+        <Projects />
+      </Route>
+      <Route exact path="/admin/volunteers">
+        <Volunteers />
+      </Route>
+      <Route exact path="/admin/Dashboard">
+        <Dashboard />
+      </Route>
+      <Route exact path="/admin/profile">
+        <Profile />
+      </Route>
+      <Route exact path="/admin/applicants">
+        <Applicants />
+      </Route>
+      <Route exact path="/admin/organizations">
+        <Organizations />
+      </Route>
+      <Route exact path="/admin/causeAreas">
+        <CauseAreas />
+      </Route>
+      <Route exact path="/admin/skillSets">
+        <SkillSets />
+      </Route>
+      <Route exact path="/admin/evaluationCriterias">
+        <EvaluationCriterias />
+      </Route>
+      <Route exact path="/">
+        <Dashboard />
+      </Route>
+    </Switch>
+    </BrowserRouter>
+    
   );
 }

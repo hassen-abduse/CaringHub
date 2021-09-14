@@ -7,8 +7,23 @@ import Popper from "@material-ui/core/Popper";
 import MenuItem from "@material-ui/core/MenuItem";
 import MenuList from "@material-ui/core/MenuList";
 import { makeStyles } from "@material-ui/core/styles";
+import { logoutUser } from "../../redux/ActionCreators/authActions";
+import { connect } from "react-redux";
 
 import ProfileImage from ".../../../src/assets/img/profile2.jpg";
+import { Link } from "react-router-dom";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import SettingsIcon from "@material-ui/icons/Settings";
+
+const mapStateToProps = (state) => {
+  return {
+    auth: state.auth,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  logoutUser: () => dispatch(logoutUser()),
+});
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -25,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function AccountMenu() {
+function AccountMenu(props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
@@ -98,7 +113,17 @@ export default function AccountMenu() {
                   >
                     <MenuItem onClick={handleClose}>Profile</MenuItem>
                     <MenuItem onClick={handleClose}>Settings</MenuItem>
-                    <MenuItem onClick={handleClose}>Logout</MenuItem>
+                    <MenuItem>
+                      <Link
+                        className="text-decoration-none"
+                        to="/index"
+                        onClick={() => {
+                          props.logoutUser();
+                        }}
+                      >
+                        <ExitToAppIcon /> Logout
+                      </Link>
+                    </MenuItem>
                   </MenuList>
                 </ClickAwayListener>
               </Paper>
@@ -109,3 +134,4 @@ export default function AccountMenu() {
     </div>
   );
 }
+export default connect(mapStateToProps, mapDispatchToProps)(AccountMenu);

@@ -27,7 +27,6 @@ import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 
-
 // import User from "./components/User";
 
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
@@ -115,17 +114,10 @@ const drawerWidth = 240;
 
 function AppBar(props) {
   const route = useLocation().pathname;
-  const classes = useStyles()
+  const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
   const decoded = props.auth.token
     ? jwtDecode(props.auth.token)
     : { role: "", _id: "" };
@@ -163,15 +155,11 @@ function AppBar(props) {
         aria-label="Main navigation"
       >
         <div class="container">
-
-          {
-            open === false ?
+          {open === false ? (
             <Link className="navbar-brand logo-text" to="/index">
               CaringHub
             </Link>
-            :
-            null
-          }
+          ) : null}
           <button
             class="navbar-toggler p-0 border-0"
             type="button"
@@ -201,9 +189,7 @@ function AppBar(props) {
                 <ul class="navbar-nav navbar-nav-scroll">
                   <li class="nav-item">
                     <Link
-                      class={
-                        route === "/" ? "nav-link active" : "nav-link"
-                      }
+                      class={route === "/" ? "nav-link active" : "nav-link"}
                       to="/"
                     >
                       Home
@@ -211,7 +197,11 @@ function AppBar(props) {
                   </li>
                   <li class="nav-item">
                     <Link
-                      class={route === `/volunteer/dashboard/${decoded._id}` ? "nav-link active" : "nav-link"}
+                      class={
+                        route === `/volunteer/dashboard/${decoded._id}`
+                          ? "nav-link active"
+                          : "nav-link"
+                      }
                       aria-current="page"
                       to={`/volunteer/dashboard/${decoded._id}`}
                     >
@@ -246,7 +236,11 @@ function AppBar(props) {
                   </li>
                   <li class="nav-item ">
                     <Link
-                      class={route === `/organization/dashboard/${decoded._id}` ? "nav-link active" : "nav-link"}
+                      class={
+                        route === `/organization/dashboard/${decoded._id}`
+                          ? "nav-link active"
+                          : "nav-link"
+                      }
                       to={`/organization/dashboard/${decoded._id}`}
                     >
                       Dasboard
@@ -301,7 +295,6 @@ function AppBar(props) {
                   </li> */}
                 </ul>
               )}
-
             </ul>
             {decoded.role == "" && (
               <span class="nav-item">
@@ -331,7 +324,6 @@ function AppBar(props) {
                 </li>
               </ul>
             )}
-
           </div>
         </div>
       </nav>

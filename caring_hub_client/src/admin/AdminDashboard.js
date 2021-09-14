@@ -10,15 +10,14 @@ import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
-import { Grid, ListItem, } from "@material-ui/core";
-import {Link } from 'react-router-dom'
+import { Grid, ListItem } from "@material-ui/core";
+
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import Badge from "@material-ui/core/Badge";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
-
 import MessageRounded from "@material-ui/icons/MessageRounded";
 import NotificationImportant from "@material-ui/icons/NotificationImportant";
 
@@ -26,6 +25,19 @@ import MainAdminRouter from "./MainAdminRouter";
 import User from "./components/User";
 import AccountMenu from "./components/AccountMenu";
 import Organizations from "./pages/orgs/Organizations";
+import { Link, Redirect } from "react-router-dom";
+
+import { connect } from "react-redux";
+
+const mapStateToProps = (state) => {
+  return {
+    auth: state.auth,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  // logoutUser: () => dispatch(logoutUser()),
+});
 
 const drawerWidth = 240;
 
@@ -75,9 +87,9 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     padding: theme.spacing(0, 1),
-    // necessary for content to be below app bar
+    // necessary for content href be below app bar
     ...theme.mixins.toolbar,
-    justifyContent: "flex-end",
+    justifyContent: "center",
   },
 
   content: {
@@ -96,12 +108,15 @@ const useStyles = makeStyles((theme) => ({
     }),
     marginLeft: 0,
   },
+  decoration: {
+    textDecoration: "none",
+  },
 }));
 
-export default function AdminDashboard() {
+function AdminDashboard(props) {
   const classes = useStyles();
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -116,7 +131,7 @@ export default function AdminDashboard() {
       <CssBaseline />
       <AppBar
         position="fixed"
-        color="default"
+        color="white"
         className={clsx(classes.appBar, {
           [classes.appBarShift]: open,
         })}
@@ -135,8 +150,16 @@ export default function AdminDashboard() {
                   <MenuIcon />
                 </IconButton>
               </Grid>
-              <Grid item>
-                <Typography variant="h3" wrap>
+              <Grid item style={{ display: "flex" }}>
+                <Typography
+                  style={{
+                    fontFamily: "Great Vibes",
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                  variant="h4"
+                  wrap
+                >
                   CaringHub
                 </Typography>
               </Grid>
@@ -144,17 +167,17 @@ export default function AdminDashboard() {
             <Grid item xs></Grid>
             <Grid item style={{ padding: 0, margin: 0 }}>
               <List className={classes.HeaderIcons}>
-                <ListItem>
+                {/* <ListItem>
                   <Badge badgeContent={4} color="primary">
                     <MessageRounded />
                   </Badge>
-                </ListItem>
+                </ListItem> */}
                 <ListItem>
-                  <Link to="/org/applicants">
+                  <a href="/admin/applicants">
                     <Badge badgeContent={6} color="secondary">
                       <NotificationImportant />
                     </Badge>
-                  </Link>
+                  </a>
                 </ListItem>
                 <ListItem>
                   <AccountMenu />
@@ -177,7 +200,7 @@ export default function AdminDashboard() {
         <div className={classes.drawerHeader}>
           <div>
             <User />
-            <Typography>Admin Dashboard</Typography>
+            <Typography>{props.auth.user.username}</Typography>
           </div>
 
           <IconButton onClick={handleDrawerClose}>
@@ -190,73 +213,73 @@ export default function AdminDashboard() {
         </div>
         <Divider />
         <List>
-          <Link href="/admin/dashboard">
+          <a className={classes.decoration} href="/admin/dashboard">
             <ListItem>
               <ListItemIcon>
                 <InboxIcon />
               </ListItemIcon>
               <ListItemText>Dashboard</ListItemText>
             </ListItem>
-          </Link>
-          <Link to="/admin/organizations">
+          </a>
+          <a className={classes.decoration} href="/admin/organizations">
             <ListItem>
               <ListItemIcon>
                 <InboxIcon />
               </ListItemIcon>
               <ListItemText>Organizations</ListItemText>
             </ListItem>
-          </Link>
-          <Link href="/admin/projects">
+          </a>
+          <a className={classes.decoration} href="/admin/projects">
             <ListItem>
               <ListItemIcon>
                 <InboxIcon />
               </ListItemIcon>
               <ListItemText>Projects</ListItemText>
             </ListItem>
-          </Link>
-          <Link href="/admin/applicants">
+          </a>
+          <a className={classes.decoration} href="/admin/applicants">
             <ListItem>
               <ListItemIcon>
                 <InboxIcon />
               </ListItemIcon>
               <ListItemText>Applicants</ListItemText>
             </ListItem>
-          </Link>
-          <Link href="/admin/volunteers">
+          </a>
+          <a className={classes.decoration} href="/admin/volunteers">
             <ListItem>
               <ListItemIcon>
                 <InboxIcon />
               </ListItemIcon>
               <ListItemText>Volunteers</ListItemText>
             </ListItem>
-          </Link>
+          </a>
         </List>
         <Divider />
         <List>
-          <Link href="/admin/skillSets">
+          <a className={classes.decoration} href="/admin/skillSets">
             <ListItem>
               <ListItemIcon>
                 <InboxIcon />
               </ListItemIcon>
               <ListItemText>Skill sets</ListItemText>
             </ListItem>
-          </Link>
-          <Link to="/admin/evaluationCriterias">
+          </a>
+          <a className={classes.decoration} href="/admin/evaluationCriterias">
             <ListItem>
               <ListItemIcon>
                 <InboxIcon />
               </ListItemIcon>
               <ListItemText>Evaluation criaterias</ListItemText>
             </ListItem>
-          </Link>
-          <Link to="/admin/causeAreas">
+          </a>
+          <a className={classes.decoration} href="/admin/causeAreas">
             <ListItem>
               <ListItemIcon>
                 <InboxIcon />
               </ListItemIcon>
               <ListItemText>cause areas</ListItemText>
             </ListItem>
-          </Link>
+          </a>
         </List>
       </Drawer>
       <main
@@ -264,10 +287,10 @@ export default function AdminDashboard() {
           [classes.contentShift]: open,
         })}
       >
-        <div className={classes.drawerHeader}>Hey</div>
+        <div className={classes.drawerHeader}>Heefwretrhrewgey</div>
         <MainAdminRouter />
-        {/* <Organizations /> */}
       </main>
     </div>
   );
 }
+export default connect(mapStateToProps, mapDispatchToProps)(AdminDashboard);

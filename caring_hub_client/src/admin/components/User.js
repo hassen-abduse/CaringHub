@@ -5,7 +5,9 @@ import { Avatar } from "@material-ui/core";
 
 export default function User() {
   return (
-    <div>
+    <div 
+    style={{ display: "flex", justifyContent: "center" }}
+    >
       <IconButton color="inherit">
         <Avatar fontSize="small" />
       </IconButton>
