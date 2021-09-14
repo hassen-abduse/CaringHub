@@ -24,6 +24,11 @@ import EditIcon from "@material-ui/icons/Edit";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import { Modal } from "antd";
 import ProjectDetail from "./ProjectDetail";
+import { fetchProjects } from "../../../redux/ActionCreators/projectActions";
+import { connect } from 'react-redux'
+import { useEffect } from "react";
+import { Alert, AlertTitle } from '@material-ui/lab';
+import { CircularProgress, Container, Portal } from "@material-ui/core";
 
 function createData(
   projectName,
@@ -81,38 +86,29 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
-    id: "project-Name",
+    id: "Project Name",
     numeric: false,
     disablePadding: true,
     label: "Project Name",
   },
-  {
-    id: "posted-Date",
-    date: true,
-    disablePadding: false,
-    label: "Posted Date",
-  },
 
   {
-    id: "posted-By",
+    id: "Owner Organization",
     numeric: true,
     disablePadding: false,
-    label: "Posted By",
-  },
-  { id: "deadline", numeric: true, disablePadding: false, label: "Deadline" },
-  { id: "location", numeric: true, disablePadding: false, label: "Location" },
-  {
-    id: "active-Volunteers",
-    numeric: true,
-    disablePadding: false,
-    label: "Active Volunteers",
+    label: "Owner Organization",
   },
   {
-    id: "applicant",
-    numeric: true,
+    id: "Posted On",
+    date: true,
     disablePadding: false,
-    label: "Applicants",
+    label: "Posted On",
   },
+  { id: "Location", numeric: true, disablePadding: false, label: "Location" },
+  { id: "Start Date", numeric: true, disablePadding: false, label: "Start Date" },
+  { id: "End Date", numeric: true, disablePadding: false, label: "End Date" },
+
+
 ];
 
 function EnhancedTableHead(props) {
@@ -184,13 +180,13 @@ const useToolbarStyles = makeStyles((theme) => ({
   highlight:
     theme.palette.type === "light"
       ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        }
+        color: theme.palette.secondary.main,
+        backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+      }
       : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark,
-        },
+        color: theme.palette.text.primary,
+        backgroundColor: theme.palette.secondary.dark,
+      },
   title: {
     flex: "1 1 100%",
   },
@@ -275,7 +271,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Projects() {
+const mapStateToProps = (state) => {
+  return {
+    Projects: state.Projects,
+  }
+}
+
+const mapDispatchToProps = (dispatch) => ({
+  fetchProjects: () => dispatch(fetchProjects()),
+})
+
+function Projects(props) {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
@@ -283,6 +289,7 @@ export default function Projects() {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [selectedRow, setSelectedRow] = React.useState();
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -298,6 +305,9 @@ export default function Projects() {
     }
     setSelected([]);
   };
+  useEffect(() => {
+    props.fetchProjects()
+  }, [])
 
   const handleClick = (event, index) => {
     console.log(index);
@@ -338,7 +348,35 @@ export default function Projects() {
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
   const [visible, setVisible] = useState(false);
-  return (
+  if (props.Projects.errMess) return (
+    <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
+      <div className='container'>
+        <div className='row' style={{ display: 'flex', justifyContent: 'center', }}>
+          <Alert style={{ margin: '50px', padding: '50px' }} severity="error">
+            <AlertTitle style={{ fontWeight: 'bold' }}>Error</AlertTitle>
+            <strong>{props.Projects.errMess}</strong>
+          </Alert>
+        </div>
+      </div>
+
+    </Container >
+
+  )
+  else if (props.Projects.isLoading) return (
+    <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
+      <div class='container'>
+        <div className='row'>
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '100px', marginBottom: '75px' }}>
+            <CircularProgress size={'50px'} />
+
+          </div>
+          <p style={{ textAlign: 'center', fontSize: '25px', fontWeight: 'bold' }}>Loading...</p>
+        </div>
+      </div>
+    </Container>
+  )
+
+  else if (props.Projects.projects.length >= 1) return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
         <EnhancedTableToolbar numSelected={selected.length} />
@@ -359,7 +397,7 @@ export default function Projects() {
               rowCount={rows.length}
             />
             <TableBody>
-              {stableSort(rows, getComparator(order, orderBy))
+              {stableSort(props.Projects.projects, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const isItemSelected = isSelected(index);
@@ -367,6 +405,10 @@ export default function Projects() {
 
                   return (
                     <TableRow
+                      onClick={() => {
+                        setVisible(true);
+                        setSelectedRow(row);
+                      }}
                       hover
                       role="checkbox"
                       aria-checked={isItemSelected}
@@ -383,35 +425,23 @@ export default function Projects() {
                       </TableCell>
                       <TableCell
                         component="th"
-                        id={labelId}
+                        id={row._id}
                         scope="row"
                         padding="none"
                       >
-                        {row.projectName}
+                        {row.name}
                       </TableCell>
 
-                      <TableCell align="right">{row.postedDate}</TableCell>
-                      <TableCell align="right">{row.PostedBy}</TableCell>
-                      <TableCell align="right">{row.deadline}</TableCell>
-                      <TableCell align="right">{row.location}</TableCell>
-                      <TableCell align="right">
-                        {row.activeVolunteers}
-                      </TableCell>
-                      <TableCell align="right">{row.applicant}</TableCell>
+                      <TableCell align="right">{row.ownerOrg.name}</TableCell>
+                      <TableCell align="right">{new Date(row.createdAt).toDateString()}</TableCell>
+                      <TableCell align="right">{row.location.city}</TableCell>
+                      <TableCell align="right">{new Date(row.startDate).toDateString()}</TableCell>
+                      <TableCell align="right">{new Date(row.endDate).toDateString()}</TableCell>
                       <TableCell>
                         <Button type="primary" onClick={() => setVisible(true)}>
-                          show projects
+                          show detail
                         </Button>
-                        <Modal
-                          title="project detail"
-                          centered
-                          visible={visible}
-                          onOk={() => setVisible(false)}
-                          onCancel={() => setVisible(false)}
-                          width={1000}
-                        >
-                          <ProjectDetail />
-                        </Modal>
+
                       </TableCell>
                     </TableRow>
                   );
@@ -424,6 +454,17 @@ export default function Projects() {
             </TableBody>
           </Table>
         </TableContainer>
+        {selectedRow && <Modal
+          title="project detail"
+          //centered
+          visible={visible}
+          onOk={() => setVisible(false)}
+          onCancel={() => setVisible(false)}
+          width={800}
+        >
+          <ProjectDetail project={selectedRow} />
+        </Modal>
+}
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
@@ -439,5 +480,19 @@ export default function Projects() {
         label="Dense padding"
       />
     </div>
-  );
+  )
+  else return (
+    <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
+      <div className='container'>
+        <div className='row' style={{ display: 'flex', justifyContent: 'center', }}>
+          <Alert style={{ margin: '50px', padding: '50px' }} severity="error">
+            <AlertTitle style={{ fontWeight: 'bold' }}>Error</AlertTitle>
+            <strong>No Projects Found!</strong>
+          </Alert>
+        </div>
+      </div>
+
+    </Container >
+  )
 }
+export default connect(mapStateToProps, mapDispatchToProps)(Projects)

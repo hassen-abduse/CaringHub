@@ -4,10 +4,22 @@ import Divider from "@material-ui/core/Divider";
 import { Rate, Row } from "antd";
 import Avatar from "../../../volunteer/components/Avatars";
 import { Badge, Col } from "antd";
-
 import { Button } from "@material-ui/core";
-
+import { baseUrl } from "../../../redux/shared/baseUrl";
+import { Alert, AlertTitle } from '@material-ui/lab';
+import { CircularProgress } from "@material-ui/core";
+import { deleteOrg } from "../../../redux/ActionCreators/orgActions";
+import { connect } from 'react-redux'
 const desc = ["terrible", "bad", "normal", "good", "wonderful"];
+
+const mapStateToProps = (state) => {
+  return {
+    Organizations: state.Organizations,
+  }
+}
+const mapDispatchToProps = (dispatch) => ({
+  deleteOrg: (orgId) => dispatch(deleteOrg(orgId)),
+})
 class OrgDetail extends Component {
   state = {
     value: 0,
@@ -50,7 +62,8 @@ class OrgDetail extends Component {
       proffesionalism,
       hireAgain,
     } = this.state;
-    return (
+    // 
+     return (
       <div style={{ justifyContent: "center" }}>
         <Row>
           <Col span="8">
@@ -63,30 +76,16 @@ class OrgDetail extends Component {
                     height: "80px",
                   }}
                   alt="projectImage"
-                  src="https://demos.creative-tim.com/argon-dashboard-pro/assets/img/theme/team-4.jpg"
+                  src={this.props.org.logo}
                 ></img>
               </div>
               <div>
-                <h4
+                <h3
                   style={{ marginLeft: "0rem", marginBottom: 0 }}
                   className="h2-heading"
                 >
-                  Org Name
-                </h4>
-                <p
-                  style={{ marginLeft: "0rem", color: "#159197" }}
-                  className=""
-                >
-                  Field of work: educational
-                </p>
-                <span style={{ marginTop: "0px" }}>
-                  <Rate disabled={true} tooltips={desc} value={value} />
-                  {value ? (
-                    <span className="ant-rate-text">{desc[value - 1]}</span>
-                  ) : (
-                    ""
-                  )}
-                </span>
+                  {this.props.org.name}
+                </h3>
               </div>
             </div>
           </Col>
@@ -111,11 +110,11 @@ class OrgDetail extends Component {
                     }}
                     className=" mb-0 teal"
                   >
-                    Org Description :
+                    Org Mission :
                   </h6>
                   <span>
-                    <Typography>
-                      we work on tech education to create elite peoples
+                    <Typography style={{marginTop:"10px"}}>
+                      {this.props.org.mission.substring(0, 50) + '...'}
                     </Typography>
                   </span>
                 </div>
@@ -130,7 +129,7 @@ class OrgDetail extends Component {
                     Email :
                   </h6>
                   <span>
-                    <Typography>aau@edu.et</Typography>
+                    <Typography style={{marginTop: "3px"}}>{this.props.org.emailAddress}</Typography>
                   </span>
                 </div>
                 <div style={{ display: "flex" }}>
@@ -144,21 +143,7 @@ class OrgDetail extends Component {
                     Phone :
                   </h6>
                   <span>
-                    <Typography>0923191253</Typography>
-                  </span>
-                </div>
-                <div style={{ display: "flex" }}>
-                  <h6
-                    style={{
-                      marginTop: "3px",
-                      marginRight: "10px",
-                    }}
-                    className="mb-0 teal"
-                  >
-                    areas we worked on :
-                  </h6>
-                  <span>
-                    <Typography>education, training, research</Typography>
+                    <Typography style={{marginTop: "3px"}}>{this.props.org.phoneNumber}</Typography>
                   </span>
                 </div>
 
@@ -170,9 +155,11 @@ class OrgDetail extends Component {
                     }}
                     className="mb-0 teal"
                   >
-                    Locations:
+                    Location:
                   </h6>
-                  <span>addis ababa</span>
+                  <span>
+                    <Typography style={{marginTop:'3px'}}>{this.props.org.address.city}</Typography>
+                  </span>
                 </div>
                 <div style={{ display: "flex" }}>
                   <h6
@@ -182,39 +169,29 @@ class OrgDetail extends Component {
                     }}
                     className="mb-0 teal"
                   >
-                    Volunteers:
+                    Legal Document:
                   </h6>
-                  <span>100</span>
-                </div>
-                <div style={{ display: "flex" }}>
-                  <h6
-                    style={{
-                      marginTop: "3px",
-                      marginRight: "10px",
-                    }}
-                    className="mb-0 teal"
-                  >
-                    projects:
-                  </h6>
-                  <span>100</span>
+                  <span>
+                    <Typography style={{marginTop:'3px'}}><a href={this.props.org.legalDoc}>Legal Document</a></Typography>
+                  </span>
                 </div>
 
                 <div
                   style={{
                     display: "flex",
-                    justifyContent: "space-between",
+                    justifyContent: "flex-end",
                     marginTop: "10px",
                   }}
                 >
                   <Button
-                    onClick={this.handleRating}
                     variant="contained"
                     color="primary"
+                    style={{marginRight:'10px'}}
                   >
-                    go to org
+                    <a style={{textDecoration:'none'}} href={`/organization/dashboard/${this.props.org._id}`}>More Details</a>
                   </Button>
                   <Button
-                    onClick={this.handleRating}
+                    onClick={()=> this.props.deleteOrg(this.props.org._id)}
                     variant="contained"
                     color="secondary"
                   >
@@ -225,46 +202,10 @@ class OrgDetail extends Component {
             </div>
           </Col>
         </Row>
-        <Row>
-          <Col>
-            <h4 className="teal mt-4">Skills</h4>
-            <div style={{ display: "flexStart" }}>
-              <span
-                style={{ margin: "0.3rem", padding: "0.8rem" }}
-                className="btn-outline-sm "
-              >
-                Software Engineering
-              </span>
-              <span
-                style={{ margin: "0.3rem", padding: "0.8rem" }}
-                className="btn-outline-sm"
-              >
-                Socail Work
-              </span>
-              <span
-                style={{ margin: "0.3rem", padding: "0.8rem" }}
-                className="btn-outline-sm"
-              >
-                Teaching
-              </span>
-              <span
-                style={{ margin: "0.3rem", padding: "0.8rem" }}
-                className="btn-outline-sm"
-              >
-                Blood Donation
-              </span>
-              <span
-                style={{ margin: "0.3rem", padding: "0.8rem" }}
-                className="btn-outline-sm"
-              >
-                Project Manager
-              </span>
-            </div>
-          </Col>
-        </Row>
+      
       </div>
     );
   }
 }
 
-export default OrgDetail;
+export default connect(mapStateToProps, mapDispatchToProps)(OrgDetail);

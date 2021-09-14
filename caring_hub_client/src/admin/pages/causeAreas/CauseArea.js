@@ -152,13 +152,13 @@ const useToolbarStyles = makeStyles((theme) => ({
   highlight:
     theme.palette.type === "light"
       ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        }
+        color: theme.palette.secondary.main,
+        backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+      }
       : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark,
-        },
+        color: theme.palette.text.primary,
+        backgroundColor: theme.palette.secondary.dark,
+      },
   title: {
     flex: "1 1 100%",
   },
@@ -202,12 +202,13 @@ const EnhancedTableToolbar = (props) => {
           Add Cause
         </Button>
         <Modal
+          //style={{alignItems:'flex-end',justifyContent:'center'}}
           title="add  Causes"
           centered
           visible={visible}
           onOk={() => setVisible(false)}
           onCancel={() => setVisible(false)}
-          width={1000}
+          width={700}
           footer={[
             <Button
               key="back"
@@ -434,34 +435,6 @@ export default function CauseAreas() {
                               >
                                 Edit
                               </Button>
-                              <Modal
-                                title="add cause"
-                                centered
-                                visible={visible}
-                                onOk={() => setVisible(false)}
-                                onCancel={() => setVisible(false)}
-                                width={1000}
-                                footer={[
-                                  <Button
-                                    key="back"
-                                    size="large"
-                                    color="primary"
-                                    onClick={() => setVisible(false)}
-                                  >
-                                    Update
-                                  </Button>,
-                                  <Button
-                                    key="back"
-                                    size="large"
-                                    color="primary"
-                                    onClick={() => setVisible(false)}
-                                  >
-                                    cancel
-                                  </Button>,
-                                ]}
-                              >
-                                <CauseAreaAdd />
-                              </Modal>
                             </Grid>
 
                             <Grid
@@ -480,6 +453,34 @@ export default function CauseAreas() {
                       </TableRow>
                     );
                   })}
+                <Modal
+                  title="add cause"
+                  centered
+                  visible={visible}
+                  onOk={() => setVisible(false)}
+                  onCancel={() => setVisible(false)}
+                  width={1000}
+                  footer={[
+                    <Button
+                      key="back"
+                      size="large"
+                      color="primary"
+                      onClick={() => setVisible(false)}
+                    >
+                      Update
+                    </Button>,
+                    <Button
+                      key="back"
+                      size="large"
+                      color="primary"
+                      onClick={() => setVisible(false)}
+                    >
+                      cancel
+                    </Button>,
+                  ]}
+                >
+                  <CauseAreaAdd />
+                </Modal>
                 {emptyRows > 0 && (
                   <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
                     <TableCell colSpan={6} />

@@ -23,63 +23,23 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import { Modal } from "antd";
-
-import ClearIcon from "@material-ui/icons/Clear";
-import DoneAllIcon from "@material-ui/icons/DoneAll";
 import ApplicantDetail from "./ApplicantDetail";
-import ShowApplicantOrgDialog from "./ShowApplicantOrgDialog";
+import { connect } from 'react-redux'
+import { fetchOrgs } from "../../../redux/ActionCreators/orgActions";
+import { useEffect } from "react";
+import { Alert, AlertTitle } from '@material-ui/lab';
+import { CircularProgress, Container, Portal } from "@material-ui/core";
 
-function createData(firstName, lastName, phone, email, address, skill, areas) {
-  return { firstName, lastName, phone, email, address, skill, areas };
+const mapStateToProps = (state) => {
+  return {
+    Organizations: state.Organizations,
+  }
 }
 
-const rows = [
-  createData(
-    "Mehammed",
-    "Teshome",
-    "0923191253",
-    "checoslbches@gmail.com",
-    "addis ababa",
-    "it",
-    "tech"
-  ),
-  createData(
-    "Mehammed",
-    "Teshome",
-    "0923191253",
-    "checoslbches@gmail.com",
-    "addis ababa",
-    "it",
-    "tech"
-  ),
-  createData(
-    "Mehammed",
-    "Teshome",
-    "0923191253",
-    "checoslbches@gmail.com",
-    "addis ababa",
-    "it",
-    "tech"
-  ),
-  createData(
-    "Mehammed",
-    "Teshome",
-    "0923191253",
-    "checoslbches@gmail.com",
-    "addis ababa",
-    "it",
-    "tech"
-  ),
-  createData(
-    "Mehammed",
-    "Teshome",
-    "0923191253",
-    "checoslbches@gmail.com",
-    "addis ababa",
-    "it",
-    "tech"
-  ),
-];
+const mapDispatchToProps = (dispatch) => ({
+  fetchOrgs: () => dispatch(fetchOrgs()),
+})
+
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -109,25 +69,31 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
-    id: "Full-Name",
+    id: "org_Name",
     numeric: false,
-    disablePadding: true,
-    label: "Full Name",
+    disablePadding: false,
+    label: "Org Name",
   },
 
-  { id: "address", numeric: true, disablePadding: false, label: "address" },
-
   {
-    id: "areas",
+    id: "phone",
     numeric: true,
     disablePadding: false,
-    label: "applied to project- ",
+    label: "Phone Number",
   },
+  { id: "email", numeric: true, disablePadding: false, label: "Email address" },
+  { id: "address", numeric: true, disablePadding: false, label: "address" },
   {
-    id: "verify",
+    id: "legalDoc",
     numeric: false,
     disablePadding: false,
-    label: "Verify applicants ",
+    label: "Legal Document ",
+  },
+  {
+    id: "locations",
+    numeric: false,
+    disablePadding: false,
+    label: "Actions ",
   },
 ];
 
@@ -151,7 +117,8 @@ function EnhancedTableHead(props) {
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={headCell.id === "verify" ? "center" : "left"}
+            align={headCell.numeric ? "right" : "left"}
+            padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
@@ -191,19 +158,18 @@ const useToolbarStyles = makeStyles((theme) => ({
   highlight:
     theme.palette.type === "light"
       ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        }
+        color: theme.palette.secondary.main,
+        backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+      }
       : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark,
-        },
+        color: theme.palette.text.primary,
+        backgroundColor: theme.palette.secondary.dark,
+      },
   title: {
     flex: "1 1 100%",
   },
-  headerTooltip: {
+  HeaderIcons: {
     display: "flex",
-    padding: "0 5px",
   },
 }));
 
@@ -217,46 +183,14 @@ const EnhancedTableToolbar = (props) => {
         [classes.highlight]: numSelected > 0,
       })}
     >
-      {numSelected > 0 ? (
-        <Typography
-          className={classes.title}
-          color="inherit"
-          variant="subtitle1"
-          component="div"
-        >
-          {numSelected} selected
-        </Typography>
-      ) : (
-        <Typography
-          className={classes.title}
-          variant="h6"
-          id="tableTitle"
-          component="div"
-        >
-          Applicants
-        </Typography>
-      )}
-
-      {numSelected > 0 ? (
-        <div className={classes.headerTooltip}>
-          <Tooltip title="accept selected applicants">
-            <IconButton aria-label="delete">
-              <DoneAllIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="decline selected applicants">
-            <IconButton aria-label="delete">
-              <ClearIcon />
-            </IconButton>
-          </Tooltip>
-        </div>
-      ) : (
-        <Tooltip title="Filter list">
-          <IconButton aria-label="filter list">
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
-      )}
+      <Typography
+        className={classes.title}
+        variant="h6"
+        id="tableTitle"
+        component="div"
+      >
+        Organization
+      </Typography>
     </Toolbar>
   );
 };
@@ -290,7 +224,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Applicants() {
+function Applicants(props) {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
@@ -298,6 +232,7 @@ export default function Applicants() {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [selectedRow, setSelectedRow] = React.useState();
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -307,12 +242,15 @@ export default function Applicants() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.name);
+      const newSelecteds = props.Organizations.organizations.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
+  useEffect(() => {
+    props.fetchOrgs()
+  }, [])
 
   const handleClick = (event, index) => {
     console.log(index);
@@ -351,152 +289,157 @@ export default function Applicants() {
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
   const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+    rowsPerPage - Math.min(rowsPerPage, props.Organizations.organizations.length - page * rowsPerPage);
   const [visible, setVisible] = useState(false);
-  return (
-    <div className="container">
-      <Modal
-        title="Applicant Organizations Information"
-        centered
-        visible={visible}
-        // mask={false}
-        maskStyle={{
-          backgroundColor: "rgba(0, 0, 0, 0.25)",
-        }}
-        // onOk={() => setVisible(false)}
-        onCancel={() => setVisible(false)}
-        width={1000}
-        footer={[
-          <Button
-            key="back"
-            size="large"
-            color="primary"
-            onClick={() => setVisible(false)}
-          >
-            View documents
-          </Button>,
-        ]}
-      >
-        <ShowApplicantOrgDialog />
-      </Modal>
-      <div className={classes.root}>
-        <Paper className={classes.paper}>
-          <EnhancedTableToolbar numSelected={selected.length} />
-          <TableContainer>
-            <Table
-              className={classes.table}
-              aria-labelledby="tableTitle"
-              size={dense ? "small" : "medium"}
-              aria-label="enhanced table"
-            >
-              <EnhancedTableHead
-                classes={classes}
-                numSelected={selected.length}
-                order={order}
-                orderBy={orderBy}
-                onSelectAllClick={handleSelectAllClick}
-                onRequestSort={handleRequestSort}
-                rowCount={rows.length}
-              />
-              <TableBody style={{ paddingLeft: "20px" }}>
-                {stableSort(rows, getComparator(order, orderBy))
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row, index) => {
-                    const isItemSelected = isSelected(index);
-                    const labelId = `enhanced-table-checkbox-${index}`;
+  const handleOpen = () => {
+    setVisible(true);
+  };
 
-                    return (
+  const handleClose = () => {
+    setVisible(false);
+  };
+  if (props.Organizations.errMess) return (
+    <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
+      <div className='container'>
+        <div className='row' style={{ display: 'flex', justifyContent: 'center', }}>
+          <Alert style={{ margin: '50px', padding: '50px' }} severity="error">
+            <AlertTitle style={{ fontWeight: 'bold' }}>Error</AlertTitle>
+            <strong>{props.Organizations.errMess}</strong>
+          </Alert>
+        </div>
+      </div>
+
+    </Container >
+
+  )
+  else if (props.Organizations.isLoading) return (
+    <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
+      <div class='container'>
+        <div className='row'>
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '100px', marginBottom: '75px' }}>
+            <CircularProgress size={'50px'} />
+
+          </div>
+          <p style={{ textAlign: 'center', fontSize: '25px', fontWeight: 'bold' }}>Loading...</p>
+        </div>
+      </div>
+    </Container>
+  )
+
+  else if (props.Organizations.organizations.length >= 1) return  (
+    <div className={classes.root}>
+      <Paper className={classes.paper}>
+        <EnhancedTableToolbar numSelected={selected.length} />
+        <TableContainer>
+          <Table
+            className={classes.table}
+            aria-labelledby="tableTitle"
+            size={dense ? "small" : "medium"}
+            aria-label="enhanced table"
+          >
+            <EnhancedTableHead
+              classes={classes}
+              numSelected={selected.length}
+              order={order}
+              orderBy={orderBy}
+              onSelectAllClick={handleSelectAllClick}
+              onRequestSort={handleRequestSort}
+              rowCount={props.Organizations.organizations.length}
+            />
+            <TableBody>
+              {stableSort(props.Organizations.organizations, getComparator(order, orderBy))
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((row, index) => {
+                  const isItemSelected = isSelected(index);
+                  const labelId = `enhanced-table-checkbox-${index}`;
+
+                  return (
+                    <>
                       <TableRow
+                        // clicking the row set the modal visible
+                        onClick={() => {
+                          setVisible(true);
+                          setSelectedRow(row);
+                        }}
                         hover
                         role="checkbox"
                         aria-checked={isItemSelected}
                         tabIndex={-1}
-                        // onClick={() => setVisible(true)}
-                        key={index}
+                        key={row._id}
                         selected={isItemSelected}
+
                       >
-                        <TableCell
-                          style={{
-                            cursor: "pointer",
-                          }}
-                          component="th"
-                          id={labelId}
-                          scope="row"
-                          onClick={() => setVisible(true)}
-                        >
-                          {row.firstName + " " + row.lastName}
+                        <TableCell align="right">{row.name}</TableCell>
+                        <TableCell align="right">{row.phoneNumber}</TableCell>
+                        <TableCell align="right">{row.emailAddress}</TableCell>
+                        <TableCell align="right">{row.address.city}</TableCell>
+                        <TableCell align="center">
+                          {<a href={row.legalDoc}>Legal Doc</a>}
                         </TableCell>
-
-                        <TableCell align="left">{row.address}</TableCell>
-
-                        <TableCell align="left">{row.areas}</TableCell>
-                        <TableCell
-                          style={{
-                            display: "flex",
-                            justifyContent: "center",
-                          }}
-                        >
-                          <Grid
-                            container
-                            style={{
-                              margin: "10px",
-                              alignContent: "center",
-                              justifyContent: "space-between",
-                              width: "200px",
-                              marginLeft: "30px",
-                            }}
-                          >
-                            <Grid
-                              item
-                              style={{
-                                // backgroundColor: "green",
-                                borderRadius: "5px",
-                              }}
-                            >
-                              <Button variant="contained" color="primary">
-                                Accept
-                              </Button>
-                            </Grid>
-
-                            <Grid
-                              item
-                              style={{
-                                backgroundColor: "red",
-                                borderRadius: "5px",
-                              }}
-                            >
-                              <Button variant="contained" color="secondary">
-                                Decline
-                              </Button>
-                            </Grid>
-                          </Grid>
+                        <TableCell display="flex">
+                          <Button type="primary" style={{backgroundColor:"green"}}>Approve</Button>
                         </TableCell>
                       </TableRow>
-                    );
-                  })}
-                {emptyRows > 0 && (
-                  <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
-                    <TableCell colSpan={6} />
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
-            component="div"
-            count={rows.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
-        </Paper>
-        <FormControlLabel
-          control={<Switch checked={dense} onChange={handleChangeDense} />}
-          label="Dense padding"
+                    </>
+                  );
+                })}
+              {/* this modal pops up when the row is cliked*/}
+              {selectedRow && <div>
+                <Portal>
+                  <div>
+                    <Modal
+                      // closable
+                      title="Organization Detail..."
+                      style={{alignSelf:'flex-end'}}
+                      onClose={handleClose}
+                      visible={visible}
+                      onOk={() => setVisible(false)}
+                      onCancel={() => setVisible(false)}
+                      width={900}
+                    >
+                      <ApplicantDetail org={selectedRow} />
+                    </Modal>
+                  </div>
+                </Portal>
+              </div>}
+              {emptyRows > 0 && (
+                <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
+                  <TableCell colSpan={6} />
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={props.Organizations.organizations.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
         />
+      </Paper>
+      <FormControlLabel
+        control={<Switch checked={dense} onChange={handleChangeDense} />}
+        label="Dense padding"
+      />
+    </div>
+  )
+  else return (
+    <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
+    <div className='container'>
+      <div className='row' style={{ display: 'flex', justifyContent: 'center', }}>
+        <Alert style={{ margin: '50px', padding: '50px' }} severity="error">
+          <AlertTitle style={{ fontWeight: 'bold' }}>Error</AlertTitle>
+          <strong>No Organizations Found!</strong>
+        </Alert>
       </div>
     </div>
-  );
+
+  </Container >
+  )
 }
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Applicants)
