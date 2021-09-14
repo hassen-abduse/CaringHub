@@ -4,10 +4,19 @@ import Divider from "@material-ui/core/Divider";
 import { Rate, Row } from "antd";
 import Avatar from "../../../volunteer/components/Avatars";
 import { Badge, Col } from "antd";
-
 import { Button } from "@material-ui/core";
-
+import { connect } from 'react-redux'
+import { deleteProject } from "../../../redux/ActionCreators/projectActions";
 const desc = ["terrible", "bad", "normal", "good", "wonderful"];
+
+const mapStateToProps = (state) => {
+  return {
+    Projects: state.Projects,
+  }
+}
+const mapDispatchToProps = (dispatch) => ({
+  deleteProject: (projectId) => dispatch(deleteProject(projectId)),
+})
 class ProjectDetail extends Component {
   state = {
     value: 0,
@@ -50,43 +59,30 @@ class ProjectDetail extends Component {
       proffesionalism,
       hireAgain,
     } = this.state;
+    // 
     return (
       <div style={{ justifyContent: "center" }}>
         <Row>
-          <Col span="8">
+          <Col>
             <div>
-              <div>
+              {/* <div>
                 <img
                   style={{
-                    borderRadius: "100%",
-                    width: "80px",
+
+                    width: "80%",
                     height: "80px",
                   }}
                   alt="projectImage"
-                  src="https://demos.creative-tim.com/argon-dashboard-pro/assets/img/theme/team-4.jpg"
+                  src={this.props.project.image}
                 ></img>
-              </div>
+              </div> */}
               <div>
-                <h4
+                <h3
                   style={{ marginLeft: "0rem", marginBottom: 0 }}
                   className="h2-heading"
                 >
-                  Project Name
-                </h4>
-                <p
-                  style={{ marginLeft: "0rem", color: "#159197" }}
-                  className=""
-                >
-                  Category: educational
-                </p>
-                <span style={{ marginTop: "0px" }}>
-                  <Rate disabled={true} tooltips={desc} value={value} />
-                  {value ? (
-                    <span className="ant-rate-text">{desc[value - 1]}</span>
-                  ) : (
-                    ""
-                  )}
-                </span>
+                  {this.props.project.name}
+                </h3>
               </div>
             </div>
           </Col>
@@ -95,14 +91,14 @@ class ProjectDetail extends Component {
             <div>
               <div
                 style={{
-                  marginLeft: "3rem",
+                  //marginLeft: "3rem",
                   display: "flex",
                   flexDirection: "column",
                 }}
               >
-                <h4 style={{ marginLeft: "0rem", marginBottom: 0 }}>
+                {/* <h4 style={{ marginLeft: "0rem", marginBottom: 0 }}>
                   About The Project
-                </h4>
+                </h4> */}
                 <div style={{ display: "flex" }}>
                   <h6
                     style={{
@@ -111,15 +107,14 @@ class ProjectDetail extends Component {
                     }}
                     className=" mb-0 teal"
                   >
-                    Project Topic :
+                    Project Description :
                   </h6>
                   <span>
-                    <Typography>
-                      teachin summer course for highschool students
+                    <Typography style={{ marginTop: "10px" }}>
+                      {this.props.project.description.substring(0, 50) + '...'}
                     </Typography>
                   </span>
                 </div>
-
                 <div style={{ display: "flex" }}>
                   <h6
                     style={{
@@ -128,10 +123,24 @@ class ProjectDetail extends Component {
                     }}
                     className=" mb-0 teal"
                   >
-                    Posted Date :
+                    Owner Organization :
                   </h6>
                   <span>
-                    <Typography>september 10</Typography>
+                    <Typography style={{ marginTop: "3px" }}>{this.props.project.ownerOrg.name}</Typography>
+                  </span>
+                </div>
+                <div style={{ display: "flex" }}>
+                  <h6
+                    style={{
+                      marginTop: "3px",
+                      marginRight: "10px",
+                    }}
+                    className=" mb-0 teal"
+                  >
+                    Email :
+                  </h6>
+                  <span>
+                    <Typography style={{ marginTop: "3px" }}>{this.props.project.ownerOrg.emailAddress}</Typography>
                   </span>
                 </div>
 
@@ -143,10 +152,10 @@ class ProjectDetail extends Component {
                     }}
                     className="mb-0 teal"
                   >
-                    Needed Skills :
+                    Phone :
                   </h6>
                   <span>
-                    <Typography>programming and tech</Typography>
+                    <Typography style={{ marginTop: "3px" }}>{this.props.project.ownerOrg.phoneNumber}</Typography>
                   </span>
                 </div>
 
@@ -158,77 +167,79 @@ class ProjectDetail extends Component {
                     }}
                     className="mb-0 teal"
                   >
-                    Deadline :
+                    Location:
                   </h6>
                   <span>
-                    <Typography>October 20</Typography>
+                    <Typography style={{ marginTop: '3px' }}>{this.props.project.location.city}</Typography>
                   </span>
                 </div>
-                <div style={{ display: "flex" }}>
-                  <h6
-                    style={{
-                      marginTop: "3px",
-                      marginRight: "10px",
-                    }}
-                    className="mb-0 teal"
-                  >
-                    Needeed Volunteer:
-                  </h6>
-                  <span>100</span>
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    marginTop: "10px",
-                  }}
-                >
-                  <Button
-                    onClick={this.handleRating}
-                    variant="contained"
-                    color="primary"
-                  >
-                    see project
-                  </Button>
-                </div>
+
               </div>
             </div>
           </Col>
         </Row>
         <Row>
           <Col>
-            <h4 className="teal mt-4">Skills</h4>
+            <h4 className="teal">Skills</h4>
             <div style={{ display: "flexStart" }}>
-              <span
+             { this.props.project.skillSets.map( skill => {
+               return (
+                <span
                 style={{ margin: "0.3rem", padding: "0.8rem" }}
                 className="btn-outline-sm "
               >
-                Software Engineering
+                    {skill.name}
               </span>
-              <span
+               )
+             })
+
+             }
+            </div>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <h4 className="teal">Causes</h4>
+            <div style={{ display: "flexStart" }}>
+             { this.props.project.causeAreas.map( cause => {
+               return (
+                <span
                 style={{ margin: "0.3rem", padding: "0.8rem" }}
-                className="btn-outline-sm"
+                className="btn-outline-sm "
               >
-                Socail Work
+                    {cause.name}
               </span>
-              <span
-                style={{ margin: "0.3rem", padding: "0.8rem" }}
-                className="btn-outline-sm"
+               )
+             })
+
+             }
+            </div>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <div
+              style={{
+                display: "flexEnd",
+                //justifyContent: "flex-end",
+                //alignSelf:'flex-end',
+                marginTop: "10px",
+              }}
+            >
+              <Button
+                variant="contained"
+                color="primary"
+                style={{ marginRight: '10px' }}
               >
-                Teaching
-              </span>
-              <span
-                style={{ margin: "0.3rem", padding: "0.8rem" }}
-                className="btn-outline-sm"
+                <a style={{textDecoration:'none'}} href={`/volunteer/jobDescription/${this.props.project._id}`}>More Details</a>
+              </Button>
+              <Button
+                onClick={()=> this.props.deleteProject(this.props.project._id)}
+                variant="contained"
+                color="secondary"
               >
-                Blood Donation
-              </span>
-              <span
-                style={{ margin: "0.3rem", padding: "0.8rem" }}
-                className="btn-outline-sm"
-              >
-                Project Manager
-              </span>
+                remove
+              </Button>
             </div>
           </Col>
         </Row>
@@ -237,4 +248,4 @@ class ProjectDetail extends Component {
   }
 }
 
-export default ProjectDetail;
+export default connect(mapStateToProps, mapDispatchToProps)(ProjectDetail);

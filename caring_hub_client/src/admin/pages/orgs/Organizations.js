@@ -25,60 +25,22 @@ import FilterListIcon from "@material-ui/icons/FilterList";
 import { Modal } from "antd";
 import OrgDetail from "./OrgDetail";
 import RemoveOrg from "./RemoveOrg";
+import { connect } from 'react-redux'
+import { fetchOrgs } from "../../../redux/ActionCreators/orgActions";
+import { useEffect } from "react";
+import { Alert, AlertTitle } from '@material-ui/lab';
+import { CircularProgress, Container, Portal } from "@material-ui/core";
 
-function createData(
-  org_name,
-  email,
-  phone,
-  causeArea,
-  locations,
-  legalDocument
-) {
-  return { org_name, email, phone, causeArea, locations, legalDocument };
+const mapStateToProps = (state) => {
+  return {
+    Organizations: state.Organizations,
+  }
 }
 
-const rows = [
-  createData(
-    "Addis ababa university",
-    "aau@gmail.com",
-    "0923191253",
-    "educational",
-    "addis ababa",
-    "True"
-  ),
-  createData(
-    "AAu",
-    "aau@gmail.com",
-    "0923191253",
-    "educational",
-    "addis ababa",
-    "True"
-  ),
-  createData(
-    "AAu",
-    "aau@gmail.com",
-    "0923191253",
-    "educational",
-    "addis ababa",
-    "True"
-  ),
-  createData(
-    "AAu",
-    "aau@gmail.com",
-    "0923191253",
-    "educational",
-    "addis ababa",
-    "True"
-  ),
-  createData(
-    "AAu",
-    "aau@gmail.com",
-    "0923191253",
-    "educational",
-    "addis ababa",
-    "True"
-  ),
-];
+const mapDispatchToProps = (dispatch) => ({
+  fetchOrgs: () => dispatch(fetchOrgs()),
+})
+
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -122,13 +84,6 @@ const headCells = [
   },
   { id: "email", numeric: true, disablePadding: false, label: "Email address" },
   { id: "address", numeric: true, disablePadding: false, label: "address" },
-
-  {
-    id: "cause-areas",
-    numeric: true,
-    disablePadding: false,
-    label: "Areas to work on ",
-  },
   {
     id: "legalDoc",
     numeric: false,
@@ -204,13 +159,13 @@ const useToolbarStyles = makeStyles((theme) => ({
   highlight:
     theme.palette.type === "light"
       ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        }
+        color: theme.palette.secondary.main,
+        backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+      }
       : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark,
-        },
+        color: theme.palette.text.primary,
+        backgroundColor: theme.palette.secondary.dark,
+      },
   title: {
     flex: "1 1 100%",
   },
@@ -270,7 +225,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Organizations() {
+function Organizations(props) {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
@@ -278,6 +233,7 @@ export default function Organizations() {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [selectedRow, setSelectedRow] = React.useState();
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -287,12 +243,15 @@ export default function Organizations() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.name);
+      const newSelecteds = props.Organizations.organizations.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
+  useEffect(() => {
+    props.fetchOrgs()
+  }, [])
 
   const handleClick = (event, index) => {
     console.log(index);
@@ -331,7 +290,7 @@ export default function Organizations() {
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
   const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+    rowsPerPage - Math.min(rowsPerPage, props.Organizations.organizations.length - page * rowsPerPage);
   const [visible, setVisible] = useState(false);
   const handleOpen = () => {
     setVisible(true);
@@ -340,7 +299,35 @@ export default function Organizations() {
   const handleClose = () => {
     setVisible(false);
   };
-  return (
+  if (props.Organizations.errMess) return (
+    <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
+      <div className='container'>
+        <div className='row' style={{ display: 'flex', justifyContent: 'center', }}>
+          <Alert style={{ margin: '50px', padding: '50px' }} severity="error">
+            <AlertTitle style={{ fontWeight: 'bold' }}>Error</AlertTitle>
+            <strong>{props.Organizations.errMess}</strong>
+          </Alert>
+        </div>
+      </div>
+
+    </Container >
+
+  )
+  else if (props.Organizations.isLoading) return (
+    <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
+      <div class='container'>
+        <div className='row'>
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '100px', marginBottom: '75px' }}>
+            <CircularProgress size={'50px'} />
+
+          </div>
+          <p style={{ textAlign: 'center', fontSize: '25px', fontWeight: 'bold' }}>Loading...</p>
+        </div>
+      </div>
+    </Container>
+  )
+
+  else if (props.Organizations.organizations.length >= 1) return  (
     <div className={classes.root}>
       <Paper className={classes.paper}>
         <EnhancedTableToolbar numSelected={selected.length} />
@@ -358,10 +345,10 @@ export default function Organizations() {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={rows.length}
+              rowCount={props.Organizations.organizations.length}
             />
             <TableBody>
-              {stableSort(rows, getComparator(order, orderBy))
+              {stableSort(props.Organizations.organizations, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const isItemSelected = isSelected(index);
@@ -371,43 +358,51 @@ export default function Organizations() {
                     <>
                       <TableRow
                         // clicking the row set the modal visible
-                        onClick={() => setVisible(true)}
+                        onClick={() => {
+                          setVisible(true);
+                          setSelectedRow(row);
+                        }}
                         hover
                         role="checkbox"
                         aria-checked={isItemSelected}
                         tabIndex={-1}
-                        key={index}
+                        key={row._id}
                         selected={isItemSelected}
+
                       >
-                        <TableCell align="right">{row.org_name}</TableCell>
-                        <TableCell align="right">{row.phone}</TableCell>
-                        <TableCell align="right">{row.email}</TableCell>
-                        <TableCell align="right">{row.locations}</TableCell>
-                        <TableCell align="right">{row.causeArea}</TableCell>
+                        <TableCell align="right">{row.name}</TableCell>
+                        <TableCell align="right">{row.phoneNumber}</TableCell>
+                        <TableCell align="right">{row.emailAddress}</TableCell>
+                        <TableCell align="right">{row.address.city}</TableCell>
                         <TableCell align="center">
-                          {row.legalDocument}
+                          {<a href={row.legalDoc}>Legal Doc</a>}
                         </TableCell>
                         <TableCell display="flex">
                           <Button type="primary">show details</Button>
                         </TableCell>
                       </TableRow>
-
-                      {/* this modal pops up when the row is cliked*/}
-                      <Modal
-                        // closable
-                        title="Organization Detail..."
-                        centered
-                        onClose={handleClose}
-                        visible={visible}
-                        onOk={() => setVisible(false)}
-                        onCancel={() => setVisible(false)}
-                        width={1000}
-                      >
-                        <OrgDetail />
-                      </Modal>
                     </>
                   );
                 })}
+              {/* this modal pops up when the row is cliked*/}
+              {selectedRow && <div>
+                <Portal>
+                  <div>
+                    <Modal
+                      // closable
+                      title="Organization Detail..."
+                      style={{alignSelf:'flex-end'}}
+                      onClose={handleClose}
+                      visible={visible}
+                      onOk={() => setVisible(false)}
+                      onCancel={() => setVisible(false)}
+                      width={900}
+                    >
+                      <OrgDetail org={selectedRow} />
+                    </Modal>
+                  </div>
+                </Portal>
+              </div>}
               {emptyRows > 0 && (
                 <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
                   <TableCell colSpan={6} />
@@ -419,7 +414,7 @@ export default function Organizations() {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={rows.length}
+          count={props.Organizations.organizations.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
@@ -431,5 +426,21 @@ export default function Organizations() {
         label="Dense padding"
       />
     </div>
-  );
+  )
+  else return (
+    <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
+    <div className='container'>
+      <div className='row' style={{ display: 'flex', justifyContent: 'center', }}>
+        <Alert style={{ margin: '50px', padding: '50px' }} severity="error">
+          <AlertTitle style={{ fontWeight: 'bold' }}>Error</AlertTitle>
+          <strong>No Organizations Found!</strong>
+        </Alert>
+      </div>
+    </div>
+
+  </Container >
+  )
 }
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Organizations)
