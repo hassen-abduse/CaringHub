@@ -10,24 +10,22 @@ import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
-import { Grid, ListItem, Link } from "@material-ui/core";
+import { Grid, ListItem, } from "@material-ui/core";
+import {Link } from 'react-router-dom'
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import Badge from "@material-ui/core/Badge";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
-import MailIcon from "@material-ui/icons/Mail";
+
 import MessageRounded from "@material-ui/icons/MessageRounded";
 import NotificationImportant from "@material-ui/icons/NotificationImportant";
-import SettingsIcon from "@material-ui/icons/Settings";
-import LanguageIcon from "@material-ui/icons/Language";
-import Admin from "./components/Admin";
-import { blue } from "@material-ui/core/colors";
-import Multiselect from "multiselect-react-dropdown";
+
 import MainAdminRouter from "./MainAdminRouter";
 import User from "./components/User";
 import AccountMenu from "./components/AccountMenu";
+import Organizations from "./pages/orgs/Organizations";
 
 const drawerWidth = 240;
 
@@ -152,7 +150,7 @@ export default function AdminDashboard() {
                   </Badge>
                 </ListItem>
                 <ListItem>
-                  <Link href="/org/applicants">
+                  <Link to="/org/applicants">
                     <Badge badgeContent={6} color="secondary">
                       <NotificationImportant />
                     </Badge>
@@ -200,7 +198,7 @@ export default function AdminDashboard() {
               <ListItemText>Dashboard</ListItemText>
             </ListItem>
           </Link>
-          <Link href="/admin/organizations">
+          <Link to="/admin/organizations">
             <ListItem>
               <ListItemIcon>
                 <InboxIcon />
@@ -243,7 +241,7 @@ export default function AdminDashboard() {
               <ListItemText>Skill sets</ListItemText>
             </ListItem>
           </Link>
-          <Link href="/admin/evaluationCriterias">
+          <Link to="/admin/evaluationCriterias">
             <ListItem>
               <ListItemIcon>
                 <InboxIcon />
@@ -251,7 +249,7 @@ export default function AdminDashboard() {
               <ListItemText>Evaluation criaterias</ListItemText>
             </ListItem>
           </Link>
-          <Link href="/admin/causeAreas">
+          <Link to="/admin/causeAreas">
             <ListItem>
               <ListItemIcon>
                 <InboxIcon />
@@ -268,6 +266,7 @@ export default function AdminDashboard() {
       >
         <div className={classes.drawerHeader}>Hey</div>
         <MainAdminRouter />
+        {/* <Organizations /> */}
       </main>
     </div>
   );

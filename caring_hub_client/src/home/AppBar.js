@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../assets/css/styles.css";
 import "../assets/css/swiper.css";
+import clsx from "clsx";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import { Button } from "@material-ui/core";
 import { useLocation } from "react-router";
@@ -10,6 +11,25 @@ import jwtDecode from "jwt-decode";
 import { connect } from "react-redux";
 import { logoutUser } from "../redux/ActionCreators/authActions";
 import { Badge, Menu, Dropdown } from "antd";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+import Drawer from "@material-ui/core/Drawer";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import Toolbar from "@material-ui/core/Toolbar";
+import List from "@material-ui/core/List";
+import { ListItem } from "@material-ui/core";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import InboxIcon from "@material-ui/icons/MoveToInbox";
+import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import Typography from "@material-ui/core/Typography";
+import Divider from "@material-ui/core/Divider";
+import IconButton from "@material-ui/core/IconButton";
+import MenuIcon from "@material-ui/icons/Menu";
+
+
+// import User from "./components/User";
+
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import SettingsIcon from "@material-ui/icons/Settings";
 
@@ -23,8 +43,89 @@ const mapDispatchToProps = (dispatch) => ({
   logoutUser: () => dispatch(logoutUser()),
 });
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: "flex",
+  },
+
+  appBar: {
+    transition: theme.transitions.create(["margin", "width"], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+  },
+  appBarShift: {
+    width: `calc(100% - ${drawerWidth}px)`,
+    marginLeft: drawerWidth,
+    transition: theme.transitions.create(["margin", "width"], {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  },
+  leftSide: {
+    display: "flex",
+    flexDirection: "row",
+  },
+  HeaderIcons: {
+    display: "flex",
+    flexDirection: "row",
+    margin: 0,
+    padding: 0,
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  hide: {
+    display: "none",
+  },
+  drawer: {
+    width: drawerWidth,
+    flexShrink: 0,
+  },
+  drawerPaper: {
+    width: drawerWidth,
+  },
+  drawerHeader: {
+    display: "flex",
+    alignItems: "center",
+    padding: theme.spacing(0, 1),
+    // necessary for content to be below app bar
+    ...theme.mixins.toolbar,
+    justifyContent: "flex-end",
+  },
+
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing(3),
+    transition: theme.transitions.create("margin", {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    marginLeft: -drawerWidth,
+  },
+  contentShift: {
+    transition: theme.transitions.create("margin", {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+    marginLeft: 0,
+  },
+}));
+const drawerWidth = 240;
+
 function AppBar(props) {
   const route = useLocation().pathname;
+  const classes = useStyles()
+  const theme = useTheme();
+  const [open, setOpen] = React.useState(false);
+
+  const handleDrawerOpen = () => {
+    setOpen(true);
+  };
+
+  const handleDrawerClose = () => {
+    setOpen(false);
+  };
   const decoded = props.auth.token
     ? jwtDecode(props.auth.token)
     : { role: "", _id: "" };
@@ -62,10 +163,15 @@ function AppBar(props) {
         aria-label="Main navigation"
       >
         <div class="container">
-          <Link className="navbar-brand logo-text" to="/index">
-            CaringHub
-          </Link>
 
+          {
+            open === false ?
+            <Link className="navbar-brand logo-text" to="/index">
+              CaringHub
+            </Link>
+            :
+            null
+          }
           <button
             class="navbar-toggler p-0 border-0"
             type="button"
@@ -195,6 +301,7 @@ function AppBar(props) {
                   </li> */}
                 </ul>
               )}
+
             </ul>
             {decoded.role == "" && (
               <span class="nav-item">
@@ -224,6 +331,7 @@ function AppBar(props) {
                 </li>
               </ul>
             )}
+
           </div>
         </div>
       </nav>

@@ -35,6 +35,15 @@ import Applicants from "../organization/pages/applicants/Applicant";
 import VolunteerHeader from "../volunteer/components/VolunteerHeader";
 import AppBar from "../home/AppBar";
 import FouroFour from "./FouroFour";
+import AdminDashboard from "../admin/AdminDashboard";
+import AdminVolunteers from "../admin/pages/volunteers/Volunteer";
+import AdminApplicants from "../admin/pages/applicants/Applicant";
+import AdminOrganizations from "../admin/pages/orgs/Organizations";
+import AdminProfile from "../admin/pages/profile/Profile";
+import AdminProjects from "../admin/pages/projects/Projects";
+import CauseAreas from "../admin/pages/causeAreas/CauseArea";
+import EvaluationCriterias from "../admin/pages/evaluation/EvaluationCriterias";
+import SkillSets from "../admin/pages/skillSet/SkillSet";
 
 const mapStateToProps = (state) => {
   return {
@@ -82,7 +91,7 @@ class Main extends Component {
       : { role: "" };
     return (
       <React.Fragment>
-        {route !== "/login" && <AppBar />}
+        {(route !== "/login") && <AppBar />}
         <div>
           <Switch>
             <Route exact path="/index">
@@ -148,6 +157,42 @@ class Main extends Component {
                 </Route>
               </>
             )}
+            {
+              decoded.role === 'Admin' && (
+                <>
+                  <Route exact path="/">
+                    <AdminDashboard />
+                  </Route>
+                  {/* <Route exact path="/admin/projects">
+                    <AdminProjects />
+                  </Route>
+                  <Route exact path="/admin/volunteers">
+                    <AdminVolunteers />
+                  </Route>
+                  <Route exact path="/admin/Dashboard">
+                    <AdminDashboard />
+                  </Route>
+                  <Route exact path="/admin/profile">
+                    <AdminProfile />
+                  </Route>
+                  <Route exact path="/admin/applicants">
+                    <AdminApplicants />
+                  </Route>
+                  <Route exact path="/admin/organizations">
+                    <AdminOrganizations />
+                  </Route>
+                  <Route exact path="/admin/causeAreas">
+                    <CauseAreas />
+                  </Route>
+                  <Route exact path="/admin/skillSets">
+                    <SkillSets />
+                  </Route>
+                  <Route exact path="/admin/evaluationCriterias">
+                    <EvaluationCriterias />
+                  </Route> */}
+                </>
+              )
+            }
 
             <Route path="*">
               <FouroFour />
