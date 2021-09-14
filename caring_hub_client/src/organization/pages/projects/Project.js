@@ -1,6 +1,6 @@
 import React from "react";
 
-import { OrgProjectCard } from "../../components/OrgProjectCard";
+import OrgProjectCard from "../../components/OrgProjectCard";
 import Container from "@material-ui/core/Container";
 
 import WorkWithTalent from "./components/WorkWithTalent";
@@ -12,16 +12,17 @@ export default function Project() {
       style={{
         display: "flex",
         justifyContent: "center",
-        marginTop:'20px'
+        marginTop: "20px",
       }}
     >
       <div style={{ display: "flex", flexDirection: "column" }}>
-        <div style={{ display: "flex" }}>
-          <div>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <div style={{ marginTop: "10%" }}>
             <h5>My Job Posts</h5>
           </div>
-          <OrgProjectCard />
-          <OrgProjectCard />
+          <div>
+            <OrgProjectCard />
+          </div>
         </div>
 
         <div className="container">
