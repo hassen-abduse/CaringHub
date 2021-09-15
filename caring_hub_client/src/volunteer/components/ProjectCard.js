@@ -32,7 +32,7 @@ export default function ProjectCard(props) {
           <div class="col-lg-12">
             <div class="card">
               <img
-                style={{ width: "100%", maxHeight: "330px" }}
+                style={{ width: "100%", height: "300px" }}
                 class="img-fluid"
                 src={project.image}
                 alt="alternative"
@@ -41,13 +41,13 @@ export default function ProjectCard(props) {
                 <p style={{ color: "#0092FF" }} class="testimonial-text">
                 {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).format(new Date(project.createdAt))}
                 </p>
-                <div class="testimonial-author">{project.name}</div>
+                <div  style={{minHeight:"110px",display:"flex",alignItems:"center"}} class="testimonial-author">{project.name}</div>
 
                 <p
                   style={{ maxHeight: "180px", overflow: "hidden" }}
                   class="testimonial-text"
                 >
-                  {project.description}{" "}
+                  {project.description.length < 90 ? project.description : (project.description.substring(0,90) + "..." )}
                 </p>
                 <div>
                   <span class="nav-item">

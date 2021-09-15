@@ -25,7 +25,7 @@ import MainAdminRouter from "./MainAdminRouter";
 import User from "./components/User";
 import AccountMenu from "./components/AccountMenu";
 import Organizations from "./pages/orgs/Organizations";
-import { Link, Redirect } from "react-router-dom";
+import { NavLink, Redirect } from "react-router-dom";
 
 import { connect } from "react-redux";
 

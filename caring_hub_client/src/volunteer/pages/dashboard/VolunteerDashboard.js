@@ -7,11 +7,29 @@ import { CircularProgress, Container } from "@material-ui/core";
 import { Alert, AlertTitle } from "@material-ui/lab";
 import { Badge, Rate } from "antd";
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams,Link } from "react-router-dom";
 import { baseUrl } from "../../../redux/shared/baseUrl";
 
-export default function Dashboard() {
+import jwtDecode from "jwt-decode";
+import { connect } from "react-redux";
+
+
+
+
+const mapStateToProps = (state) => {
+  return {
+    auth: state.auth,
+  };
+};
+
+function VolunteerDashboard(props) {
+  const decoded = props.auth.token
+    ? jwtDecode(props.auth.token)
+    : { role: "", _id: "" };
+
+  
   const { volId } = useParams();
+
   const [volunteer, setVolunteer] = useState({ skillSets: [], address: {} });
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState(null);
@@ -267,93 +285,23 @@ export default function Dashboard() {
             <h4 className=" mt-5 teal">Languages</h4>
             <p className="m-0">English</p>
           </div>
+
         </div>
+        {decoded._id === volId &&
+        <div style={{display:"flex",justifyContent:"center",margin:"20px"}}>
+         <Link to={`/volunteer/editProfile/${decoded._id}`}>
+         <span 
+         
+         className="text-center btn-outline-sm"
+         >
+          Edit Profile 
+         </span>
+         </Link>
+         </div>}
       </div>
 
-      // <div>
-
-      //   <ProfileCard />
-      //   <Container>
-      //     <div
-      //       style={{
-      //         height: 250,
-      //         display: "flex",
-      //         justifyContent: "center",
-      //         alignItems: "center",
-      //         background: `url(${Img})`,
-      //         backgroundSize: "cover",
-      //       }}
-      //     >
-      //       <Button
-      //         style={{
-      //           backgroundColor: "yellow",
-      //           paddingLeft: "50px",
-      //           paddingRight: "50px",
-      //         }}
-      //       >
-      //         Find Project
-      //       </Button>
-      //       <Button
-      //         style={{
-      //           backgroundColor: "#e3e3e3",
-      //           marginLeft: "30px",
-      //           paddingLeft: "50px",
-      //           paddingRight: "50px",
-      //         }}
-      //       >
-      //         {" "}
-      //         Discover
-      //       </Button>
-      //     </div>
-      //     <br />
-      //     <Typography style={{ marginTop: "20px", marginBottom: "5px" }}>
-      //       Application sent{" "}
-      //       <span style={{ backgroundColor: "#e3e3e3", padding: "0 5px" }}>
-      //         3
-      //       </span>
-      //     </Typography>
-      //     {/* <Container
-      //       style={{
-      //         display: "flex",
-      //         flexDirection: "column",
-      //         backgroundColor: "#e3e3e3",
-      //         marginTop: "0px",
-      //         padding:"20px"
-      //       }}
-      //     >
-      //       <div >
-      //       <Typography style={{backgroundColor:'yellow',width:"160px",padding:"2px 6px"}} align="center" variant="caption" >
-      //       application sent
-      //       </Typography>
-
-      //       </div>
-      //       <div>
-      //       <Typography variant="caption" color="error">
-      //       Applied on May 12/2021
-      //       </Typography>
-      //       </div>
-      //       <div>
-      //         <Typography>
-      //           ABC Blood Donation Club.
-      //         </Typography>
-      //       </div>
-
-      //     &nbsp;
-      //     &nbsp;
-
-      //       <div>
-      //         <Typography>
-      //            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Arcu cursus euismod quis viverra nibh. Enim blandit volutpat maecenas volutpat blandit aliquam etiam. Ac feugiat sed lectus vestibulum mattis. Aliquet nibh praesent tristique magna sit. Amet consectetur adipiscing elit ut. Pellentesque id nibh tortor id. Interdum velit euismod in pellentesque massa placerat duis ultricies lacus.
-      //          </Typography>
-      //       </div>
-
-      //     </Container> */}
-      //     <SentApplicationCard />
-      //     <br />
-      //     <SentApplicationCard />
-      //     <br />
-      //     <SentApplicationCard />
-      //   </Container>
-      // </div>
+      
     );
 }
+export default connect(mapStateToProps)(VolunteerDashboard);
+

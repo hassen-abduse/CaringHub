@@ -4,7 +4,9 @@ import { Switch, Route, withRouter, Redirect } from "react-router-dom";
 
 import jwtDecode from "jwt-decode";
 import Footer from "../home/Footer";
-import Dashboard from "../volunteer/pages/dashboard/Dashboard";
+import VolunteerDashboard from "../volunteer/pages/dashboard/VolunteerDashboard";
+import EditVolunteerProfile from "../volunteer/pages/dashboard/EditVolunteerProfile";
+
 import FindProject from "../volunteer/pages/find-project/FindProject";
 import ReviewApplication from "../volunteer/pages/review-application/ReviewApplication";
 import DescriptionCard from "../volunteer/components/JobDescriptionCard";
@@ -110,7 +112,7 @@ class Main extends Component {
               <Profile />
             </Route>
             <Route exact path="/volunteer/dashboard/:volId">
-              <Dashboard />
+              <VolunteerDashboard />
             </Route>
 
             <Route exact path="/volunteer/jobDescription/:id">
@@ -130,6 +132,10 @@ class Main extends Component {
                 </Route>
                 <Route exact path="/volunteer/myApplications">
                   <MyApplication />
+                </Route>
+
+                <Route exact path="/volunteer/editProfile/:volId">
+                  <EditVolunteerProfile />
                 </Route>
               </>
             )}

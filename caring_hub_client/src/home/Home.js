@@ -5,6 +5,7 @@ import Footer from "./Footer";
 import ContactUs from "./ContactUs";
 import HowItWorks from "./HowItWorks";
 import { ProjectCard } from "../volunteer/components/ProjectCard";
+import {Link} from "react-router-dom"
 function Home() {
   return (
     <div className="App">
@@ -131,9 +132,9 @@ function Home() {
               </div>
 
               <div>
-                <a class="btn-solid-lg" href="#contact">
+                <Link class="btn-solid-lg" to="/volunteer/findProjects">
                   Browse All Projects
-                </a>
+                </Link>
               </div>
             </div>
           </div>

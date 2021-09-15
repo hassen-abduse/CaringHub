@@ -43,9 +43,9 @@ export default function HowItWorks() {
                   Nonprofits post questions and short-term project needs on our
                   marketplace.
                 </p>
-                <a class="read-more no-line" href="#">
+                {/* <a class="read-more no-line" href="#">
                   Learn more <span class="fas fa-long-arrow-alt-right"></span>
-                </a>
+                </a> */}
               </div>
             </div>
 
@@ -67,9 +67,9 @@ export default function HowItWorks() {
                   Volunteers browse opportunities based on skills, cause area,
                   and time commitment.
                 </p>
-                <a class="read-more no-line" href="#">
+                {/* <a class="read-more no-line" href="#">
                   Learn more <span class="fas fa-long-arrow-alt-right"></span>
-                </a>
+                </a> */}
               </div>
             </div>
 
@@ -91,9 +91,9 @@ export default function HowItWorks() {
                   Volunteers submit applications, and if both parties opt in,
                   it's a match!
                 </p>
-                <a class="read-more no-line" href="#">
+                {/* <a class="read-more no-line" href="#">
                   Learn more <span class="fas fa-long-arrow-alt-right"></span>
-                </a>
+                </a> */}
               </div>
             </div>
           </div>
