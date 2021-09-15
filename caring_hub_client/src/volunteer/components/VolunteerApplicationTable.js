@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
 import { lighten, makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
-
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
@@ -15,7 +14,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 import Checkbox from "@material-ui/core/Checkbox";
-import { Button } from "@material-ui/core";
+import { Button, Grid } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -24,75 +23,27 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import { Modal } from "antd";
-import EvalueateVolunteers from "./EvaluateVolunteers";
 
-function createData(firstName, lastName, phone, email, address, skill, areas) {
-  return { firstName, lastName, phone, email, address, skill, areas };
+import ClearIcon from "@material-ui/icons/Clear";
+import DoneAllIcon from "@material-ui/icons/DoneAll";
+import { connect } from "react-redux";
+import { fetchProjects } from "../../redux/ActionCreators/projectActions";
+import { Link } from "react-router-dom";
+import { fetchApplications } from "../../redux/ActionCreators/appActions";
+import { Alert, AlertTitle } from "@material-ui/lab";
+import { CircularProgress, Container } from "@material-ui/core";
+import jwtDecode from "jwt-decode";
+function createData(title, organization, status, actions) {
+  return { title, organization, status, actions };
 }
 
-const customeStyle = {
-  content: {
-    top: "auto",
-    left: "auto",
-    right: "auto",
-    bottom: "0",
-    marginRight: "auto",
-    width: "100%",
-  },
-  overlay: {
-    backdropFilter: "blur(5px)",
-
-    backgroundColor: "rgba(253,255,255,0.44)",
-  },
-};
-
-const rows = [
-  createData(
-    "Mehammed",
-    "Teshome",
-    "0923191253",
-    "checoslbches@gmail.com",
-    "addis ababa",
-    "it",
-    "tech"
-  ),
-  createData(
-    "Mehammed",
-    "Teshome",
-    "0923191253",
-    "checoslbches@gmail.com",
-    "addis ababa",
-    "it",
-    "tech"
-  ),
-  createData(
-    "Mehammed",
-    "Teshome",
-    "0923191253",
-    "checoslbches@gmail.com",
-    "addis ababa",
-    "it",
-    "tech"
-  ),
-  createData(
-    "Mehammed",
-    "Teshome",
-    "0923191253",
-    "checoslbches@gmail.com",
-    "addis ababa",
-    "it",
-    "tech"
-  ),
-  createData(
-    "Mehammed",
-    "Teshome",
-    "0923191253",
-    "checoslbches@gmail.com",
-    "addis ababa",
-    "it",
-    "tech"
-  ),
-];
+// const rows = [
+//   createData("Teaching", "ABC school", "In Progress"),
+//   createData("Teaching", "ABC school", "In Progress"),
+//   createData("Teaching", "ABC school", "In Progress"),
+//   createData("Teaching", "ABC school", "In Progress"),
+//   createData("Teaching", "ABC school", "In Progress"),
+// ];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -122,32 +73,26 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
-    id: "First-Name",
+    id: "Project-title",
     numeric: false,
     disablePadding: true,
-    label: "First Name",
+    label: "Project Title",
   },
-  {
-    id: "Last-Name",
-    numeric: true,
-    disablePadding: false,
-    label: "Last Name",
-  },
-  {
-    id: "phone",
-    numeric: true,
-    disablePadding: false,
-    label: "Phone Number",
-  },
-  { id: "email", numeric: true, disablePadding: false, label: "Emain address" },
-  { id: "address", numeric: true, disablePadding: false, label: "address" },
-  { id: "skill", numeric: true, disablePadding: false, label: "skill" },
-  {
-    id: "areas",
-    numeric: true,
-    disablePadding: false,
-    label: "Areas to work on ",
-  },
+
+  //   {
+  //     id: "organization",
+  //     numeric: true,
+  //     disablePadding: false,
+  //     label: "Organization",
+  //   },
+
+  // {
+  //   id: "areas",
+  //   numeric: true,
+  //   disablePadding: false,
+  //   label: "applied to project- ",
+  // },
+  { id: "status", numeric: true, disablePadding: false, label: "Status" },
   {
     id: "actions",
     numeric: false,
@@ -171,20 +116,12 @@ function EnhancedTableHead(props) {
   };
 
   return (
-    <TableHead style={{ paddingLeft: "20px" }}>
+    <TableHead>
       <TableRow>
-        {/* <TableCell padding="checkbox">
-          <Checkbox
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{ "aria-label": "select all desserts" }}
-          />
-        </TableCell> */}
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={headCell.numeric ? "right" : "left"}
+            align={headCell.id === "actions" ? "center" : "left"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
@@ -234,8 +171,9 @@ const useToolbarStyles = makeStyles((theme) => ({
   title: {
     flex: "1 1 100%",
   },
-  HeaderIcons: {
+  headerTooltip: {
     display: "flex",
+    padding: "0 5px",
   },
 }));
 
@@ -249,7 +187,7 @@ const EnhancedTableToolbar = (props) => {
         [classes.highlight]: numSelected > 0,
       })}
     >
-      {numSelected > 0 ? (
+      {/* {numSelected > 0 ? (
         <Typography
           className={classes.title}
           color="inherit"
@@ -265,16 +203,23 @@ const EnhancedTableToolbar = (props) => {
           id="tableTitle"
           component="div"
         >
-          Volunteers
+          Applicants
         </Typography>
-      )}
+      )} */}
 
       {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton aria-label="delete">
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
+        <div className={classes.headerTooltip}>
+          <Tooltip title="accept selected applicants">
+            <IconButton aria-label="delete">
+              <DoneAllIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="decline selected applicants">
+            <IconButton aria-label="delete">
+              <ClearIcon />
+            </IconButton>
+          </Tooltip>
+        </div>
       ) : (
         <Tooltip title="Filter list">
           <IconButton aria-label="filter list">
@@ -292,14 +237,16 @@ EnhancedTableToolbar.propTypes = {
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: "100%",
+    maxWidth: "100%",
+    // backgroundColor:"#e3e3e3"
+    paddingLeft: "15px",
   },
   paper: {
     width: "100%",
     marginBottom: theme.spacing(2),
   },
   table: {
-    minWidth: 750,
+    // minWidth: "px",
   },
 
   visuallyHidden: {
@@ -315,14 +262,29 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Volunteers() {
+const mapStateToProps = (state) => {
+  return {
+    Applications: state.Applications,
+    auth: state.auth,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  fetchApplications: () => dispatch(fetchApplications()),
+});
+
+function VolunteerApplicationTable(props) {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
-  // const [dense, setDense] = React.useState(false);
+  const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const decoded = props.auth.token ? jwtDecode(props.auth.token) : { role: "" };
+  const rows = props.Applications.applications.filter(
+    (app) => app.volunteer._id === decoded._id
+  );
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -369,17 +331,64 @@ export default function Volunteers() {
     setPage(0);
   };
 
-  // const handleChangeDense = (event) => {
-  //   setDense(event.target.checked);
-  // };
+  const handleChangeDense = (event) => {
+    setDense(event.target.checked);
+  };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
-
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
   const [visible, setVisible] = useState(false);
-  return (
-    <div className="container" style={{ marginTop: "10%" }}>
+
+  useEffect(() => {
+    props.fetchApplications();
+  }, []);
+  if (props.Applications.errMess)
+    return (
+      <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
+        <div className="container">
+          <div
+            className="row"
+            style={{ display: "flex", justifyContent: "center" }}
+          >
+            <Alert style={{ margin: "50px", padding: "50px" }} severity="error">
+              <AlertTitle style={{ fontWeight: "bold" }}>Error</AlertTitle>
+              <strong>{props.Applications.errMess}</strong>
+            </Alert>
+          </div>
+        </div>
+      </Container>
+    );
+  else if (props.Applications.isLoading)
+    return (
+      <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
+        <div class="container">
+          <div className="row">
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                marginTop: "100px",
+                marginBottom: "75px",
+              }}
+            >
+              <CircularProgress size={"50px"} />
+            </div>
+            <p
+              style={{
+                textAlign: "center",
+                fontSize: "25px",
+                fontWeight: "bold",
+              }}
+            >
+              Loading...
+            </p>
+          </div>
+        </div>
+      </Container>
+    );
+  else if (rows.length >= 1)
+    return (
       <div className={classes.root}>
         <Paper className={classes.paper}>
           <EnhancedTableToolbar numSelected={selected.length} />
@@ -387,7 +396,7 @@ export default function Volunteers() {
             <Table
               className={classes.table}
               aria-labelledby="tableTitle"
-              // size={dense ? "small" : "medium"}
+              size={dense ? "small" : "medium"}
               aria-label="enhanced table"
             >
               <EnhancedTableHead
@@ -412,58 +421,82 @@ export default function Volunteers() {
                         role="checkbox"
                         aria-checked={isItemSelected}
                         tabIndex={-1}
+                        // onClick={() => setVisible(true)}
                         key={index}
                         selected={isItemSelected}
                       >
-                        {/* <TableCell padding="checkbox">
-                          <Checkbox
-                            checked={isItemSelected}
-                            inputProps={{ "aria-labelledby": labelId }}
-                            onClick={(event) => handleClick(event, index)}
-                          />
-                        </TableCell> */}
-                        <TableCell component="th" id={labelId} scope="row">
-                          {row.firstName}
+                        <TableCell
+                        // style={{
+                        //   cursor: "pointer",
+                        // }}
+                        // component="th"
+                        // id={labelId}
+                        // scope="row"
+                        // onClick={() => setVisible(true)}
+                        >
+                          {row.project.name}
                         </TableCell>
 
-                        <TableCell align="right">{row.lastName}</TableCell>
-                        <TableCell align="right">{row.phone}</TableCell>
-                        <TableCell align="right">{row.email}</TableCell>
-                        <TableCell align="right">{row.address}</TableCell>
-                        <TableCell align="right">{row.skill}</TableCell>
-                        <TableCell align="right">{row.areas}</TableCell>
-                        <TableCell>
-                          <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={() => setVisible(true)}
-                          >
-                            Evaluate
-                          </Button>
-                          <Modal
-                            title="evaluate volunteer"
-                            centered
-                            visible={visible}
-                            // mask={false}
-                            maskStyle={{
-                              backgroundColor: "rgba(0, 0, 0, 0.25)",
+                        {/* <TableCell align="left">{row.organization}</TableCell> */}
+                        <TableCell align="left">
+                          {row.accepted ? "Accepted" : "Pending"}
+                        </TableCell>
+
+                        <TableCell
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <Grid
+                            container
+                            style={{
+                              display: "flex",
+                              justifyContent: "center",
                             }}
-                            onOk={() => setVisible(false)}
-                            onCancel={() => setVisible(false)}
-                            width={700}
-                            footer={null}
                           >
-                            <EvalueateVolunteers />
-                          </Modal>
+                            <Grid
+                              item
+                              style={{
+                                // backgroundColor: "green",
+                                borderRadius: "5px",
+                              }}
+                            >
+                              <Link
+                                to={`/volunteer/jobDescription/${row.project._id}`}
+                                style={{ textDecoration: "none" }}
+                              >
+                                <Button variant="contained" color="primary">
+                                  View Detail
+                                </Button>
+                              </Link>
+                            </Grid>
+
+                            <Grid
+                              item
+                              style={{
+                                borderRadius: "5px",
+                                marginLeft: "5px",
+                              }}
+                            >
+                              <span className="nav-item m-2">
+                                <Button
+                                  variant="outlined"
+                                  color="secondary"
+                                  startIcon={<DeleteIcon />}
+                                ></Button>
+                              </span>
+                            </Grid>
+                          </Grid>
                         </TableCell>
                       </TableRow>
                     );
                   })}
-                {/* {emptyRows > 0 && (
+                {emptyRows > 0 && (
                   <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
                     <TableCell colSpan={6} />
                   </TableRow>
-                )} */}
+                )}
               </TableBody>
             </Table>
           </TableContainer>
@@ -478,10 +511,29 @@ export default function Volunteers() {
           />
         </Paper>
         {/* <FormControlLabel
-          control={<Switch checked={dense} onChange={handleChangeDense} />}
-          label="Dense padding"
-        /> */}
+        control={<Switch checked={dense} onChange={handleChangeDense} />}
+        label="Dense padding"
+      /> */}
       </div>
-    </div>
-  );
+    );
+  else
+    return (
+      <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
+        <div className="container">
+          <div
+            className="row"
+            style={{ display: "flex", justifyContent: "center" }}
+          >
+            <Alert style={{ margin: "50px", padding: "50px" }} severity="error">
+              <AlertTitle style={{ fontWeight: "bold" }}>Error</AlertTitle>
+              <strong>No Applications Found!</strong>
+            </Alert>
+          </div>
+        </div>
+      </Container>
+    );
 }
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(VolunteerApplicationTable);

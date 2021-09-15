@@ -205,7 +205,7 @@ function AppBar(props) {
                       aria-current="page"
                       to={`/volunteer/dashboard/${decoded._id}`}
                     >
-                      Dashboard
+                      Profile
                     </Link>
                   </li>
                   <li class="nav-item">
@@ -219,6 +219,19 @@ function AppBar(props) {
                       to="/volunteer/findProject"
                     >
                       Find Projects
+                    </Link>
+                  </li>
+                  <li class="nav-item">
+                    <Link
+                      class={
+                        route === "/volunteer/myApplications"
+                          ? "nav-link active"
+                          : "nav-link"
+                      }
+                      aria-current="page"
+                      to="/volunteer/myApplications"
+                    >
+                      My Applications
                     </Link>
                   </li>
                 </ul>

@@ -35,6 +35,7 @@ import VolunteerHeader from "../volunteer/components/VolunteerHeader";
 import AppBar from "../home/AppBar";
 import FouroFour from "./FouroFour";
 import AdminDashboard from "../admin/AdminDashboard";
+import MyApplication from "../volunteer/pages/myApplications/MyApplication";
 
 const mapStateToProps = (state) => {
   return {
@@ -127,7 +128,9 @@ class Main extends Component {
                 <Route exact path="/volunteer/reviewApplication">
                   <ReviewApplication />
                 </Route>
-
+                <Route exact path="/volunteer/myApplications">
+                  <MyApplication />
+                </Route>
               </>
             )}
 
