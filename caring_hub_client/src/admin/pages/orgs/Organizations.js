@@ -327,7 +327,7 @@ function Organizations(props) {
     </Container>
   )
 
-  else if (props.Organizations.organizations.length >= 1) return  (
+  else if (props.Organizations.organizations.filter(org => org.isApproved).length >= 1) return  (
     <div className={classes.root}>
       <Paper className={classes.paper}>
         <EnhancedTableToolbar numSelected={selected.length} />
@@ -348,7 +348,7 @@ function Organizations(props) {
               rowCount={props.Organizations.organizations.length}
             />
             <TableBody>
-              {stableSort(props.Organizations.organizations, getComparator(order, orderBy))
+              {stableSort(props.Organizations.organizations.filter(org=> org.isApproved), getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const isItemSelected = isSelected(index);

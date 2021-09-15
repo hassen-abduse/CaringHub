@@ -59,3 +59,29 @@ export const deleteOrg = (orgId) => (dispatch) => {
         .then(response => dispatch(addOrgs(response)))
         .catch(error => dispatch(orgsFailed(error)))
 }
+
+export const approveOrg = (org) => (dispatch) => {
+    const bearer = 'Bearer ' + localStorage.getItem('token')
+    return fetch(baseUrl + 'approveOrg',{
+        method: 'PUT',
+        headers: {
+            'Authorization': bearer,
+            'Content-Type': 'application/json'
+        },
+        body:JSON.stringify(org) 
+    })
+        .then(response => {
+            if (response.ok) {
+                return response
+            } else {
+                const error = new Error('Error ' + response.status + ': ' + response.statusText)
+                error.response = response
+                throw error
+            }
+        }, error => {
+            throw error
+        })
+        .then(response => response.json())
+        .then(response => dispatch(addOrgs(response)))
+        .catch(error => dispatch(orgsFailed(error.message)))
+}
