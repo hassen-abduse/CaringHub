@@ -2,17 +2,17 @@ import React from "react";
 import Container from "@material-ui/core/Container";
 import ProjectCard from "./ProjectCard";
 import { fetchProjects } from "../../redux/ActionCreators/projectActions";
-import { Grid, Box } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 import { connect } from "react-redux";
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    Projects: state.Projects
-  }
-}
+    Projects: state.Projects,
+  };
+};
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchProjects: () => dispatch(fetchProjects())
-})
+  fetchProjects: () => dispatch(fetchProjects()),
+});
 function LandingCardHolder(props) {
   return (
     <Container>
@@ -27,4 +27,4 @@ function LandingCardHolder(props) {
   );
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(LandingCardHolder)
+export default connect(mapStateToProps, mapDispatchToProps)(LandingCardHolder);

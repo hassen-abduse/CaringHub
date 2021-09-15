@@ -1,46 +1,42 @@
 import React, { useState } from "react";
 import Container from "@material-ui/core/Container";
-import { Form, Input, Button, DatePicker, InputNumber, Select } from "antd";
-import { InfoCircleOutlined } from "@ant-design/icons";
-import { registerVolunteer } from '../redux/ActionCreators/registrationActions'
+import { Form, Input, Button, Select } from "antd";
+import { registerVolunteer } from "../redux/ActionCreators/registrationActions";
 import TextArea from "antd/lib/input/TextArea";
-import Demo from "../organization/components/ImageUploadComponent";
 import "../organization/components/JobPostDescription.css";
-import VolunteerFileUpload from "./VolunteerFileUpload";
 import { connect } from "react-redux";
-import Modal from '@material-ui/core/Modal';
-import Backdrop from '@material-ui/core/Backdrop';
-import Fade from '@material-ui/core/Fade';
-import { makeStyles } from '@material-ui/core/styles';
+import Modal from "@material-ui/core/Modal";
+import Fade from "@material-ui/core/Fade";
+import { makeStyles } from "@material-ui/core/styles";
 import { CircularProgress, DialogTitle, Box } from "@material-ui/core";
-import { Alert, AlertTitle } from '@material-ui/lab';
+import { Alert, AlertTitle } from "@material-ui/lab";
 
 import { Redirect } from "react-router-dom";
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     Registration: state.Registration,
     Skills: state.Skills,
     Causes: state.Causes,
-  }
-}
+  };
+};
 const mapDispatchToProps = (dispatch) => ({
   registerVolunteer: (data) => dispatch(registerVolunteer(data)),
-})
+});
 
 const useStyles = makeStyles((theme) => ({
   modal: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
   paper: {
     backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
+    border: "2px solid #000",
     boxShadow: theme.shadows[5],
-    width: '50%',
+    width: "50%",
     padding: theme.spacing(0, 3, 3, 3),
   },
 }));
@@ -49,10 +45,10 @@ function VolunteerRegistration(props) {
   const { Option } = Select;
   const [selectedSkills, setSelectedSkills] = useState([]);
   const [selectedCauses, setSelectedCauses] = useState([]);
-  const [profile, setProfile] = useState(null)
-  const [resume, setResume] = useState(null)
-  const [open, setOpen] = useState(false)
-  const classes = useStyles()
+  const [profile, setProfile] = useState(null);
+  const [resume, setResume] = useState(null);
+  const [open, setOpen] = useState(false);
+  const classes = useStyles();
   const handleOpen = () => {
     setOpen(true);
   };
@@ -62,27 +58,25 @@ function VolunteerRegistration(props) {
   };
 
   const onFinish = (values) => {
-    props.Registration.errMess = null
-    const volunteer = new FormData()
-    volunteer.append('firstName', values.firstName)
-    volunteer.append('lastName', values.lastName)
-    volunteer.append('username', values.username)
-    volunteer.append('phoneNumber', values.prefix + values.phone)
-    volunteer.append('emailAddress', values.email)
-    volunteer.append('skillSets', JSON.stringify(selectedSkills))
-    volunteer.append('causeAreas', JSON.stringify(selectedCauses))
-    volunteer.append('password', values.password)
-    volunteer.append('address', JSON.stringify({ city: values.city }))
-    volunteer.append('VolPP', profile)
-    volunteer.append('doc', resume)
-    props.registerVolunteer(volunteer)
-    handleOpen()
-
+    props.Registration.errMess = null;
+    const volunteer = new FormData();
+    volunteer.append("firstName", values.firstName);
+    volunteer.append("lastName", values.lastName);
+    volunteer.append("username", values.username);
+    volunteer.append("phoneNumber", values.prefix + values.phone);
+    volunteer.append("emailAddress", values.email);
+    volunteer.append("skillSets", JSON.stringify(selectedSkills));
+    volunteer.append("causeAreas", JSON.stringify(selectedCauses));
+    volunteer.append("password", values.password);
+    volunteer.append("address", JSON.stringify({ city: values.city }));
+    volunteer.append("VolPP", profile);
+    volunteer.append("doc", resume);
+    props.registerVolunteer(volunteer);
+    handleOpen();
   };
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
-
   };
 
   const prefixSelector = (
@@ -99,12 +93,10 @@ function VolunteerRegistration(props) {
   );
 
   if (props.Registration.success === true) {
-
-    return <Redirect to='/login' />
+    return <Redirect to="/login" />;
   }
 
   return (
-
     <div style={{ backgroundColor: "#EEEEEE" }}>
       <Modal
         className={classes.modal}
@@ -116,48 +108,44 @@ function VolunteerRegistration(props) {
       >
         <Fade in={open}>
           <div className={classes.paper}>
-            {
-              props.Registration.isLoading === false ?
-                <DialogTitle>
-                  <Box display="flex" justifyContent='flex-end'>
-                    <Box>
-                      <IconButton onClick={handleClose}>
-                        <CloseIcon />
-                      </IconButton>
-                    </Box>
+            {props.Registration.isLoading === false ? (
+              <DialogTitle>
+                <Box display="flex" justifyContent="flex-end">
+                  <Box>
+                    <IconButton onClick={handleClose}>
+                      <CloseIcon />
+                    </IconButton>
                   </Box>
-                </DialogTitle>
-                : null
-            }
-            {
-              props.Registration.isLoading === true ?
-                <div style={{ padding: '20px', paddingTop:'40px', paddingLeft:'40px'}}>
-                  <div>
-                    <CircularProgress />
-                    <br></br>
-                    <strong>Please wait...</strong>
-                  </div>
-
-
+                </Box>
+              </DialogTitle>
+            ) : null}
+            {props.Registration.isLoading === true ? (
+              <div
+                style={{
+                  padding: "20px",
+                  paddingTop: "40px",
+                  paddingLeft: "40px",
+                }}
+              >
+                <div>
+                  <CircularProgress />
+                  <br></br>
+                  <strong>Please wait...</strong>
                 </div>
-                : null
-            }
-            {
-              props.Registration.errMess &&
-
-              <Alert style={{ padding: '20px' }} severity="error">
-                <AlertTitle style={{ fontWeight: 'bold' }}>Error</AlertTitle>
+              </div>
+            ) : null}
+            {props.Registration.errMess && (
+              <Alert style={{ padding: "20px" }} severity="error">
+                <AlertTitle style={{ fontWeight: "bold" }}>Error</AlertTitle>
                 <strong>{props.Registration.errMess}</strong>
               </Alert>
-            }
-            {
-              props.Registration.success === true ?
-                <Alert style={{ padding: '20px' }} severity="success">
-                  <AlertTitle style={{ fontWeight: 'bold' }}>Success</AlertTitle>
-                  <strong>Registration Succesfull!</strong>
-                </Alert>
-                : null
-            }
+            )}
+            {props.Registration.success === true ? (
+              <Alert style={{ padding: "20px" }} severity="success">
+                <AlertTitle style={{ fontWeight: "bold" }}>Success</AlertTitle>
+                <strong>Registration Succesfull!</strong>
+              </Alert>
+            ) : null}
           </div>
         </Fade>
       </Modal>
@@ -242,7 +230,6 @@ function VolunteerRegistration(props) {
                     <label style={{ margin: "2rem" }}>
                       Give your Basic Informations :
                     </label>
-
 
                     <Form.Item
                       label="First Name"
@@ -606,7 +593,6 @@ function VolunteerRegistration(props) {
                       </Form.Item>
                     </div>
                     <br></br>
-
                   </div>
                   <br></br>
                   <div
@@ -664,8 +650,11 @@ function VolunteerRegistration(props) {
                             },
                           ]}
                         >
-                          <Input type='file' name='volPP' onChange={(e) => setProfile(e.target.files[0])} />
-
+                          <Input
+                            type="file"
+                            name="volPP"
+                            onChange={(e) => setProfile(e.target.files[0])}
+                          />
                         </Form.Item>
 
                         <label>
@@ -687,8 +676,11 @@ function VolunteerRegistration(props) {
                             },
                           ]}
                         >
-                          <Input type='file' name='volResume' onChange={(e) => setResume(e.target.files[0])} />
-
+                          <Input
+                            type="file"
+                            name="volResume"
+                            onChange={(e) => setResume(e.target.files[0])}
+                          />
                         </Form.Item>
                       </div>
                       <br></br>
@@ -721,4 +713,7 @@ function VolunteerRegistration(props) {
   );
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(VolunteerRegistration)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(VolunteerRegistration);

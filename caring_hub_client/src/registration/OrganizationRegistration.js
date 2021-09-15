@@ -1,55 +1,51 @@
 import React, { useState } from "react";
 import Container from "@material-ui/core/Container";
-import { Form, Input, Button, DatePicker, InputNumber, Select } from "antd";
-import { InfoCircleOutlined } from "@ant-design/icons";
+import { Form, Input, Button, Select } from "antd";
 import TextArea from "antd/lib/input/TextArea";
-import Demo from "../organization/components/ImageUploadComponent";
 import "../organization/components/JobPostDescription.css";
 import { connect } from "react-redux";
-import Modal from '@material-ui/core/Modal';
+import Modal from "@material-ui/core/Modal";
 import { CircularProgress, DialogTitle, Box } from "@material-ui/core";
-import { Alert, AlertTitle } from '@material-ui/lab';
-import Fade from '@material-ui/core/Fade';
-import { makeStyles } from '@material-ui/core/styles';
+import { Alert, AlertTitle } from "@material-ui/lab";
+import Fade from "@material-ui/core/Fade";
+import { makeStyles } from "@material-ui/core/styles";
 import { Redirect } from "react-router-dom";
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
 import { registerOrg } from "../redux/ActionCreators/registrationActions";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     Registration: state.Registration,
     Skills: state.Skills,
     Causes: state.Causes,
-  }
-}
+  };
+};
 const mapDispatchToProps = (dispatch) => ({
   registerOrg: (data) => dispatch(registerOrg(data)),
-})
+});
 
 const useStyles = makeStyles((theme) => ({
   modal: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
   paper: {
     backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
+    border: "2px solid #000",
     boxShadow: theme.shadows[5],
-    width: '50%',
+    width: "50%",
     padding: theme.spacing(0, 3, 3, 3),
   },
 }));
 
-
 function OrganizationRegistration(props) {
-
   const { Option } = Select;
-  const [logo, setLogo] = useState(null)
-  const [legalDoc, setLegalDoc] = useState(null)
-  const [open, setOpen] = useState(false)
-  const classes = useStyles()
+  const [logo, setLogo] = useState(null);
+  const [legalDoc, setLegalDoc] = useState(null);
+  const [open, setOpen] = useState(false);
+  const classes = useStyles();
 
   const handleOpen = () => {
     setOpen(true);
@@ -60,24 +56,24 @@ function OrganizationRegistration(props) {
   };
 
   const onFinish = (values) => {
-    props.Registration.errMess = null
-    const org = new FormData()
-    org.append('name', values.name)
-    org.append('username', values.username)
-    org.append('phoneNumber', values.phone)
-    org.append('emailAddress', values.email)
-    org.append('address', JSON.stringify({ city: values.city }))
-    org.append('mission', values.mission)
-    org.append('password', values.password)
-    org.append('logo', logo)
-    org.append('legalDoc', legalDoc)
-    props.registerOrg(org)
-    console.log(open)
-    handleOpen()
+    props.Registration.errMess = null;
+    const org = new FormData();
+    org.append("name", values.name);
+    org.append("username", values.username);
+    org.append("phoneNumber", values.phone);
+    org.append("emailAddress", values.email);
+    org.append("address", JSON.stringify({ city: values.city }));
+    org.append("mission", values.mission);
+    org.append("password", values.password);
+    org.append("logo", logo);
+    org.append("legalDoc", legalDoc);
+    props.registerOrg(org);
+    console.log(open);
+    handleOpen();
   };
 
   const onFinishFailed = (errorInfo) => {
-   // handleOpen()
+    // handleOpen()
     //console.log(open)
     console.log("Failed:", errorInfo);
   };
@@ -96,8 +92,7 @@ function OrganizationRegistration(props) {
   );
 
   if (props.Registration.success === true) {
-
-    return <Redirect to='/login' />
+    return <Redirect to="/login" />;
   }
   return (
     <div style={{ backgroundColor: "#EEEEEE" }}>
@@ -111,44 +106,36 @@ function OrganizationRegistration(props) {
       >
         <Fade in={open}>
           <div className={classes.paper}>
-                <DialogTitle>
-                  <Box display="flex" justifyContent='flex-end'>
-                    <Box>
-                      <IconButton onClick={handleClose}>
-                        <CloseIcon />
-                      </IconButton>
-                    </Box>
-                  </Box>
-                </DialogTitle>
-            {
-              props.Registration.isLoading === true ?
-                <div style={{ padding: '20px', paddingLeft:'40px'}}>
-                  <div>
-                    <CircularProgress />
-                    <br></br>
-                    <strong>Please wait...</strong>
-                  </div>
-
-
+            <DialogTitle>
+              <Box display="flex" justifyContent="flex-end">
+                <Box>
+                  <IconButton onClick={handleClose}>
+                    <CloseIcon />
+                  </IconButton>
+                </Box>
+              </Box>
+            </DialogTitle>
+            {props.Registration.isLoading === true ? (
+              <div style={{ padding: "20px", paddingLeft: "40px" }}>
+                <div>
+                  <CircularProgress />
+                  <br></br>
+                  <strong>Please wait...</strong>
                 </div>
-                : null
-            }
-            {
-              props.Registration.errMess &&
-
-              <Alert style={{ padding: '20px' }} severity="error">
-                <AlertTitle style={{ fontWeight: 'bold' }}>Error</AlertTitle>
+              </div>
+            ) : null}
+            {props.Registration.errMess && (
+              <Alert style={{ padding: "20px" }} severity="error">
+                <AlertTitle style={{ fontWeight: "bold" }}>Error</AlertTitle>
                 <strong>{props.Registration.errMess}</strong>
               </Alert>
-            }
-            {
-              props.Registration.success === true ?
-                <Alert style={{ padding: '20px' }} severity="success">
-                  <AlertTitle style={{ fontWeight: 'bold' }}>Success</AlertTitle>
-                  <strong>Registration Succesfull!</strong>
-                </Alert>
-                : null
-            }
+            )}
+            {props.Registration.success === true ? (
+              <Alert style={{ padding: "20px" }} severity="success">
+                <AlertTitle style={{ fontWeight: "bold" }}>Success</AlertTitle>
+                <strong>Registration Succesfull!</strong>
+              </Alert>
+            ) : null}
           </div>
         </Fade>
       </Modal>
@@ -232,7 +219,6 @@ function OrganizationRegistration(props) {
                     <label style={{ margin: "2rem" }}>
                       Give your Organizations Basic Informations :
                     </label>
-
 
                     <Form.Item
                       label="Organization Name"
@@ -532,8 +518,11 @@ function OrganizationRegistration(props) {
                           },
                         ]}
                       >
-                        <Input type='file' name='logo' onChange={(e) => setLogo(e.target.files[0])} />
-
+                        <Input
+                          type="file"
+                          name="logo"
+                          onChange={(e) => setLogo(e.target.files[0])}
+                        />
                       </Form.Item>
 
                       <label>
@@ -555,8 +544,11 @@ function OrganizationRegistration(props) {
                           },
                         ]}
                       >
-                        <Input type='file' name='legalDoc' onChange={(e) => setLegalDoc(e.target.files[0])} />
-
+                        <Input
+                          type="file"
+                          name="legalDoc"
+                          onChange={(e) => setLegalDoc(e.target.files[0])}
+                        />
                       </Form.Item>
                     </div>
                     <br></br>
@@ -589,4 +581,7 @@ function OrganizationRegistration(props) {
   );
 }
 //
-export default connect(mapStateToProps, mapDispatchToProps)(OrganizationRegistration)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(OrganizationRegistration);

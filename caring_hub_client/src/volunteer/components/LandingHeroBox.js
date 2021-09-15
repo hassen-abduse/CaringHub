@@ -1,11 +1,9 @@
 import React from "react";
 import { Box } from "@material-ui/core";
-import Imge from "../../assets/img/landing3.png";
 import landingImg from "../../assets/img/landingImg.svg";
-import freqAskedPic from "../../assets/img/bcg.jpg";
-import Button from "@material-ui/core/Button";
+
 import LandingCardHolder from "./LandingCardHolder";
-import {Link} from "react-router-dom"
+import { Link } from "react-router-dom";
 
 export default function LandingHeroBox() {
   return (
@@ -56,8 +54,6 @@ export default function LandingHeroBox() {
           </div>
         </div>
       </div>
-
-      
 
       <div class="basic-2">
         <div class="container">

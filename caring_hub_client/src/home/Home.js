@@ -5,7 +5,7 @@ import Footer from "./Footer";
 import ContactUs from "./ContactUs";
 import HowItWorks from "./HowItWorks";
 import { ProjectCard } from "../volunteer/components/ProjectCard";
-import {Link} from "react-router-dom"
+import { Link } from "react-router-dom";
 function Home() {
   return (
     <div className="App">

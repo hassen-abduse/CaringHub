@@ -1,20 +1,14 @@
-import { Button, Grid, Paper, Typography } from "@material-ui/core";
-import React, { Component } from "react";
-import ProfileCard from "../../components/ProfileCard";
-import SentApplicationCard from "../../components/SentApplicationCard";
-import Img from "../../../assets/img/bg2.jpg";
+import React from "react";
+
 import { CircularProgress, Container } from "@material-ui/core";
 import { Alert, AlertTitle } from "@material-ui/lab";
 import { Badge, Rate } from "antd";
 import { useState, useEffect } from "react";
-import { useParams,Link } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { baseUrl } from "../../../redux/shared/baseUrl";
 
 import jwtDecode from "jwt-decode";
 import { connect } from "react-redux";
-
-
-
 
 const mapStateToProps = (state) => {
   return {
@@ -27,7 +21,6 @@ function VolunteerDashboard(props) {
     ? jwtDecode(props.auth.token)
     : { role: "", _id: "" };
 
-  
   const { volId } = useParams();
 
   const [volunteer, setVolunteer] = useState({ skillSets: [], address: {} });
@@ -285,23 +278,21 @@ function VolunteerDashboard(props) {
             <h4 className=" mt-5 teal">Languages</h4>
             <p className="m-0">English</p>
           </div>
-
         </div>
-        {decoded._id === volId &&
-        <div style={{display:"flex",justifyContent:"center",margin:"20px"}}>
-         <Link to={`/volunteer/editProfile/${decoded._id}`}>
-         <span 
-         
-         className="text-center btn-outline-sm"
-         >
-          Edit Profile 
-         </span>
-         </Link>
-         </div>}
+        {decoded._id === volId && (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              margin: "20px",
+            }}
+          >
+            <Link to={`/volunteer/editProfile/${decoded._id}`}>
+              <span className="text-center btn-outline-sm">Edit Profile</span>
+            </Link>
+          </div>
+        )}
       </div>
-
-      
     );
 }
 export default connect(mapStateToProps)(VolunteerDashboard);
-
