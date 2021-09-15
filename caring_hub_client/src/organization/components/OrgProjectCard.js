@@ -26,6 +26,7 @@ import { Modal } from "antd";
 
 import ClearIcon from "@material-ui/icons/Clear";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
+import { Link } from "react-router-dom";
 
 function createData(title, status, actions) {
   return { title, status, actions };
@@ -384,9 +385,14 @@ export default function OrgProjectCard() {
                               borderRadius: "5px",
                             }}
                           >
-                            <Button variant="contained" color="primary">
-                              Applicants
-                            </Button>
+                            <Link
+                              to="/organization/applicants"
+                              style={{ textDecoration: "none" }}
+                            >
+                              <Button variant="contained" color="primary">
+                                Applicants
+                              </Button>
+                            </Link>
                           </Grid>
 
                           <Grid
@@ -396,9 +402,14 @@ export default function OrgProjectCard() {
                               marginLeft: "5px",
                             }}
                           >
-                            <Button variant="contained" color="secondary">
-                              Volunteers
-                            </Button>
+                            <Link
+                              to="/organization/volunteers"
+                              style={{ textDecoration: "none" }}
+                            >
+                              <Button variant="contained" color="secondary">
+                                Volunteers
+                              </Button>
+                            </Link>
                           </Grid>
                           <Grid
                             item
