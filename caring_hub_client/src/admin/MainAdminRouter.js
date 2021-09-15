@@ -14,7 +14,7 @@ import SkillSets from "./pages/skillSet/SkillSet";
 
 export default function MainAdminRouter() {
   return (
-    <BrowserRouter>
+    // <BrowserRouter>
     <Switch>
       <Route exact path="/admin/projects">
         <Projects />
@@ -47,7 +47,7 @@ export default function MainAdminRouter() {
         <Dashboard />
       </Route>
     </Switch>
-    </BrowserRouter>
+    // </BrowserRouter>
     
   );
 }

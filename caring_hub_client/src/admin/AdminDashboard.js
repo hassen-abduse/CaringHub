@@ -87,7 +87,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     padding: theme.spacing(0, 1),
-    // necessary for content href be below app bar
+    // necessary for content to be below app bar
     ...theme.mixins.toolbar,
     justifyContent: "center",
   },
@@ -173,11 +173,11 @@ function AdminDashboard(props) {
                   </Badge>
                 </ListItem> */}
                 <ListItem>
-                  <a href="/admin/applicants">
+                  <Link to="/admin/applicants">
                     <Badge badgeContent={6} color="secondary">
                       <NotificationImportant />
                     </Badge>
-                  </a>
+                  </Link>
                 </ListItem>
                 <ListItem>
                   <AccountMenu />
@@ -213,73 +213,73 @@ function AdminDashboard(props) {
         </div>
         <Divider />
         <List>
-          <a className={classes.decoration} href="/admin/dashboard">
+          <Link className={classes.decoration} to="/admin/dashboard">
             <ListItem>
               <ListItemIcon>
                 <InboxIcon />
               </ListItemIcon>
               <ListItemText>Dashboard</ListItemText>
             </ListItem>
-          </a>
-          <a className={classes.decoration} href="/admin/organizations">
+          </Link>
+          <Link className={classes.decoration} to="/admin/organizations">
             <ListItem>
               <ListItemIcon>
                 <InboxIcon />
               </ListItemIcon>
               <ListItemText>Organizations</ListItemText>
             </ListItem>
-          </a>
-          <a className={classes.decoration} href="/admin/projects">
+          </Link>
+          <Link className={classes.decoration} to="/admin/projects">
             <ListItem>
               <ListItemIcon>
                 <InboxIcon />
               </ListItemIcon>
               <ListItemText>Projects</ListItemText>
             </ListItem>
-          </a>
-          <a className={classes.decoration} href="/admin/applicants">
+          </Link>
+          <Link className={classes.decoration} to="/admin/applicants">
             <ListItem>
               <ListItemIcon>
                 <InboxIcon />
               </ListItemIcon>
               <ListItemText>Applicants</ListItemText>
             </ListItem>
-          </a>
-          <a className={classes.decoration} href="/admin/volunteers">
+          </Link>
+          <Link className={classes.decoration} to="/admin/volunteers">
             <ListItem>
               <ListItemIcon>
                 <InboxIcon />
               </ListItemIcon>
               <ListItemText>Volunteers</ListItemText>
             </ListItem>
-          </a>
+          </Link>
         </List>
         <Divider />
         <List>
-          <a className={classes.decoration} href="/admin/skillSets">
+          <Link className={classes.decoration} to="/admin/skillSets">
             <ListItem>
               <ListItemIcon>
                 <InboxIcon />
               </ListItemIcon>
               <ListItemText>Skill sets</ListItemText>
             </ListItem>
-          </a>
-          <a className={classes.decoration} href="/admin/evaluationCriterias">
+          </Link>
+          <Link className={classes.decoration} to="/admin/evaluationCriterias">
             <ListItem>
               <ListItemIcon>
                 <InboxIcon />
               </ListItemIcon>
               <ListItemText>Evaluation criaterias</ListItemText>
             </ListItem>
-          </a>
-          <a className={classes.decoration} href="/admin/causeAreas">
+          </Link>
+          <Link className={classes.decoration} to="/admin/causeAreas">
             <ListItem>
               <ListItemIcon>
                 <InboxIcon />
               </ListItemIcon>
               <ListItemText>cause areas</ListItemText>
             </ListItem>
-          </a>
+          </Link>
         </List>
       </Drawer>
       <main

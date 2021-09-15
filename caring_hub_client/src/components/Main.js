@@ -114,6 +114,10 @@ class Main extends Component {
               <VolunteerDashboard />
             </Route>
 
+            <Route exact path="/volunteer/jobDescription/:id">
+              <DescriptionCard />
+            </Route>
+
             {decoded.role === "Vol" && (
               <>
                 <Route exact path="/">
@@ -125,13 +129,11 @@ class Main extends Component {
                 <Route exact path="/volunteer/reviewApplication">
                   <ReviewApplication />
                 </Route>
-                <Route exact path="/volunteer/jobDescription/:id">
-                  <DescriptionCard />
-                </Route>
+                
                 <Route exact path="/volunteer/editProfile/:volId">
                   <EditVolunteerProfile />
                 </Route>
-                
+ 
 
               </>
             )}
