@@ -5,6 +5,7 @@ import landingImg from "../../assets/img/landingImg.svg";
 import freqAskedPic from "../../assets/img/bcg.jpg";
 import Button from "@material-ui/core/Button";
 import LandingCardHolder from "./LandingCardHolder";
+import {Link} from "react-router-dom"
 
 export default function LandingHeroBox() {
   return (
@@ -56,69 +57,7 @@ export default function LandingHeroBox() {
         </div>
       </div>
 
-      {/* 
-      <div
-        style={{
-          display: "flex",
-          marginTop: "40px",
-          justifyContent: "center",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            maxWidth: "1000px",
-          }}
-        >
-          <div
-            style={{
-              paddingRight: "30px",
-            }}
-          >
-            <img
-              src={landingImg}
-              width="400%"
-              height="400px"
-
-              // style={{ objectFit: "cover" }}
-            />
-          </div>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-
-              justifyContent: "center",
-              marginLeft: "30%",
-              paddingLeft: "30px",
-              paddingBottom: "200px",
-            }}
-          >
-            <div>
-              <h1>Facilitating meaningful volunteer opportunities</h1>
-            </div>
-
-            <div>
-              <h3>
-                Volunteering your skills is an impactful way to give back – the
-                average volunteer project on Catchafire is worth $5,200 in
-                professional services. Connect directly with nonprofits and make
-                a difference.
-              </h3>
-            </div>
-            <div>
-              <Button
-                variant="contained"
-                style={{ backgroundColor: "#FFDB15" }}
-                href="/volunteer/findProject"
-              >
-                See available projects
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div> */}
+      
 
       <div class="basic-2">
         <div class="container">
@@ -152,9 +91,9 @@ export default function LandingHeroBox() {
                   nonprofits all over the Ethiopia and beyond that are great
                   places to volunteer and could use your volunteer hours.
                 </p>
-                <a class="btn-outline-reg" href="#">
+                <Link class="btn-outline-reg" to="/volunteer/findProject">
                   See available projects
-                </a>
+                </Link>
               </div>
             </div>
           </div>

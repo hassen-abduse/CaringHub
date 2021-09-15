@@ -243,7 +243,7 @@ function AppBar(props) {
                       }
                       to={`/organization/dashboard/${decoded._id}`}
                     >
-                      Dasboard
+                      Dashboard
                     </Link>
                   </li>
                   <li class="nav-item">
