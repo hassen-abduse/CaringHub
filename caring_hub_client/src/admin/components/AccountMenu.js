@@ -13,7 +13,6 @@ import { connect } from "react-redux";
 import ProfileImage from ".../../../src/assets/img/profile2.jpg";
 import { Link } from "react-router-dom";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import SettingsIcon from "@material-ui/icons/Settings";
 
 const mapStateToProps = (state) => {
   return {

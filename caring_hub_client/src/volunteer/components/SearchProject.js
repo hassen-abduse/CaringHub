@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import SearchPanel from "./SearchPanel";
 class SearchProject extends Component {
   state = {};
   render() {

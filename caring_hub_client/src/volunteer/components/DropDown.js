@@ -1,14 +1,6 @@
 import React from "react";
-import {
-  AppBar,
-  Toolbar,
-  Button,
-  MenuIcon,
-  Typography,
-} from "@material-ui/core";
+import { AppBar, Toolbar } from "@material-ui/core";
 import NavMenu from "./Menu";
-
-// import { DownOutlined, UserOutlined } from "@ant-design/icons";
 
 export default function DropDown() {
   return (

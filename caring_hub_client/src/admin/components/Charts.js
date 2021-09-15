@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  LineChart,
-  Line,
-  CartesianGrid,
-  XAxis,
-  YAxis,
-  Tooltip,
-} from "recharts";
+import { LineChart, Line, CartesianGrid, XAxis, Tooltip } from "recharts";
 export default function Charts(data) {
   return (
     <div>

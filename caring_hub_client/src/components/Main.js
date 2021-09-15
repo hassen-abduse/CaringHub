@@ -29,11 +29,9 @@ import VolunteerRegistration from "../registration/VolunteerRegistration";
 import OrganizationRegistration from "../registration/OrganizationRegistration";
 
 import Profile from "../organization/pages/profile/Profile";
-import OrganizationHeader from "../organization/components/OrganizationHeader";
 import Volunteers from "../organization/pages/volunteers/Volunteers";
 import Project from "../organization/pages/projects/Project";
 import Applicants from "../organization/pages/applicants/Applicant";
-import VolunteerHeader from "../volunteer/components/VolunteerHeader";
 import AppBar from "../home/AppBar";
 import FouroFour from "./FouroFour";
 import AdminDashboard from "../admin/AdminDashboard";
@@ -129,12 +127,10 @@ class Main extends Component {
                 <Route exact path="/volunteer/reviewApplication">
                   <ReviewApplication />
                 </Route>
-                
+
                 <Route exact path="/volunteer/editProfile/:volId">
                   <EditVolunteerProfile />
                 </Route>
- 
-
               </>
             )}
 

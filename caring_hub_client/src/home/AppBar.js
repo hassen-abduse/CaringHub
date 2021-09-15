@@ -1,31 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../assets/css/styles.css";
 import "../assets/css/swiper.css";
-import clsx from "clsx";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
-import { Button } from "@material-ui/core";
 import { useLocation } from "react-router";
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 import jwtDecode from "jwt-decode";
 import { connect } from "react-redux";
 import { logoutUser } from "../redux/ActionCreators/authActions";
-import { Badge, Menu, Dropdown } from "antd";
+import { Menu, Dropdown } from "antd";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import Drawer from "@material-ui/core/Drawer";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import Toolbar from "@material-ui/core/Toolbar";
-import List from "@material-ui/core/List";
-import { ListItem } from "@material-ui/core";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import Typography from "@material-ui/core/Typography";
-import Divider from "@material-ui/core/Divider";
-import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
 
 // import User from "./components/User";
 

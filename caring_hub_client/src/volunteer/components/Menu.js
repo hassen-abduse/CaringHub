@@ -1,7 +1,5 @@
 import { Menu } from "antd";
 import {
-  MailOutlined,
-  AppstoreOutlined,
   CalendarFilled,
   SettingOutlined,
   HeartFilled,
