@@ -1,16 +1,10 @@
-import { Grid, Container, Paper, Typography } from "@material-ui/core";
+import { Typography } from "@material-ui/core";
 import React, { Component } from "react";
-import Divider from "@material-ui/core/Divider";
-import { Rate, Row } from "antd";
-import Avatar from "../../../volunteer/components/Avatars";
-import { Badge, Col } from "antd";
+import {  Row } from "antd";
+import { Col } from "antd";
 import { Button } from "@material-ui/core";
-import { baseUrl } from "../../../redux/shared/baseUrl";
-import { Alert, AlertTitle } from '@material-ui/lab';
-import { CircularProgress } from "@material-ui/core";
-import { deleteOrg } from "../../../redux/ActionCreators/orgActions";
+import { approveOrg } from "../../../redux/ActionCreators/orgActions";
 import { connect } from 'react-redux'
-const desc = ["terrible", "bad", "normal", "good", "wonderful"];
 
 const mapStateToProps = (state) => {
   return {
@@ -18,7 +12,7 @@ const mapStateToProps = (state) => {
   }
 }
 const mapDispatchToProps = (dispatch) => ({
-  deleteOrg: (orgId) => dispatch(deleteOrg(orgId)),
+  approveOrg: (org) => dispatch(approveOrg(org)),
 })
 class OrgDetail extends Component {
   state = {
@@ -191,7 +185,7 @@ class OrgDetail extends Component {
                     <a style={{textDecoration:'none'}} href={`/organization/dashboard/${this.props.org._id}`}>More Details</a>
                   </Button>
                   <Button
-                    onClick={()=> this.props.deleteOrg(this.props.org._id)}
+                    onClick={()=> this.props.approveOrg({orgId: this.props.org._id})}
                     variant="contained"
                     color="green"
                     style={{backgroundColor:"green"}}

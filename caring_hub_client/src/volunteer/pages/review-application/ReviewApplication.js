@@ -1,8 +1,6 @@
 import React from "react";
 import "./index.css";
-import Avatar from "../../components/Avatars";
-import img from "../../../assets/img/image.jpg";
-import ProfessionalExperienceCard from "../../components/ProfessionalExperienceCard";
+
 export default function ReviewApplication() {
   return (
     <div className="container">

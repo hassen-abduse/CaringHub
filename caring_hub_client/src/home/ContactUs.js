@@ -14,26 +14,6 @@ export default function ContactUs() {
                 Sed risus ipsum, egestas sed odio in, pulvinar euismod ipsum.
                 Sed ut enim non nunc fermentum dictum et sit amet erat. Maecenas
               </p>
-              {/* <ul class="list-unstyled li-space-lg">
-                <li class="d-flex">
-                  <i class="fas fa-square"></i>
-                  <div class="flex-grow-1">
-                    Vel maximus nunc aliquam ut. Donec semper, magna a pulvinar
-                  </div>
-                </li>
-                <li class="d-flex">
-                  <i class="fas fa-square"></i>
-                  <div class="flex-grow-1">
-                    Suscipit sit amet quis lorem. Sed risus ipsum, egestas mare
-                  </div>
-                </li>
-                <li class="d-flex">
-                  <i class="fas fa-square"></i>
-                  <div class="flex-grow-1">
-                    Sem pulvinar suscipit sit amet quis lorem. Sed risus
-                  </div>
-                </li>
-              </ul> */}
             </div>
           </div>
           <div class="col-lg-6">

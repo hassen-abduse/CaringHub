@@ -1,6 +1,6 @@
 import React from "react";
 
-import { BrowserRouter , Switch, Route } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 
 import Volunteers from "./pages/volunteers/Volunteer";
 import Dashboard from "./pages/dashboard/Dashboard";
@@ -48,6 +48,5 @@ export default function MainAdminRouter() {
       </Route>
     </Switch>
     // </BrowserRouter>
-    
   );
 }

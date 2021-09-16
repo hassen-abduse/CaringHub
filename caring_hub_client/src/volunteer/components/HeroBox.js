@@ -1,14 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { Box, Container, Grid } from "@material-ui/core";
-import Imge from "../../assets/img/1.jpg";
+import React, { useState } from "react";
 import SearchProject from "./SearchProject";
 
 import SearchPanel from "./SearchPanel";
-import { ProjectCard } from "./ProjectCard";
 import { fetchProjects } from "../../redux/ActionCreators/projectActions";
 import CardHolder from "./CardHolder";
-import MovieSource from "./MovieSource";
 import { connect } from "react-redux";
+import { Box } from "@material-ui/core";
 
 const mapStateToProps = (state) => {
   return {
