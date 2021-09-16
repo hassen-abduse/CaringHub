@@ -26,7 +26,7 @@ import User from "./components/User";
 import AccountMenu from "./components/AccountMenu";
 import Organizations from "./pages/orgs/Organizations";
 import { NavLink, Redirect } from "react-router-dom";
-
+import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 
 const mapStateToProps = (state) => {

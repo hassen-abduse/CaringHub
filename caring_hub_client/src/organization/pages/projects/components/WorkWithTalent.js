@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: "100%",
     // backgroundColor:"#e3e3e3"
     paddingLeft: "15px",
-    marginTop: "7%",
+    marginTop: "7% ",
   },
   expand: {
     transform: "rotate(0deg)",
