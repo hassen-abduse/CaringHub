@@ -121,7 +121,7 @@ function DescriptionCard(props) {
     );
   else
     return (
-      <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
+      <Container style={{ marginTop: "100px" }}>
         <div className="container">
           <div>
             <a className="btn-solid-sm mt-3 mb-3" href="/volunteer/findProject">

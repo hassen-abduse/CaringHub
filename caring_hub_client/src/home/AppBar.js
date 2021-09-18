@@ -2,6 +2,7 @@ import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../assets/css/styles.css";
 import "../assets/css/swiper.css";
+import logo from "../assets/img/logo.png";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import { useLocation } from "react-router";
 import { Link } from "react-router-dom";
@@ -140,8 +141,13 @@ function AppBar(props) {
       >
         <div class="container">
           {open === false ? (
-            <Link className="navbar-brand logo-text" to="/index">
-              CaringHub
+            <Link
+              style={{ padding: 0, margin: 0 }}
+              className="navbar-brand "
+              to="/index"
+            >
+              {" "}
+              <img style={{ width: "90px", height: "65px" }} src={logo}></img>
             </Link>
           ) : null}
           <button
