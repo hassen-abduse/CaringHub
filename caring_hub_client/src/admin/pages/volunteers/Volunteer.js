@@ -27,7 +27,7 @@ import { Alert, AlertTitle } from '@material-ui/lab';
 import { CircularProgress, Container, Portal } from "@material-ui/core";
 import VolunteerDetail from "./VolunteerDetail";
 import { fetchVolunteers } from "../../../redux/ActionCreators/volActions";
-
+import { connect } from 'react-redux'
 function createData(firstName, lastName, phone, email, address, skill, areas) {
   return { firstName, lastName, phone, email, address, skill, areas };
 }
@@ -137,13 +137,6 @@ const headCells = [
   },
   { id: "email", numeric: true, disablePadding: false, label: "Emain address" },
   { id: "address", numeric: true, disablePadding: false, label: "address" },
-  { id: "skill", numeric: true, disablePadding: false, label: "skill" },
-  {
-    id: "areas",
-    numeric: true,
-    disablePadding: false,
-    label: "Areas to work on ",
-  },
   {
     id: "actions",
     numeric: false,
@@ -169,18 +162,18 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding="checkbox">
+        {/* <TableCell padding="checkbox">
           <Checkbox
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
             inputProps={{ "aria-label": "select all desserts" }}
           />
-        </TableCell>
+        </TableCell> */}
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={headCell.numeric ? "right" : "left"}
+            align={headCell.numeric ? "center" : "center"}
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
@@ -386,7 +379,7 @@ function Volunteers(props) {
         <div className='row' style={{ display: 'flex', justifyContent: 'center', }}>
           <Alert style={{ margin: '50px', padding: '50px' }} severity="error">
             <AlertTitle style={{ fontWeight: 'bold' }}>Error</AlertTitle>
-            <strong>{props.Organizations.errMess}</strong>
+            <strong>{props.Volunteers.errMess}</strong>
           </Alert>
         </div>
       </div>
@@ -427,10 +420,10 @@ function Volunteers(props) {
                 orderBy={orderBy}
                 onSelectAllClick={handleSelectAllClick}
                 onRequestSort={handleRequestSort}
-                rowCount={rows.length}
+                rowCount={props.Volunteers.volunteers.length}
               />
               <TableBody>
-                {stableSort(rows, getComparator(order, orderBy))
+                {stableSort(props.Volunteers.volunteers, getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
                     const isItemSelected = isSelected(index);
@@ -439,37 +432,40 @@ function Volunteers(props) {
                     return (
                       <TableRow
                         hover
+                        onClick={() => {
+                          setVisible(true);
+                          setSelectedRow(row);
+                        }}
                         role="checkbox"
                         aria-checked={isItemSelected}
                         tabIndex={-1}
                         key={index}
                         selected={isItemSelected}
                       >
-                        <TableCell padding="checkbox">
+                        {/* <TableCell padding="checkbox">
                           <Checkbox
                             checked={isItemSelected}
                             inputProps={{ "aria-labelledby": labelId }}
                             onClick={(event) => handleClick(event, index)}
                           />
-                        </TableCell>
+                        </TableCell> */}
                         <TableCell
                           component="th"
                           id={labelId}
                           scope="row"
+                          align="center"
                           padding="none"
                         >
                           {row.firstName}
                         </TableCell>
 
-                        <TableCell align="right">{row.lastName}</TableCell>
-                        <TableCell align="right">{row.phone}</TableCell>
-                        <TableCell align="right">{row.email}</TableCell>
-                        <TableCell align="right">{row.address}</TableCell>
-                        <TableCell align="right">{row.skill}</TableCell>
-                        <TableCell align="right">{row.areas}</TableCell>
+                        <TableCell align="center">{row.lastName}</TableCell>
+                        <TableCell align="center">{row.phoneNumber}</TableCell>
+                        <TableCell align="center">{row.emailAddress}</TableCell>
+                        <TableCell align="center">{row.address.city}</TableCell>
                         <TableCell>
                           <Button type="primary" onClick={() => setVisible(true)}>
-                            show Volunteers
+                            show Details
                           </Button>
                         </TableCell>
                       </TableRow>
@@ -489,7 +485,7 @@ function Volunteers(props) {
                   onCancel={() => setVisible(false)}
                   width={1000}
                 >
-                  <VolunteerDetail />
+                  <VolunteerDetail vol={selectedRow}/>
                 </Modal>
 
               </TableBody>
@@ -515,9 +511,9 @@ function Volunteers(props) {
     <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
       <div className='container'>
         <div className='row' style={{ display: 'flex', justifyContent: 'center', }}>
-          <Alert style={{ margin: '50px', padding: '50px' }} severity="error">
+          <Alert style={{ margin: '10px', padding: '50px' }} severity="error">
             <AlertTitle style={{ fontWeight: 'bold' }}>Error</AlertTitle>
-            <strong>No Organizations Found!</strong>
+            <strong>No Volunteers Found!</strong>
           </Alert>
         </div>
       </div>
@@ -525,3 +521,5 @@ function Volunteers(props) {
     </Container >
   )
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(Volunteers)
