@@ -23,7 +23,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import { Modal } from "antd";
-import { Alert, AlertTitle } from '@material-ui/lab';
+import { Alert, AlertTitle } from "@material-ui/lab";
 import { CircularProgress, Container, Portal } from "@material-ui/core";
 import VolunteerDetail from "./VolunteerDetail";
 import { fetchVolunteers } from "../../../redux/ActionCreators/volActions";
@@ -82,13 +82,13 @@ const rows = [
 
 const mapStateToProps = (state) => {
   return {
-    Volunteers: state.Volunteers
-  }
-}
+    Volunteers: state.Volunteers,
+  };
+};
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchVolunteers: () => dispatch(fetchVolunteers())
-})
+  fetchVolunteers: () => dispatch(fetchVolunteers()),
+});
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -214,13 +214,13 @@ const useToolbarStyles = makeStyles((theme) => ({
   highlight:
     theme.palette.type === "light"
       ? {
-        color: theme.palette.secondary.main,
-        backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-      }
+          color: theme.palette.secondary.main,
+          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+        }
       : {
-        color: theme.palette.text.primary,
-        backgroundColor: theme.palette.secondary.dark,
-      },
+          color: theme.palette.text.primary,
+          backgroundColor: theme.palette.secondary.dark,
+        },
   title: {
     flex: "1 1 100%",
   },
@@ -331,8 +331,8 @@ function Volunteers(props) {
   };
 
   useEffect(() => {
-    props.fetchVolunteers()
-  }, [])
+    props.fetchVolunteers();
+  }, []);
 
   const handleClick = (event, index) => {
     console.log(index);
@@ -373,34 +373,50 @@ function Volunteers(props) {
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
   const [visible, setVisible] = useState(false);
-  if (props.Volunteers.errMess) return (
-    <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
-      <div className='container'>
-        <div className='row' style={{ display: 'flex', justifyContent: 'center', }}>
-          <Alert style={{ margin: '50px', padding: '50px' }} severity="error">
-            <AlertTitle style={{ fontWeight: 'bold' }}>Error</AlertTitle>
-            <strong>{props.Volunteers.errMess}</strong>
-          </Alert>
-        </div>
-      </div>
-
-    </Container >
-
-  )
-  else if (props.Volunteers.isLoading) return (
-    <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
-      <div class='container'>
-        <div className='row'>
-          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '100px', marginBottom: '75px' }}>
-            <CircularProgress size={'50px'} />
-
+  if (props.Volunteers.errMess)
+    return (
+      <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
+        <div className="container">
+          <div
+            className="row"
+            style={{ display: "flex", justifyContent: "center" }}
+          >
+            <Alert style={{ margin: "50px", padding: "50px" }} severity="error">
+              <AlertTitle style={{ fontWeight: "bold" }}>Error</AlertTitle>
+              <strong>{props.Organizations.errMess}</strong>
+            </Alert>
           </div>
-          <p style={{ textAlign: 'center', fontSize: '25px', fontWeight: 'bold' }}>Loading...</p>
         </div>
-      </div>
-    </Container>
-  )
-
+      </Container>
+    );
+  else if (props.Volunteers.isLoading)
+    return (
+      <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
+        <div class="container">
+          <div className="row">
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                marginTop: "100px",
+                marginBottom: "75px",
+              }}
+            >
+              <CircularProgress size={"50px"} />
+            </div>
+            <p
+              style={{
+                textAlign: "center",
+                fontSize: "25px",
+                fontWeight: "bold",
+              }}
+            >
+              Loading...
+            </p>
+          </div>
+        </div>
+      </Container>
+    );
   else if (props.Volunteers.volunteers.length >= 1)
     return (
       <div className={classes.root}>
@@ -464,8 +480,11 @@ function Volunteers(props) {
                         <TableCell align="center">{row.emailAddress}</TableCell>
                         <TableCell align="center">{row.address.city}</TableCell>
                         <TableCell>
-                          <Button type="primary" onClick={() => setVisible(true)}>
-                            show Details
+                          <Button
+                            type="primary"
+                            onClick={() => setVisible(true)}
+                          >
+                            show Volunteers
                           </Button>
                         </TableCell>
                       </TableRow>
@@ -487,7 +506,6 @@ function Volunteers(props) {
                 >
                   <VolunteerDetail vol={selectedRow}/>
                 </Modal>
-
               </TableBody>
             </Table>
           </TableContainer>
@@ -507,19 +525,22 @@ function Volunteers(props) {
         />
       </div>
     );
-  else return (
-    <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
-      <div className='container'>
-        <div className='row' style={{ display: 'flex', justifyContent: 'center', }}>
-          <Alert style={{ margin: '10px', padding: '50px' }} severity="error">
-            <AlertTitle style={{ fontWeight: 'bold' }}>Error</AlertTitle>
-            <strong>No Volunteers Found!</strong>
-          </Alert>
+  else
+    return (
+      <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
+        <div className="container">
+          <div
+            className="row"
+            style={{ display: "flex", justifyContent: "center" }}
+          >
+            <Alert style={{ margin: "50px", padding: "50px" }} severity="error">
+              <AlertTitle style={{ fontWeight: "bold" }}>Error</AlertTitle>
+              <strong>No Organizations Found!</strong>
+            </Alert>
+          </div>
         </div>
-      </div>
-
-    </Container >
-  )
+      </Container>
+    );
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Volunteers)

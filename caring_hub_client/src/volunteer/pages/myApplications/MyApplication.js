@@ -8,7 +8,7 @@ export default function MyApplication() {
       style={{
         display: "flex",
         justifyContent: "center",
-        marginTop: "20px",
+        marginTop: "60px",
       }}
     >
       <div style={{ display: "flex", flexDirection: "column" }}>
@@ -20,13 +20,7 @@ export default function MyApplication() {
             <VolunteerApplicationTable />
           </div>
         </div>
-
-        {/* <div className="container">
-          <WorkWithTalent />
-        </div> */}
       </div>
-
-      {/* how to post a project */}
     </div>
   );
 }

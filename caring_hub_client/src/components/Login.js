@@ -39,7 +39,7 @@ class Login extends React.Component {
     return (
       <div>
         <div
-          style={{ maxWidth: "550px", marginTop: "50px" }}
+          style={{ maxWidth: "550px", marginTop: "25px" }}
           class="container-fluid px-1 px-md-5 px-lg-1 px-xl-5 py-5 mx-auto"
         >
           <div class="card card0 border-0" style={{ paddingBottom: "50px" }}>
@@ -103,9 +103,14 @@ class Login extends React.Component {
                       type="submit"
                       class="btn btn-primary text-center"
                     >
-                      {this.props.auth.isLoading === true
-                        ?<CircularProgress color='#fff' size={'20px'}></CircularProgress>
-                        : "Login"}
+                      {this.props.auth.isLoading === true ? (
+                        <CircularProgress
+                          color="#fff"
+                          size={"20px"}
+                        ></CircularProgress>
+                      ) : (
+                        "Login"
+                      )}
                     </button>
                     {this.props.auth.errMess && (
                       <p style={{ color: "#f00", textAlign: "center" }}>

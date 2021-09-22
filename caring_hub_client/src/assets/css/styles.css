@@ -1034,7 +1034,7 @@ a:hover {
 
   /* Navigation */
   .navbar {
-    padding-top: 1.75rem;
+    padding-top: 0.5rem;
     background-color: #fcfafb;
     box-shadow: none;
     transition: all 0.2s;

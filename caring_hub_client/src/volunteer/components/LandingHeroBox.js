@@ -44,7 +44,7 @@ export default function LandingHeroBox() {
                 nonprofits and the communities they serve.
               </h2>
             </div>
-            <div>
+            <div style={{ display: "flex", justifyContent: "center" }}>
               <span class="nav-item">
                 <a class="btn-solid-sm" href="#contact">
                   Find Projects
