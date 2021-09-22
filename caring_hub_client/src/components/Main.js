@@ -146,13 +146,13 @@ class Main extends Component {
                 <Route exact path="/organization/postProject">
                   <PostProject />
                 </Route>
-                <Route exact path="/organization/volunteers">
+                <Route exact path="/organization/volunteers/:projectId">
                   <Volunteers />
                 </Route>
                 <Route exact path="/organization/projects">
                   <Project />
                 </Route>
-                <Route exact path="/organization/applicants">
+                <Route exact path="/organization/applicants/:projectId">
                   <Applicants />
                 </Route>
               </>

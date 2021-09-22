@@ -185,13 +185,6 @@ export default function Profile() {
           <p className="m-0">{org.address.city}</p>
           <p className="m-0">Ethiopia</p>
 
-          <h6 className="teal mt-4">Time Zone</h6>
-          <p className="m-0"> East African Time Zone </p>
-          <p>UTC + 3:00</p>
-
-          <h4 className=" mt-5 teal">Files</h4>
-          <p className="m-0">document.pdf</p>
-          <p className="m-0">Professional License.pdf</p>
         </div>
       </div>
     </div>

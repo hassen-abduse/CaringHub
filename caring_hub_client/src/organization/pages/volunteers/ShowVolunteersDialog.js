@@ -23,7 +23,7 @@ class ShowVolunteersDialog extends Component {
             <img
               style={{ borderRadius: "100%", width: "80px", height: "80px" }}
               alt="Image placeholder"
-              src="https://demos.creative-tim.com/argon-dashboard-pro/assets/img/theme/team-4.jpg"
+              src={this.props.applicant.profilePicture ? this.props.applicant.profilePicture : "https://demos.creative-tim.com/argon-dashboard-pro/assets/img/theme/team-4.jpg"}
             ></img>
           </div>
           <div className="col-lg-3">
@@ -31,7 +31,7 @@ class ShowVolunteersDialog extends Component {
               style={{ marginLeft: "0rem", marginBottom: 0 }}
               className="h2-heading"
             >
-              Jonathan Peter
+              {this.props.applicant.firstName + ' ' + this.props.applicant.lastName}
             </h4>
             <p style={{ marginLeft: "0rem", color: "#159197" }} className="">
               Volunteer
@@ -39,37 +39,19 @@ class ShowVolunteersDialog extends Component {
           </div>
           <h4 className="teal mt-4">Skills</h4>
           <div style={{ display: "flexStart" }}>
-            <span
-              style={{ margin: "0.3rem", padding: "0.8rem" }}
-              className="btn-outline-sm "
-            >
-              Software Engineering
-            </span>
-            <span
-              style={{ margin: "0.3rem", padding: "0.8rem" }}
-              className="btn-outline-sm"
-            >
-              Socail Work
-            </span>
-            <span
-              style={{ margin: "0.3rem", padding: "0.8rem" }}
-              className="btn-outline-sm"
-            >
-              Teaching
-            </span>
-            <span
-              style={{ margin: "0.3rem", padding: "0.8rem" }}
-              className="btn-outline-sm"
-            >
-              Blood Donation
-            </span>
-            <span
-              style={{ margin: "0.3rem", padding: "0.8rem" }}
-              className="btn-outline-sm"
-            >
-              Project Manager
-            </span>
-          </div>
+            {
+
+              this.props.applicant.skillSets.map(skill => {
+                return <span
+                  style={{ margin: "0.3rem", padding: "0.8rem" }}
+                  className="btn-outline-sm "
+                >
+                  {skill.name}
+                </span>
+              })
+          
+           }
+           </div>
         </div>
 
         <div>
@@ -125,19 +107,7 @@ class ShowVolunteersDialog extends Component {
                 >
                   Email :
                 </h6>
-                <p>beshirdek@gmail.com</p>
-              </div>
-              <div style={{ display: "flex" }}>
-                <h6
-                  style={{
-                    marginTop: "3px",
-                    marginRight: "10px",
-                  }}
-                  className=" mb-0 teal"
-                >
-                  User Name :
-                </h6>
-                <p>beshir</p>
+                <p>{this.props.applicant.emailAddress}</p>
               </div>
               <div style={{ display: "flex" }}>
                 <h6
@@ -149,7 +119,7 @@ class ShowVolunteersDialog extends Component {
                 >
                   Phone Number :
                 </h6>
-                <p>+251913*******</p>
+                <p>{this.props.applicant.phoneNumber}</p>
               </div>
             </div>
           </div>

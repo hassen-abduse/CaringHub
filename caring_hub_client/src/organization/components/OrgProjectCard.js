@@ -27,6 +27,11 @@ import { Modal } from "antd";
 import ClearIcon from "@material-ui/icons/Clear";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
 import { Link } from "react-router-dom";
+import { fetchProjects } from "../../redux/ActionCreators/projectActions";
+import { connect } from 'react-redux'
+import { useEffect } from "react";
+import { Alert, AlertTitle } from '@material-ui/lab';
+import { CircularProgress, Container, Portal } from "@material-ui/core";
 
 function createData(title, status, actions) {
   return { title, status, actions };
@@ -74,7 +79,7 @@ const headCells = [
     label: "Project Title",
   },
 
-  { id: "status", numeric: true, disablePadding: false, label: "Status" },
+  { id: "status", numeric: true, disablePadding: false, label: "Start Date" },
 
   // {
   //   id: "areas",
@@ -251,7 +256,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function OrgProjectCard() {
+const mapStateToProps = (state) => {
+  return {
+    Projects: state.Projects,
+  }
+}
+
+const mapDispatchToProps = (dispatch) => ({
+  fetchProjects: () => dispatch(fetchProjects()),
+})
+function OrgProjectCard(props) {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
@@ -259,7 +273,7 @@ export default function OrgProjectCard() {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
+  const [selectedRow, setSelectedRow] = React.useState()
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -314,7 +328,34 @@ export default function OrgProjectCard() {
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
   const [visible, setVisible] = useState(false);
-  return (
+  if (props.Projects.errMess) return (
+    <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
+      <div className='container'>
+        <div className='row' style={{ display: 'flex', justifyContent: 'center', }}>
+          <Alert style={{ margin: '50px', padding: '50px' }} severity="error">
+            <AlertTitle style={{ fontWeight: 'bold' }}>Error</AlertTitle>
+            <strong>{props.Projects.errMess}</strong>
+          </Alert>
+        </div>
+      </div>
+
+    </Container >
+
+  )
+  else if (props.Projects.isLoading) return (
+    <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
+      <div class='container'>
+        <div className='row'>
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '100px', marginBottom: '75px' }}>
+            <CircularProgress size={'50px'} />
+
+          </div>
+          <p style={{ textAlign: 'center', fontSize: '25px', fontWeight: 'bold' }}>Loading...</p>
+        </div>
+      </div>
+    </Container>
+  )
+  else if(props.Projects.projects.length >=1) return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
         <EnhancedTableToolbar numSelected={selected.length} />
@@ -335,7 +376,7 @@ export default function OrgProjectCard() {
               rowCount={rows.length}
             />
             <TableBody style={{ paddingLeft: "20px" }}>
-              {stableSort(rows, getComparator(order, orderBy))
+              {stableSort(props.Projects.projects, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const isItemSelected = isSelected(index);
@@ -343,6 +384,9 @@ export default function OrgProjectCard() {
 
                   return (
                     <TableRow
+                      onClick={() => {
+                        setSelectedRow(row)
+                      }}
                       hover
                       role="checkbox"
                       aria-checked={isItemSelected}
@@ -360,10 +404,10 @@ export default function OrgProjectCard() {
                       // scope="row"
                       // onClick={() => setVisible(true)}
                       >
-                        {row.title}
+                        {row.name}
                       </TableCell>
 
-                      <TableCell align="left">{row.status}</TableCell>
+                      <TableCell align="left">{new Date(row.startDate).toDateString()}</TableCell>
 
                       <TableCell
                         style={{
@@ -386,7 +430,7 @@ export default function OrgProjectCard() {
                             }}
                           >
                             <Link
-                              to="/organization/applicants"
+                              to={`/organization/applicants/${row._id}`}
                               style={{ textDecoration: "none" }}
                             >
                               <Button variant="contained" color="primary">
@@ -403,7 +447,7 @@ export default function OrgProjectCard() {
                             }}
                           >
                             <Link
-                              to="/organization/volunteers"
+                              to={`/organization/volunteers/${row._id}`}
                               style={{ textDecoration: "none" }}
                             >
                               <Button variant="contained" color="secondary">
@@ -462,4 +506,18 @@ export default function OrgProjectCard() {
       /> */}
     </div>
   );
+  else return (
+    <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
+      <div className='container'>
+        <div className='row' style={{ display: 'flex', justifyContent: 'center', }}>
+          <Alert style={{ margin: '50px', padding: '50px' }} severity="error">
+            <AlertTitle style={{ fontWeight: 'bold' }}>Error</AlertTitle>
+            <strong>No Projects Found!</strong>
+          </Alert>
+        </div>
+      </div>
+
+    </Container >
+  )
 }
+export default connect(mapStateToProps, mapDispatchToProps)(OrgProjectCard)

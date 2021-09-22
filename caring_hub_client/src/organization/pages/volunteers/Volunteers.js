@@ -25,6 +25,13 @@ import EditIcon from "@material-ui/icons/Edit";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import { Modal } from "antd";
 import EvalueateVolunteers from "./EvaluateVolunteers";
+import { approveApp, fetchApplications } from "../../../redux/ActionCreators/appActions";
+import { connect } from 'react-redux'
+import { useEffect } from "react";
+import { Alert, AlertTitle } from '@material-ui/lab';
+import { CircularProgress, Container, Portal } from "@material-ui/core";
+import { useParams } from "react-router";
+import { Link } from "react-router-dom";
 
 function createData(firstName, lastName, phone, email, address, skill, areas) {
   return { firstName, lastName, phone, email, address, skill, areas };
@@ -122,37 +129,25 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
-    id: "First-Name",
-    numeric: false,
-    disablePadding: true,
-    label: "First Name",
-  },
-  {
-    id: "Last-Name",
+    id: "Name",
     numeric: true,
     disablePadding: false,
-    label: "Last Name",
+    label: "Name",
   },
   {
     id: "phone",
     numeric: true,
     disablePadding: false,
-    label: "Phone Number",
+    label: "Phone",
   },
-  { id: "email", numeric: true, disablePadding: false, label: "Emain address" },
-  { id: "address", numeric: true, disablePadding: false, label: "address" },
-  { id: "skill", numeric: true, disablePadding: false, label: "skill" },
-  {
-    id: "areas",
-    numeric: true,
-    disablePadding: false,
-    label: "Areas to work on ",
-  },
+  { id: "email", numeric: true, disablePadding: false, label: "Email" },
+  { id: "address", numeric: true, disablePadding: false, label: "Address" },
+  
   {
     id: "actions",
     numeric: false,
     disablePadding: false,
-    label: "Actions ",
+    label: "Evaluate",
   },
 ];
 
@@ -184,7 +179,7 @@ function EnhancedTableHead(props) {
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={headCell.numeric ? "right" : "left"}
+            align={headCell.numeric ? "center" : "center"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
@@ -224,13 +219,13 @@ const useToolbarStyles = makeStyles((theme) => ({
   highlight:
     theme.palette.type === "light"
       ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        }
+        color: theme.palette.secondary.main,
+        backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+      }
       : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark,
-        },
+        color: theme.palette.text.primary,
+        backgroundColor: theme.palette.secondary.dark,
+      },
   title: {
     flex: "1 1 100%",
   },
@@ -315,7 +310,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Volunteers() {
+const mapStateToProps = (state) => {
+  return {
+    Applications: state.Applications,
+  }
+}
+
+const mapDispatchToProps = (dispatch) => ({
+  fetchApplications: () => dispatch(fetchApplications()),
+  approveApp: (app) => dispatch(approveApp(app))
+})
+function Volunteers(props) {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
@@ -323,7 +328,11 @@ export default function Volunteers() {
   const [page, setPage] = React.useState(0);
   // const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
+  const { projectId } = useParams()
+  const [selectedApplicant, setSelectedApplicant] = React.useState(null)
+  useEffect(() => {
+    props.fetchApplications()
+  }, [])
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -378,110 +387,149 @@ export default function Volunteers() {
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
   const [visible, setVisible] = useState(false);
-  return (
-    <div className="container" style={{ marginTop: "10%" }}>
-      <div className={classes.root}>
-        <Paper className={classes.paper}>
-          <EnhancedTableToolbar numSelected={selected.length} />
-          <TableContainer>
-            <Table
-              className={classes.table}
-              aria-labelledby="tableTitle"
-              // size={dense ? "small" : "medium"}
-              aria-label="enhanced table"
-            >
-              <EnhancedTableHead
-                classes={classes}
-                numSelected={selected.length}
-                order={order}
-                orderBy={orderBy}
-                onSelectAllClick={handleSelectAllClick}
-                onRequestSort={handleRequestSort}
-                rowCount={rows.length}
-              />
-              <TableBody style={{ paddingLeft: "20px" }}>
-                {stableSort(rows, getComparator(order, orderBy))
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row, index) => {
-                    const isItemSelected = isSelected(index);
-                    const labelId = `enhanced-table-checkbox-${index}`;
+  if (props.Applications.errMess) return (
+    <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
+      <div className='container'>
+        <div className='row' style={{ display: 'flex', justifyContent: 'center', }}>
+          <Alert style={{ margin: '50px', padding: '50px' }} severity="error">
+            <AlertTitle style={{ fontWeight: 'bold' }}>Error</AlertTitle>
+            <strong>{props.Applications.errMess}</strong>
+          </Alert>
+        </div>
+      </div>
 
-                    return (
-                      <TableRow
-                        hover
-                        role="checkbox"
-                        aria-checked={isItemSelected}
-                        tabIndex={-1}
-                        key={index}
-                        selected={isItemSelected}
-                      >
-                        {/* <TableCell padding="checkbox">
+    </Container >
+
+  )
+  else if (props.Applications.isLoading) return (
+    <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
+      <div class='container'>
+        <div className='row'>
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '100px', marginBottom: '75px' }}>
+            <CircularProgress size={'50px'} />
+
+          </div>
+          <p style={{ textAlign: 'center', fontSize: '25px', fontWeight: 'bold' }}>Loading...</p>
+        </div>
+      </div>
+    </Container>
+  )
+  else if (props.Applications.applications.length >= 1) {
+    const applications = props.Applications.applications.filter(app => app.project._id === projectId && app.accepted)
+    if (applications.length >= 1)
+      return (
+        <div className="container" style={{ marginTop: "10%" }}>
+          <div className={classes.root}>
+            <Paper className={classes.paper}>
+              <EnhancedTableToolbar numSelected={selected.length} />
+              <TableContainer>
+                <Table
+                  className={classes.table}
+                  aria-labelledby="tableTitle"
+                  // size={dense ? "small" : "medium"}
+                  aria-label="enhanced table"
+                >
+                  <EnhancedTableHead
+                    classes={classes}
+                    numSelected={selected.length}
+                    order={order}
+                    orderBy={orderBy}
+                    onSelectAllClick={handleSelectAllClick}
+                    onRequestSort={handleRequestSort}
+                    rowCount={rows.length}
+                  />
+                  <TableBody style={{ paddingLeft: "20px" }}>
+                    {stableSort(applications, getComparator(order, orderBy))
+                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      .map((row, index) => {
+                        const isItemSelected = isSelected(index);
+                        const labelId = `enhanced-table-checkbox-${index}`;
+
+                        return (
+                          <TableRow
+                            hover
+                            role="checkbox"
+                            aria-checked={isItemSelected}
+                            tabIndex={-1}
+                            key={index}
+                            selected={isItemSelected}
+                          >
+                            {/* <TableCell padding="checkbox">
                           <Checkbox
                             checked={isItemSelected}
                             inputProps={{ "aria-labelledby": labelId }}
                             onClick={(event) => handleClick(event, index)}
                           />
                         </TableCell> */}
-                        <TableCell component="th" id={labelId} scope="row">
-                          {row.firstName}
-                        </TableCell>
+                            <TableCell align="center">{row.volunteer.firstName + ' ' +row.volunteer.lastName}</TableCell>
+                            <TableCell align="center">{row.volunteer.phoneNumber}</TableCell>
+                            <TableCell align="center">{row.volunteer.emailAddress}</TableCell>
+                            <TableCell align="center">{row.volunteer.address.city}</TableCell>
+                           <TableCell>
+                              <Button
+                                variant="contained" color="primary"
 
-                        <TableCell align="right">{row.lastName}</TableCell>
-                        <TableCell align="right">{row.phone}</TableCell>
-                        <TableCell align="right">{row.email}</TableCell>
-                        <TableCell align="right">{row.address}</TableCell>
-                        <TableCell align="right">{row.skill}</TableCell>
-                        <TableCell align="right">{row.areas}</TableCell>
-                        <TableCell>
-                          <Button
-                            variant="contained" color="primary"
-                            
-                            onClick={() => setVisible(true)}
-                          >
-                            Evaluate
-                          </Button>
-                          <Modal
-                            title="evaluate volunteer"
-                            centered
-                            visible={visible}
-                            // mask={false}
-                            maskStyle={{
-                              backgroundColor: "rgba(0, 0, 0, 0.25)",
-                            }}
-                            onOk={() => setVisible(false)}
-                            onCancel={() => setVisible(false)}
-                            width={700}
-                            footer={null}
-                          >
-                            <EvalueateVolunteers />
-                          </Modal>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-                {/* {emptyRows > 0 && (
+                                onClick={() => setVisible(true)}
+                              >
+                                Evaluate
+                              </Button>
+                              <Modal
+                                title="evaluate volunteer"
+                                centered
+                                visible={visible}
+                                // mask={false}
+                                maskStyle={{
+                                  backgroundColor: "rgba(0, 0, 0, 0.25)",
+                                }}
+                                onOk={() => setVisible(false)}
+                                onCancel={() => setVisible(false)}
+                                width={700}
+                                footer={null}
+                              >
+                                <EvalueateVolunteers />
+                              </Modal>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    {/* {emptyRows > 0 && (
                   <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
                     <TableCell colSpan={6} />
                   </TableRow>
                 )} */}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
-            component="div"
-            count={rows.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
-        </Paper>
-        {/* <FormControlLabel
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 25]}
+                component="div"
+                count={rows.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
+            </Paper>
+            {/* <FormControlLabel
           control={<Switch checked={dense} onChange={handleChangeDense} />}
           label="Dense padding"
         /> */}
-      </div>
-    </div>
-  );
+          </div>
+        </div>
+      );
+    else return (
+      <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
+        <div className='container'>
+          <div className='row' style={{ display: 'flex', justifyContent: 'center', }}>
+            <Alert style={{ margin: '50px', padding: '50px' }} severity="error">
+              <AlertTitle style={{ fontWeight: 'bold' }}>Error</AlertTitle>
+              <strong>No Applicants Found!</strong>
+            </Alert>
+          </div>
+        </div>
+
+      </Container >
+    )
+  }
 }
+export default connect(mapStateToProps, mapDispatchToProps)(Volunteers)

@@ -100,3 +100,28 @@ export const deleteApplication = (appId) => (dispatch) => {
         .catch(error => dispatch(appsFailed(error)))
 }
 
+export const approveApp = (app) => (dispatch) => {
+    const bearer = 'Bearer ' + localStorage.getItem('token')
+    return fetch(baseUrl + 'approveApp',{
+        method: 'PUT',
+        headers: {
+            'Authorization': bearer,
+            'Content-Type': 'application/json'
+        },
+        body:JSON.stringify(app) 
+    })
+        .then(response => {
+            if (response.ok) {
+                return response
+            } else {
+                const error = new Error('Error ' + response.status + ': ' + response.statusText)
+                error.response = response
+                throw error
+            }
+        }, error => {
+            throw error
+        })
+        .then(response => response.json())
+        .then(response => dispatch(addApps(response)))
+        .catch(error => dispatch(appsFailed(error.message)))
+}
