@@ -1,7 +1,6 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
-
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
@@ -20,13 +19,14 @@ export default function SkillForm() {
     <form className={classes.root} noValidate autoComplete="off">
       <TextField
         id="outlined-primary"
-        label="skill name"
+        label="Name"
         variant="outlined"
         color="primary"
       />
       <TextField
+        minRows='2'
         id="outlined-primary"
-        label="skill description"
+        label="Description"
         variant="outlined"
         color="primary"
       />

@@ -29,6 +29,13 @@ import { Modal } from "antd";
 import ClearIcon from "@material-ui/icons/Clear";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
 import CauseAreaAdd from "./CauseAreaAdd";
+import { connect } from 'react-redux'
+import { useEffect } from "react";
+import { Alert, AlertTitle } from '@material-ui/lab';
+import { CircularProgress, Container, Portal } from "@material-ui/core";
+import { useParams } from "react-router";
+import { Link } from "react-router-dom";
+import { fetchCauses } from "../../../redux/ActionCreators/causeActions"
 
 // import ShowVolunteersDialog from "../volunteers/ShowVolunteersDialog";
 
@@ -264,7 +271,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function CauseAreas() {
+const mapStateToProps = (state) => {
+  return {
+    Causes: state.Causes
+  }
+}
+
+const mapDispatchToProps = (dispatch) => ({
+  fetchCauses: () => dispatch(fetchCauses()),
+})
+
+function CauseAreas(props) {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
@@ -272,7 +289,9 @@ export default function CauseAreas() {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
+  useEffect(() => {
+    props.fetchCauses()
+  }, [])
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -327,7 +346,36 @@ export default function CauseAreas() {
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
   const [visible, setVisible] = useState(false);
-  return (
+  
+  if (props.Causes.errMess) return (
+    <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
+      <div className='container'>
+        <div className='row' style={{ display: 'flex', justifyContent: 'center', }}>
+          <Alert style={{ margin: '50px', padding: '50px' }} severity="error">
+            <AlertTitle style={{ fontWeight: 'bold' }}>Error</AlertTitle>
+            <strong>{props.Causes.errMess}</strong>
+          </Alert>
+        </div>
+      </div>
+
+    </Container >
+
+  )
+  else if (props.Causes.isLoading) return (
+    <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
+      <div class='container'>
+        <div className='row'>
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '100px', marginBottom: '75px' }}>
+            <CircularProgress size={'50px'} />
+
+          </div>
+          <p style={{ textAlign: 'center', fontSize: '25px', fontWeight: 'bold' }}>Loading...</p>
+        </div>
+      </div>
+    </Container>
+  )
+
+  else if (props.Causes.causes.length >= 1) return (
     <div className="container">
       <Modal
         title="Applicant Information"
@@ -373,7 +421,7 @@ export default function CauseAreas() {
                 rowCount={rows.length}
               />
               <TableBody style={{ paddingLeft: "20px" }}>
-                {stableSort(rows, getComparator(order, orderBy))
+                {stableSort(props.Causes.causes, getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
                     const isItemSelected = isSelected(index);
@@ -398,11 +446,11 @@ export default function CauseAreas() {
                           scope="row"
                           onClick={() => setVisible(true)}
                         >
-                          {row.causName}
+                          {row.name}
                         </TableCell>
 
                         <TableCell align="left">
-                          {row.causeDescription}
+                          {row.description}
                         </TableCell>
 
                         <TableCell
@@ -506,4 +554,18 @@ export default function CauseAreas() {
       </div>
     </div>
   );
+  else return (
+    <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
+      <div className='container'>
+        <div className='row' style={{ display: 'flex', justifyContent: 'center', }}>
+          <Alert style={{ margin: '50px', padding: '50px' }} severity="error">
+            <AlertTitle style={{ fontWeight: 'bold' }}>Error</AlertTitle>
+            <strong>No Causes Found!</strong>
+          </Alert>
+        </div>
+      </div>
+
+    </Container >
+  )
 }
+export default connect(mapStateToProps, mapDispatchToProps)(CauseAreas)

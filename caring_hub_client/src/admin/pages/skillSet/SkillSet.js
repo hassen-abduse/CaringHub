@@ -24,6 +24,13 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import { Modal } from "antd";
+import { connect } from 'react-redux'
+import { useEffect } from "react";
+import { Alert, AlertTitle } from '@material-ui/lab';
+import { CircularProgress, Container, Portal } from "@material-ui/core";
+import { useParams } from "react-router";
+import { Link } from "react-router-dom";
+import { fetchSkills } from "../../../redux/ActionCreators/skillActions"
 // import AcceptApplicant from "./AcceptApplicant";
 // import DeclineApplicant from "./DeclineApplicant";
 import ClearIcon from "@material-ui/icons/Clear";
@@ -89,20 +96,20 @@ const headCells = [
     id: "skill-name",
     numeric: false,
     disablePadding: true,
-    label: "Skill Name",
+    label: "Name",
   },
 
   {
     id: "skill-description",
     numeric: true,
     disablePadding: false,
-    label: "skill description ",
+    label: "Description ",
   },
   {
     id: "actions",
     numeric: false,
     disablePadding: false,
-    label: "actions ",
+    label: "Actions ",
   },
 ];
 
@@ -126,7 +133,7 @@ function EnhancedTableHead(props) {
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={headCell.id === "verify" ? "center" : "left"}
+            align={headCell.id === "verify" ? "center" : "center"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
@@ -166,13 +173,13 @@ const useToolbarStyles = makeStyles((theme) => ({
   highlight:
     theme.palette.type === "light"
       ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        }
+        color: theme.palette.secondary.main,
+        backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+      }
       : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark,
-        },
+        color: theme.palette.text.primary,
+        backgroundColor: theme.palette.secondary.dark,
+      },
   title: {
     flex: "1 1 100%",
   },
@@ -216,7 +223,7 @@ const EnhancedTableToolbar = (props) => {
           Add skill
         </Button>
         <Modal
-          title="add skill set"
+          title="Add New Skill"
           centered
           visible={visible}
           onOk={() => setVisible(false)}
@@ -277,7 +284,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SkillsSets() {
+const mapStateToProps = (state) => {
+  return {
+    Skills: state.Skills
+  }
+}
+
+const mapDispatchToProps = (dispatch) => ({
+  fetchSkills: () => dispatch(fetchSkills()),
+})
+
+function SkillsSets(props) {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
@@ -286,6 +303,9 @@ export default function SkillsSets() {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
+  useEffect(() => {
+    props.fetchSkills()
+  }, [])
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -340,7 +360,36 @@ export default function SkillsSets() {
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
   const [visible, setVisible] = useState(false);
-  return (
+  
+  if (props.Skills.errMess) return (
+    <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
+      <div className='container'>
+        <div className='row' style={{ display: 'flex', justifyContent: 'center', }}>
+          <Alert style={{ margin: '50px', padding: '50px' }} severity="error">
+            <AlertTitle style={{ fontWeight: 'bold' }}>Error</AlertTitle>
+            <strong>{props.Skills.errMess}</strong>
+          </Alert>
+        </div>
+      </div>
+
+    </Container >
+
+  )
+  else if (props.Skills.isLoading) return (
+    <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
+      <div class='container'>
+        <div className='row'>
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '100px', marginBottom: '75px' }}>
+            <CircularProgress size={'50px'} />
+
+          </div>
+          <p style={{ textAlign: 'center', fontSize: '25px', fontWeight: 'bold' }}>Loading...</p>
+        </div>
+      </div>
+    </Container>
+  )
+
+  else if (props.Skills.skills.length >= 1) return (
     <div className="container">
       <Modal
         title="Applicant Information"
@@ -386,7 +435,7 @@ export default function SkillsSets() {
                 rowCount={rows.length}
               />
               <TableBody style={{ paddingLeft: "20px" }}>
-                {stableSort(rows, getComparator(order, orderBy))
+                {stableSort(props.Skills.skills, getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
                     const isItemSelected = isSelected(index);
@@ -409,13 +458,14 @@ export default function SkillsSets() {
                           component="th"
                           id={labelId}
                           scope="row"
+                          align="center"
                           onClick={() => setVisible(true)}
                         >
-                          {row.skillName}
+                          {row.name}
                         </TableCell>
 
-                        <TableCell align="left">
-                          {row.skillDescription}
+                        <TableCell align="center">
+                          {row.description}
                         </TableCell>
 
                         <TableCell
@@ -429,12 +479,12 @@ export default function SkillsSets() {
                             style={{
                               margin: "10px",
                               alignContent: "center",
-                              justifyContent: "space-between",
+                              justifyContent: "center",
                               width: "200px",
                               marginLeft: "30px",
                             }}
                           >
-                            <Grid
+                            {/* <Grid
                               item
                               style={{
                                 // backgroundColor: "green",
@@ -476,13 +526,14 @@ export default function SkillsSets() {
                               >
                                 <SkillForm />
                               </Modal>
-                            </Grid>
+                            </Grid> */}
 
                             <Grid
                               item
                               style={{
                                 // backgroundColor: "red",
                                 borderRadius: "5px",
+                                justifyContent:'center'
                               }}
                             >
                               <Button variant="contained" color="secondary">
@@ -519,4 +570,19 @@ export default function SkillsSets() {
       </div>
     </div>
   );
+  else return (
+    <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
+      <div className='container'>
+        <div className='row' style={{ display: 'flex', justifyContent: 'center', }}>
+          <Alert style={{ margin: '50px', padding: '50px' }} severity="error">
+            <AlertTitle style={{ fontWeight: 'bold' }}>Error</AlertTitle>
+            <strong>No Skills Found!</strong>
+          </Alert>
+        </div>
+      </div>
+
+    </Container >
+  )
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(SkillsSets)
