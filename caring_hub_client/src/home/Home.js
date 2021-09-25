@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import AppBar from "./AppBar";
+import React from "react";
 import Header from "./Header";
-import Footer from "./Footer";
 import ContactUs from "./ContactUs";
 import HowItWorks from "./HowItWorks";
 import { ProjectCard } from "../volunteer/components/ProjectCard";
