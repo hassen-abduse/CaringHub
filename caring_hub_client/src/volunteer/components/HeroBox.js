@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SearchProject from "./SearchProject";
 
 import SearchPanel from "./SearchPanel";
@@ -18,6 +18,31 @@ const mapStateToProps = (state) => {
   };
 };
 
+function filterProjects(projects, causes, skills) {
+	if (skills.length === 0 && causes.length === 0) return projects
+	
+	var filtered = []
+		for (const project of projects) {
+			for (const causeA of project.causeAreas) {
+				if(causes.indexOf(causeA._id) != -1) {
+					if(filtered.indexOf(project) == -1) {
+						filtered.push(project)
+					}
+				}
+			}
+		}
+		for (const project of projects) {
+			for (const skill of project.skillSets) {
+				if(skills.indexOf(skill._id) != -1) {
+					if(filtered.indexOf(project) == -1) {
+						filtered.push(project)
+					}
+				}
+			}
+		}
+	return filtered.filter(project => project._id)
+}
+
 const mapDispatchToProps = (dispatch) => ({
   fetchProjects: () => dispatch(fetchProjects()),
 });
@@ -26,10 +51,14 @@ function HeroBox(props) {
   const [query, setQuery] = useState("");
   const [selectedSkills, setSelectedSkills] = useState([]);
   const [selectedCauses, setSelectedCauses] = useState([])
-  const filteredProjects = props.Projects.projects.filter((pro) =>
+  const [projects, setProjects] = useState([])
+  const filteredProjects = projects.filter((pro) =>
     pro.name.toLowerCase().includes(query.toLowerCase())
   );
+	useEffect(() => {
 
+    setProjects(filterProjects(props.Projects.projects, selectedCauses, selectedSkills))
+}, [selectedCauses, selectedSkills])
   return (
     <Box>
       <div
@@ -81,7 +110,7 @@ function HeroBox(props) {
           showArrow
           size='large'
           mode="multiple"
-          placeholder="SKILLS"
+          placeholder="SKILL"
           value={selectedSkills}
           onChange={setSelectedSkills}
           style={{ width: "100%" }}
@@ -98,7 +127,7 @@ function HeroBox(props) {
           showArrow
           size='large'
           mode="multiple"
-          placeholder="CAUSES"
+          placeholder="CAUSE AREA"
           value={selectedCauses}
           onChange={setSelectedCauses}
           style={{ width: "100%" }}
@@ -112,6 +141,7 @@ function HeroBox(props) {
         </div>
         </div>
       </div>
+      
       <CardHolder results={filteredProjects} />
     </Box >
   );
