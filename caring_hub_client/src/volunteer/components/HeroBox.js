@@ -6,10 +6,15 @@ import { fetchProjects } from "../../redux/ActionCreators/projectActions";
 import CardHolder from "./CardHolder";
 import { connect } from "react-redux";
 import { Box } from "@material-ui/core";
+import{ Select } from "antd";
+
+
 
 const mapStateToProps = (state) => {
   return {
     Projects: state.Projects,
+    Skills: state.Skills,
+    Causes: state.Causes
   };
 };
 
@@ -19,6 +24,8 @@ const mapDispatchToProps = (dispatch) => ({
 
 function HeroBox(props) {
   const [query, setQuery] = useState("");
+  const [selectedSkills, setSelectedSkills] = useState([]);
+  const [selectedCauses, setSelectedCauses] = useState([])
   const filteredProjects = props.Projects.projects.filter((pro) =>
     pro.name.toLowerCase().includes(query.toLowerCase())
   );
@@ -64,9 +71,50 @@ function HeroBox(props) {
         </div>
         {/* <SearchPanel onSearch={onSearch} /> */}
         <SearchPanel value={query} onChange={(e) => setQuery(e.target.value)} />
+        
+        <div className='row mb-5 justify-content-center'>
+        <div className='col-12 offset-2'>
+        <h6 style={{textAlign:'start'}}>FILTER BY:</h6>
+        </div>
+        <div className='col-5'>
+        
+        <Select
+          showArrow
+          size='large'
+          mode="multiple"
+          placeholder="SKILLS"
+          value={selectedSkills}
+          onChange={setSelectedSkills}
+          style={{ width: "100%" }}
+        >
+          {props.Skills.skills.map((item) => (
+            <Select.Option key={item._id} value={item._id}>
+              {item.name}
+            </Select.Option>
+          ))}
+        </Select>
+        </div>
+        <div className='col-5'>
+        <Select
+          showArrow
+          size='large'
+          mode="multiple"
+          placeholder="CAUSES"
+          value={selectedCauses}
+          onChange={setSelectedCauses}
+          style={{ width: "100%" }}
+        >
+          {props.Causes.causes.map((item) => (
+            <Select.Option key={item._id} value={item._id}>
+              {item.name}
+            </Select.Option>
+          ))}
+        </Select>
+        </div>
+        </div>
       </div>
       <CardHolder results={filteredProjects} />
-    </Box>
+    </Box >
   );
 }
 export default connect(mapStateToProps, mapDispatchToProps)(HeroBox);

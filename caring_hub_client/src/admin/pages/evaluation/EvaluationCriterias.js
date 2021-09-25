@@ -30,6 +30,14 @@ import ClearIcon from "@material-ui/icons/Clear";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
 
 import AddEvaluation from "./AddEvaluation";
+import { fetchEvals } from "../../../redux/ActionCreators/evalActions";
+import { connect } from "react-redux";
+import { useEffect } from "react";
+import { Alert, AlertTitle } from '@material-ui/lab';
+import { CircularProgress, Container, Portal } from "@material-ui/core";
+import { useParams } from "react-router";
+import { Link } from "react-router-dom";
+
 // import ShowVolunteersDialog from "../volunteers/ShowVolunteersDialog";
 
 function createData(evaluationName, evaluationDescription) {
@@ -263,7 +271,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function EvaluationCriterias() {
+const mapStateToProps = (state) => {
+  return {
+    Evals: state.Evals
+  }
+}
+
+const mapDispatchToProps = (dispatch) => ({
+  fetchEvals: () => dispatch(fetchEvals()),
+})
+function EvaluationCriterias(props) {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
@@ -271,7 +288,9 @@ export default function EvaluationCriterias() {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
+  useEffect(() => {
+    props.fetchEvals()
+  }, [])
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -326,7 +345,36 @@ export default function EvaluationCriterias() {
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
   const [visible, setVisible] = useState(false);
-  return (
+  if (props.Evals.errMess) return (
+    <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
+      <div className='container'>
+        <div className='row' style={{ display: 'flex', justifyContent: 'center', }}>
+          <Alert style={{ margin: '50px', padding: '50px' }} severity="error">
+            <AlertTitle style={{ fontWeight: 'bold' }}>Error</AlertTitle>
+            <strong>{props.Evals.errMess}</strong>
+          </Alert>
+        </div>
+      </div>
+
+    </Container >
+
+  )
+  else if (props.Evals.isLoading) return (
+    <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
+      <div class='container'>
+        <div className='row'>
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '100px', marginBottom: '75px' }}>
+            <CircularProgress size={'50px'} />
+
+          </div>
+          <p style={{ textAlign: 'center', fontSize: '25px', fontWeight: 'bold' }}>Loading...</p>
+        </div>
+      </div>
+    </Container>
+  )
+
+  
+  else if(props.Evals.evals.length >= 1) return (
     <div className="container">
       <Modal
         title="Applicant Information"
@@ -372,7 +420,7 @@ export default function EvaluationCriterias() {
                 rowCount={rows.length}
               />
               <TableBody style={{ paddingLeft: "20px" }}>
-                {stableSort(rows, getComparator(order, orderBy))
+                {stableSort(props.Evals.evals, getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
                     const isItemSelected = isSelected(index);
@@ -397,11 +445,11 @@ export default function EvaluationCriterias() {
                           scope="row"
                           onClick={() => setVisible(true)}
                         >
-                          {row.evaluationName}
+                          {row.name}
                         </TableCell>
 
                         <TableCell align="left">
-                          {row.evaluationDescription}
+                          {row.description}
                         </TableCell>
 
                         <TableCell
@@ -505,4 +553,20 @@ export default function EvaluationCriterias() {
       </div>
     </div>
   );
+  else return (
+    <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
+      <div className='container'>
+        <div className='row' style={{ display: 'flex', justifyContent: 'center', }}>
+          <Alert style={{ margin: '50px', padding: '50px' }} severity="info">
+            <AlertTitle style={{ fontWeight: 'bold' }}>Oops..!</AlertTitle>
+            <strong>No Evaluation Criteria Found!</strong>
+          </Alert>
+        </div>
+      </div>
+
+    </Container >
+  )
 }
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(EvaluationCriterias)

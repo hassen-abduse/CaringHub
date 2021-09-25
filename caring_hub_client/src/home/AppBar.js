@@ -122,7 +122,7 @@ function AppBar(props) {
       <Menu.Item key="1" style={{ paddingLeft: "20px", paddingRight: "20px" }}>
         <Link
           className="text-decoration-none"
-          to="/index"
+          to="/"
           onClick={() => {
             props.logoutUser();
           }}
@@ -144,7 +144,7 @@ function AppBar(props) {
             <Link
               style={{ padding: 0, margin: 0 }}
               className="navbar-brand "
-              to="/index"
+              to="/"
             >
               {" "}
               <img style={{ width: "90px", height: "65px" }} src={logo}></img>

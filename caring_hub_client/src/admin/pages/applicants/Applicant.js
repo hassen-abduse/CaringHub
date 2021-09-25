@@ -424,8 +424,8 @@ function Applicants(props) {
     <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
     <div className='container'>
       <div className='row' style={{ display: 'flex', justifyContent: 'center', }}>
-        <Alert style={{ margin: '50px', padding: '50px' }} severity="error">
-          <AlertTitle style={{ fontWeight: 'bold' }}>Error</AlertTitle>
+        <Alert style={{ margin: '50px', padding: '50px' }} severity="info">
+          <AlertTitle style={{ fontWeight: 'bold' }}>Oops..!</AlertTitle>
           <strong>No Organizations Found!</strong>
         </Alert>
       </div>

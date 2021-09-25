@@ -12,7 +12,7 @@ import { Users } from './Reducers/users'
 import { Skills } from './Reducers/skills'
 import { Registration } from './Reducers/registration'
 import { NetRequest } from './Reducers/NetRequest'
-
+import { Evals } from './Reducers/evals'
 export const __store__ = () => {
   const store = createStore(
     combineReducers({
@@ -26,7 +26,8 @@ export const __store__ = () => {
       Skills,
       Causes,
       Registration,
-      NetRequest
+      NetRequest,
+      Evals
     }),
     // to log state and changes to state by actions
     applyMiddleware(thunk, logger)

@@ -36,6 +36,7 @@ import AppBar from "../home/AppBar";
 import FouroFour from "./FouroFour";
 import AdminDashboard from "../admin/AdminDashboard";
 import MyApplication from "../volunteer/pages/myApplications/MyApplication";
+import { fetchEvals } from "../redux/ActionCreators/evalActions";
 
 const mapStateToProps = (state) => {
   return {
@@ -48,6 +49,7 @@ const mapStateToProps = (state) => {
     Skills: state.Skills,
     Causes: state.Causes,
     Projects: state.Projects,
+    Evals: state.Evals
   };
 };
 
@@ -62,6 +64,7 @@ const mapDispatchToProps = (dispatch) => ({
   fetchOrgs: () => dispatch(fetchOrgs()),
   fetchVolunteers: () => dispatch(fetchVolunteers()),
   fetchHelps: () => dispatch(fetchHelps()),
+  fetchEvals: () => dispatch(fetchEvals())
 });
 
 class Main extends Component {
@@ -86,7 +89,7 @@ class Main extends Component {
         {route !== "/login" && <AppBar />}
         <div>
           <Switch>
-            <Route exact path="/index">
+            <Route exact path="/">
               <Home />
             </Route>
 
@@ -168,7 +171,7 @@ class Main extends Component {
             <Route path="*">
               <FouroFour />
             </Route>
-            <Redirect to="/index" />
+            <Redirect to="/" />
           </Switch>
         </div>
         {route !== "/login" && <Footer />}

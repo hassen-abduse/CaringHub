@@ -45,7 +45,7 @@ class Login extends React.Component {
           <div class="card card0 border-0" style={{ paddingBottom: "50px" }}>
             {" "}
             <div style={{ padding: "10px", marginBottom: "25px" }}>
-              <Link to="/index">
+              <Link to="/">
                 <KeyboardBackspaceIcon />
               </Link>
             </div>

@@ -1,12 +1,29 @@
-import React from "react";
+import React, { useEffect } from "react";
 import AppBar from "./AppBar";
 import Header from "./Header";
 import Footer from "./Footer";
 import ContactUs from "./ContactUs";
 import HowItWorks from "./HowItWorks";
 import { ProjectCard } from "../volunteer/components/ProjectCard";
+import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-function Home() {
+import { fetchProjects } from "../redux/ActionCreators/projectActions";
+const mapStateToProps = (state) => {
+  return {
+    Projects: state.Projects,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  fetchProjects: () => dispatch(fetchProjects()),
+});
+
+function Home(props) {
+
+  useEffect(() => {
+    props.fetchProjects()
+  }, [])
+
   return (
     <div className="App">
       <Header />
@@ -47,90 +64,37 @@ function Home() {
         <div class="container">
           <div class="row">
             <div class="col-lg-12">
-              <div class="card">
+              {
+                props.Projects.projects.map(project => {
+                
+               return <div class="card">
                 <img
                   style={{ width: "100%", height: "100%" }}
                   class="img-fluid"
-                  src="assets/images/childrens.jpg"
+                  src={project.image}
                   alt="alternative"
                 />
                 <div class="card-body">
                   <p style={{ color: "#0092FF" }} class="testimonial-text">
-                    Project | 6-7 days
+                    {new Date(project.startDate).toDateString()}
                   </p>
-                  <div class="testimonial-author">Environment</div>
+                  <div class="testimonial-author">{project.name}</div>
 
                   <p class="testimonial-text">
-                    Suspendisse vitae enim arcu. Aliqu convallis risus a felis
-                    blandit, at mollis nisi bibendum aliquam noto ricos
+                    {project.description.substring(0, 75)+'...'}
                   </p>
                   <div>
                     <span class="nav-item">
-                      <a class="btn-solid-sm" href="#contact">
+                      <Link to={`volunteer/jobDescription/${project._id}`} class="btn-solid-sm">
                         Check
-                      </a>
+                      </Link>
                     </span>
                   </div>
                 </div>
                 <div class="gradient-floor blue-to-purple"></div>
               </div>
-
-              <div class="card">
-                <img
-                  style={{ width: "100%", height: "100%" }}
-                  class="img-fluid"
-                  src="assets/images/childrens.jpg"
-                  alt="alternative"
-                />
-                <div class="card-body">
-                  <p style={{ color: "#0092FF" }} class="testimonial-text">
-                    Project | 6-7 days
-                  </p>
-                  <div class="testimonial-author">Environment</div>
-
-                  <p class="testimonial-text">
-                    Suspendisse vitae enim arcu. Aliqu convallis risus a felis
-                    blandit, at mollis nisi bibendum aliquam noto ricos
-                  </p>
-                  <div>
-                    <span class="nav-item">
-                      <a class="btn-solid-sm" href="#contact">
-                        Check
-                      </a>
-                    </span>
-                  </div>
-                </div>
-                <div class="gradient-floor blue-to-purple"></div>
-              </div>
-
-              <div class="card">
-                <img
-                  style={{ width: "100%", height: "100%" }}
-                  class="img-fluid"
-                  src="assets/images/childrens.jpg"
-                  alt="alternative"
-                />
-                <div class="card-body">
-                  <p style={{ color: "#0092FF" }} class="testimonial-text">
-                    Project | 6-7 days
-                  </p>
-                  <div class="testimonial-author">Environment</div>
-
-                  <p class="testimonial-text">
-                    Suspendisse vitae enim arcu. Aliqu convallis risus a felis
-                    blandit, at mollis nisi bibendum aliquam noto ricos
-                  </p>
-                  <div>
-                    <span class="nav-item">
-                      <a class="btn-solid-sm" href="#contact">
-                        Check
-                      </a>
-                    </span>
-                  </div>
-                </div>
-                <div class="gradient-floor blue-to-purple"></div>
-              </div>
-
+              })
+            }
               <div>
                 <Link class="btn-solid-lg" to="/volunteer/findProjects">
                   Browse All Projects
@@ -293,4 +257,4 @@ function Home() {
     </div>
   );
 }
-export default Home;
+export default connect(mapStateToProps, mapDispatchToProps)(Home)

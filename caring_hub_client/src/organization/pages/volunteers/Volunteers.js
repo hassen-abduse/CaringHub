@@ -142,7 +142,7 @@ const headCells = [
   },
   { id: "email", numeric: true, disablePadding: false, label: "Email" },
   { id: "address", numeric: true, disablePadding: false, label: "Address" },
-  
+
   {
     id: "actions",
     numeric: false,
@@ -326,10 +326,10 @@ function Volunteers(props) {
   const [orderBy, setOrderBy] = React.useState("calories");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
+  const [selectedVol, setSelectedVol] = React.useState()
   // const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const { projectId } = useParams()
-  const [selectedApplicant, setSelectedApplicant] = React.useState(null)
   useEffect(() => {
     props.fetchApplications()
   }, [])
@@ -461,33 +461,23 @@ function Volunteers(props) {
                             onClick={(event) => handleClick(event, index)}
                           />
                         </TableCell> */}
-                            <TableCell align="center">{row.volunteer.firstName + ' ' +row.volunteer.lastName}</TableCell>
+                            <TableCell align="center">{row.volunteer.firstName + ' ' + row.volunteer.lastName}</TableCell>
                             <TableCell align="center">{row.volunteer.phoneNumber}</TableCell>
                             <TableCell align="center">{row.volunteer.emailAddress}</TableCell>
                             <TableCell align="center">{row.volunteer.address.city}</TableCell>
-                           <TableCell>
+                            <TableCell>
                               <Button
                                 variant="contained" color="primary"
 
-                                onClick={() => setVisible(true)}
+                                onClick={() => {
+                                  setSelectedVol(row)
+                                  setVisible(true)
+                                }
+                                }
                               >
                                 Evaluate
                               </Button>
-                              <Modal
-                                title="evaluate volunteer"
-                                centered
-                                visible={visible}
-                                // mask={false}
-                                maskStyle={{
-                                  backgroundColor: "rgba(0, 0, 0, 0.25)",
-                                }}
-                                onOk={() => setVisible(false)}
-                                onCancel={() => setVisible(false)}
-                                width={700}
-                                footer={null}
-                              >
-                                <EvalueateVolunteers />
-                              </Modal>
+
                             </TableCell>
                           </TableRow>
                         );
@@ -509,6 +499,25 @@ function Volunteers(props) {
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
               />
+              {
+                selectedVol &&
+                <Modal
+                  title="Evaluate Volunteer"
+                  centered
+                  visible={visible}
+                  // mask={false}
+                  maskStyle={{
+                    backgroundColor: "rgba(0, 0, 0, 0.25)",
+                  }}
+                  destroyOnClose
+                  onOk={() => setVisible(false)}
+                  onCancel={() => setVisible(false)}
+                  width={700}
+                  footer={null}
+                >
+                  <EvalueateVolunteers app={selectedVol} />
+                </Modal>
+              }
             </Paper>
             {/* <FormControlLabel
           control={<Switch checked={dense} onChange={handleChangeDense} />}

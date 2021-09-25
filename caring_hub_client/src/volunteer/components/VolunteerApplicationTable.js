@@ -79,12 +79,12 @@ const headCells = [
     label: "Project Title",
   },
 
-  //   {
-  //     id: "organization",
-  //     numeric: true,
-  //     disablePadding: false,
-  //     label: "Organization",
-  //   },
+    {
+      id: "organization",
+      numeric: true,
+      disablePadding: false,
+      label: "Project Owner",
+    },
 
   // {
   //   id: "areas",
@@ -437,7 +437,7 @@ function VolunteerApplicationTable(props) {
                           {row.project.name}
                         </TableCell>
 
-                        {/* <TableCell align="left">{row.organization}</TableCell> */}
+                        <TableCell align="left">{row.project.ownerOrg.name}</TableCell>
                         <TableCell align="left">
                           {row.accepted ? "Accepted" : "Pending"}
                         </TableCell>
@@ -524,8 +524,8 @@ function VolunteerApplicationTable(props) {
             className="row"
             style={{ display: "flex", justifyContent: "center" }}
           >
-            <Alert style={{ margin: "50px", padding: "50px" }} severity="error">
-              <AlertTitle style={{ fontWeight: "bold" }}>Error</AlertTitle>
+            <Alert style={{ margin: "50px", padding: "50px" }} severity="info">
+              <AlertTitle style={{ fontWeight: "bold" }}>Oops..!</AlertTitle>
               <strong>No Applications Found!</strong>
             </Alert>
           </div>
