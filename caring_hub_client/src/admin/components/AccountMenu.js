@@ -9,6 +9,7 @@ import MenuList from "@material-ui/core/MenuList";
 import { makeStyles } from "@material-ui/core/styles";
 import { logoutUser } from "../../redux/ActionCreators/authActions";
 import { connect } from "react-redux";
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 
 import ProfileImage from ".../../../src/assets/img/profile2.jpg";
 import { Link } from "react-router-dom";
@@ -110,8 +111,14 @@ function AccountMenu(props) {
                     id="menu-list-grow"
                     onKeyDown={handleListKeyDown}
                   >
-                    <MenuItem onClick={handleClose}>Profile</MenuItem>
-                    <MenuItem onClick={handleClose}>Settings</MenuItem>
+                    <MenuItem>
+                      <Link
+                        className="text-decoration-none"
+                        to="/admin/dashboard"
+                      >
+                        <AccountCircleIcon /> Profile
+                      </Link>
+                    </MenuItem>
                     <MenuItem>
                       <Link
                         className="text-decoration-none"

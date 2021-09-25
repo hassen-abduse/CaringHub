@@ -10,12 +10,7 @@ import jwtDecode from "jwt-decode";
 import { connect } from "react-redux";
 import { logoutUser } from "../redux/ActionCreators/authActions";
 import { Menu, Dropdown } from "antd";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-
-// import User from "./components/User";
-
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import SettingsIcon from "@material-ui/icons/Settings";
 
 const mapStateToProps = (state) => {
   return {
@@ -27,80 +22,8 @@ const mapDispatchToProps = (dispatch) => ({
   logoutUser: () => dispatch(logoutUser()),
 });
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: "flex",
-  },
-
-  appBar: {
-    transition: theme.transitions.create(["margin", "width"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-  },
-  appBarShift: {
-    width: `calc(100% - ${drawerWidth}px)`,
-    marginLeft: drawerWidth,
-    transition: theme.transitions.create(["margin", "width"], {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  leftSide: {
-    display: "flex",
-    flexDirection: "row",
-  },
-  HeaderIcons: {
-    display: "flex",
-    flexDirection: "row",
-    margin: 0,
-    padding: 0,
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
-  hide: {
-    display: "none",
-  },
-  drawer: {
-    width: drawerWidth,
-    flexShrink: 0,
-  },
-  drawerPaper: {
-    width: drawerWidth,
-  },
-  drawerHeader: {
-    display: "flex",
-    alignItems: "center",
-    padding: theme.spacing(0, 1),
-    // necessary for content to be below app bar
-    ...theme.mixins.toolbar,
-    justifyContent: "flex-end",
-  },
-
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing(3),
-    transition: theme.transitions.create("margin", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    marginLeft: -drawerWidth,
-  },
-  contentShift: {
-    transition: theme.transitions.create("margin", {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-    marginLeft: 0,
-  },
-}));
-const drawerWidth = 240;
-
 function AppBar(props) {
   const route = useLocation().pathname;
-  const classes = useStyles();
-  const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
   const decoded = props.auth.token
@@ -109,13 +32,12 @@ function AppBar(props) {
   const menu = (
     <Menu>
       <Menu.Item key="0" style={{ paddingLeft: "20px", paddingRight: "20px" }}>
-        <Link className="text-decoration-none">
+        <Link
+          className="text-decoration-none"
+          to={`/volunteer/dashboard/${decoded._id}`}
+        >
           <AccountCircleIcon /> Profile
         </Link>
-      </Menu.Item>
-      <Menu.Divider />
-      <Menu.Item style={{ paddingLeft: "20px", paddingRight: "20px" }} key="3">
-        <SettingsIcon /> Settings
       </Menu.Item>
 
       <Menu.Divider />
@@ -135,6 +57,7 @@ function AppBar(props) {
   return (
     <div>
       <nav
+        style={{ background: "#FFFFFF" }}
         id="navbarExample"
         class="navbar navbar-expand-lg fixed-top navbar-light"
         aria-label="Main navigation"
@@ -151,12 +74,15 @@ function AppBar(props) {
             </Link>
           ) : null}
           <button
-            class="navbar-toggler p-0 border-0"
+            className="navbar-toggler"
             type="button"
-            id="navbarSideCollapse"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup"
+            aria-expanded="false"
             aria-label="Toggle navigation"
           >
-            <span class="navbar-toggler-icon"></span>
+            <span className="navbar-toggler-icon"></span>
           </button>
 
           <div
@@ -164,17 +90,6 @@ function AppBar(props) {
             id="navbarsExampleDefault"
           >
             <ul class="navbar-nav ms-auto navbar-nav-scroll">
-              {/* {decoded.role === "" && (
-                <li class="nav-item">
-                  <Link
-                    class={route === "/" ? "nav-link active" : "nav-link"}
-                    aria-current="page"
-                    to="/"
-                  >
-                    Home
-                  </Link>
-                </li>
-              )} */}
               {decoded.role === "Vol" && (
                 <ul class="navbar-nav navbar-nav-scroll">
                   <li class="nav-item">

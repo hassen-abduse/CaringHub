@@ -30,7 +30,6 @@ function HeroBox(props) {
         style={{
           marginBottom: 0,
           minHeight: "250px",
-          // backgroundImage: `url(${Imge})`,
           backgroundColor: "#191E31",
         }}
       >

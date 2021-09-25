@@ -291,9 +291,9 @@ function DescriptionCard(props) {
               </div> */}
 
               <div>
-                <a class="btn-solid-lg" href="#contact">
+                <Link class="btn-solid-lg" to="/volunteer/findProject">
                   Browse All Projects
-                </a>
+                </Link>
               </div>
             </div>
           </div>

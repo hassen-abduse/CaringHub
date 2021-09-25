@@ -1,23 +1,17 @@
 import React, { useState } from "react";
 import Container from "@material-ui/core/Container";
-
 import "./JobPostDescription.css";
-import Demo from "./ImageUploadComponent";
-import { Form, Input, Button, DatePicker, InputNumber, Select } from "antd";
-import { InfoCircleOutlined } from "@ant-design/icons";
+import { Form, Input, Button, DatePicker, Select } from "antd";
 import TextArea from "antd/lib/input/TextArea";
-import UploadMedia from "../components/UploadMedia";
 import { postProject } from "../../redux/ActionCreators/projectActions";
-import { connect } from 'react-redux'
-import Fade from '@material-ui/core/Fade';
-import Modal from '@material-ui/core/Modal';
-import { makeStyles } from '@material-ui/core/styles';
+import { connect } from "react-redux";
+import Fade from "@material-ui/core/Fade";
+import Modal from "@material-ui/core/Modal";
+import { makeStyles } from "@material-ui/core/styles";
 import { CircularProgress, DialogTitle, Box } from "@material-ui/core";
-import { Alert, AlertTitle } from '@material-ui/lab';
-import { Redirect } from "react-router-dom";
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
-
+import { Alert, AlertTitle } from "@material-ui/lab";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
 
 const { RangePicker } = DatePicker;
 const rangeConfig = {
@@ -34,35 +28,34 @@ const mapStateToProps = (state) => {
   return {
     Skills: state.Skills,
     Causes: state.Causes,
-    NetRequest: state.NetRequest
-  }
-}
+    NetRequest: state.NetRequest,
+  };
+};
 const mapDispatchToProps = (dispatch) => ({
   postProject: (data) => dispatch(postProject(data)),
-})
+});
 
 const useStyles = makeStyles((theme) => ({
   modal: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
   paper: {
     backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
+    border: "2px solid #000",
     boxShadow: theme.shadows[5],
-    width: '50%',
+    width: "50%",
     padding: theme.spacing(0, 3, 3, 3),
   },
 }));
 
-
 function JobPostDescription(props) {
   const [selectedSkills, setSelectedSkills] = useState([]);
   const [selectedCauses, setSelectedCauses] = useState([]);
-  const [file, setSelectedFile] = useState(null)
-  const [open, setOpen] = useState(false)
-  const classes = useStyles()
+  const [file, setSelectedFile] = useState(null);
+  const [open, setOpen] = useState(false);
+  const classes = useStyles();
 
   const handleOpen = () => {
     setOpen(true);
@@ -73,26 +66,24 @@ function JobPostDescription(props) {
   };
 
   const onFinish = (values) => {
-    props.NetRequest.errMess = null
-    props.NetRequest.success = false
-    var project = new FormData()
-    project.append("name", values.name)
-    project.append('description', values.description)
-    project.append('startDate', values.start_end_date[0]._d)
-    project.append('endDate', values.start_end_date[1]._d)
-    project.append('location', JSON.stringify({ city: values.city }))
-    project.append('skillSets', JSON.stringify(selectedSkills))
-    project.append('causeAreas', JSON.stringify(selectedCauses))
-    project.append('projectImage', file)
-    props.postProject(project)
-    handleOpen()
+    props.NetRequest.errMess = null;
+    props.NetRequest.success = false;
+    var project = new FormData();
+    project.append("name", values.name);
+    project.append("description", values.description);
+    project.append("startDate", values.start_end_date[0]._d);
+    project.append("endDate", values.start_end_date[1]._d);
+    project.append("location", JSON.stringify({ city: values.city }));
+    project.append("skillSets", JSON.stringify(selectedSkills));
+    project.append("causeAreas", JSON.stringify(selectedCauses));
+    project.append("projectImage", file);
+    props.postProject(project);
+    handleOpen();
   };
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
-
-
 
   return (
     <Container>
@@ -106,9 +97,9 @@ function JobPostDescription(props) {
       >
         <Fade in={open}>
           <div className={classes.paper}>
-            {props.NetRequest.isLoading === false ?
+            {props.NetRequest.isLoading === false ? (
               <DialogTitle>
-                <Box display="flex" justifyContent='flex-end'>
+                <Box display="flex" justifyContent="flex-end">
                   <Box>
                     <IconButton onClick={handleClose}>
                       <CloseIcon />
@@ -116,37 +107,34 @@ function JobPostDescription(props) {
                   </Box>
                 </Box>
               </DialogTitle>
-              : null
-            }
-            {
-              props.NetRequest.isLoading === true ?
-                <div style={{ padding: '20px', paddingTop: '40px', paddingLeft: '40px' }}>
-                  <div>
-                    <CircularProgress />
-                    <br></br>
-                    <strong>Please wait...</strong>
-                  </div>
-
-
+            ) : null}
+            {props.NetRequest.isLoading === true ? (
+              <div
+                style={{
+                  padding: "20px",
+                  paddingTop: "40px",
+                  paddingLeft: "40px",
+                }}
+              >
+                <div>
+                  <CircularProgress />
+                  <br></br>
+                  <strong>Please wait...</strong>
                 </div>
-                : null
-            }
-            {
-              props.NetRequest.errMess &&
-
-              <Alert style={{ padding: '20px' }} severity="error">
-                <AlertTitle style={{ fontWeight: 'bold' }}>Error</AlertTitle>
+              </div>
+            ) : null}
+            {props.NetRequest.errMess && (
+              <Alert style={{ padding: "20px" }} severity="error">
+                <AlertTitle style={{ fontWeight: "bold" }}>Error</AlertTitle>
                 <strong>{props.NetRequest.errMess}</strong>
               </Alert>
-            }
-            {
-              props.NetRequest.success === true ?
-                <Alert style={{ padding: '20px' }} severity="success">
-                  <AlertTitle style={{ fontWeight: 'bold' }}>Success</AlertTitle>
-                  <strong>Successfully Posted!</strong>
-                </Alert>
-                : null
-            }
+            )}
+            {props.NetRequest.success === true ? (
+              <Alert style={{ padding: "20px" }} severity="success">
+                <AlertTitle style={{ fontWeight: "bold" }}>Success</AlertTitle>
+                <strong>Successfully Posted!</strong>
+              </Alert>
+            ) : null}
           </div>
         </Fade>
       </Modal>
@@ -181,25 +169,18 @@ function JobPostDescription(props) {
                   padding: "3rem",
                 }}
               >
-                <h3>
-                  Create a volunteer opportunity so volunteers can find you in
-                  the search results Your Profile and Opportunity will be
-                  visible once your organization has been approved.{" "}
-                </h3>
+                <h3>Create a Project</h3>
               </div>
               <div
                 style={{
                   backgroundColor: "#eee",
-                  padding: "30px 25px",
-                  border: "1px solid #E6E6E6",
-                  borderRadius: "10px",
                   boxShadow: "1px 2px 6px 0 #d6d6d6",
                   width: "100%",
                 }}
               >
                 <div
                   style={{
-                    padding: "24px 38px",
+                    padding: "44px 38px",
                     backgroundColor: "white",
                   }}
                 >
@@ -214,7 +195,7 @@ function JobPostDescription(props) {
                       position: "relative",
                       top: " -6px",
                       left: "0",
-                      paddingLeft: "5px",
+                      padding: "15px 0px",
                       fontSize: "1em",
                       textTransform: "uppercase",
                       letterSpacing: ".09em",
@@ -223,22 +204,10 @@ function JobPostDescription(props) {
                     Get Started
                   </label>
                   <br></br>
-                  <br></br>
                   <label>Give your Opportunity a title: </label>
 
-                  {/* <div style={{ display: "flex", flexDirection: "column" }}>
-                  <div style={{ marginTop: "10px" }}>
-                    <label>Title</label> &nbsp;
-                    <input type="text" className="inputs" />
-                  </div>
-                  <div style={{ marginTop: "10px" }}>
-                    <label>Contact</label>
-                    <input type="text" className="inputs" />
-                  </div>
-                </div> */}
-
                   <Form.Item
-                    style={{ marginTop: '20px' }}
+                    style={{ marginTop: "20px" }}
                     label="Title"
                     name="name"
                     rules={[
@@ -257,10 +226,6 @@ function JobPostDescription(props) {
                       span: 16,
                     }}
                   ></Form.Item>
-
-                  <br></br>
-
-                  <br></br>
                 </div>
               </div>
               <br></br>
@@ -268,16 +233,14 @@ function JobPostDescription(props) {
               <div
                 style={{
                   backgroundColor: "#eee",
-                  padding: "30px 25px",
-                  border: "1px solid #E6E6E6",
-                  borderRadius: "10px",
+
                   boxShadow: "1px 2px 6px 0 #d6d6d6",
                   width: "100%",
                 }}
               >
                 <div
                   style={{
-                    padding: "24px 38px",
+                    padding: "54px 38px",
                     backgroundColor: "white",
                   }}
                 >
@@ -325,16 +288,14 @@ function JobPostDescription(props) {
               <div
                 style={{
                   backgroundColor: "#eee",
-                  padding: "30px 25px",
-                  border: "1px solid #E6E6E6",
-                  borderRadius: "10px",
+
                   boxShadow: "1px 2px 6px 0 #d6d6d6",
                   width: "100%",
                 }}
               >
                 <div
                   style={{
-                    padding: "24px 38px",
+                    padding: "44px 38px",
                     backgroundColor: "white",
                   }}
                 >
@@ -360,27 +321,9 @@ function JobPostDescription(props) {
                   <br></br>
                   <br></br>
                   <label>Give your Opportunity Date: </label>
-                  {/* 
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    flexWrap: "wrap",
-                  }}
-                >
-                  <div style={{ marginRight: "20%", marginTop: "10px" }}>
-                    <label>Start Date</label> &nbsp;
-                    <input type="text" />
-                  </div>
-                  <div style={{ marginTop: "10px" }}>
-                    <label>End Date</label> &nbsp;
-                    <input type="text" />
-                  </div>
-                </div>
-             
-              */}
+
                   <Form.Item
-                    style={{ marginTop: '20px' }}
+                    style={{ marginTop: "20px" }}
                     name="start_end_date"
                     label="Select Start and End Date"
                     {...rangeConfig}
@@ -397,16 +340,14 @@ function JobPostDescription(props) {
               <div
                 style={{
                   backgroundColor: "#eee",
-                  padding: "30px 25px",
-                  border: "1px solid #E6E6E6",
-                  borderRadius: "10px",
+
                   boxShadow: "1px 2px 6px 0 #d6d6d6",
                   width: "100%",
                 }}
               >
                 <div
                   style={{
-                    padding: "24px 38px",
+                    padding: "44px 38px",
                     backgroundColor: "white",
                   }}
                 >
@@ -463,16 +404,14 @@ function JobPostDescription(props) {
               <div
                 style={{
                   backgroundColor: "#eee",
-                  padding: "30px 25px",
-                  border: "1px solid #E6E6E6",
-                  borderRadius: "10px",
+
                   boxShadow: "1px 2px 6px 0 #d6d6d6",
                   width: "100%",
                 }}
               >
                 <div
                   style={{
-                    padding: "24px 38px",
+                    padding: "44px 38px",
                     backgroundColor: "white",
                   }}
                 >
@@ -497,7 +436,7 @@ function JobPostDescription(props) {
                   </label>
                   <br></br>
                   <br></br>
-                  <label>
+                  <label style={{ padding: "5px 0px" }}>
                     What skills are you looking for in volunteers:{" "}
                     <span
                       style={{
@@ -541,16 +480,14 @@ function JobPostDescription(props) {
               <div
                 style={{
                   backgroundColor: "#eee",
-                  padding: "30px 25px",
-                  border: "1px solid #E6E6E6",
-                  borderRadius: "10px",
+
                   boxShadow: "1px 2px 6px 0 #d6d6d6",
                   width: "100%",
                 }}
               >
                 <div
                   style={{
-                    padding: "24px 38px",
+                    padding: "44px 38px",
                     backgroundColor: "white",
                   }}
                 >
@@ -575,7 +512,7 @@ function JobPostDescription(props) {
                   </label>
                   <br></br>
                   <br></br>
-                  <label>
+                  <label style={{ padding: "5px 0px" }}>
                     Give the Cause Area of the Opportunity:{" "}
                     <span
                       style={{
@@ -617,16 +554,14 @@ function JobPostDescription(props) {
               <div
                 style={{
                   backgroundColor: "#eee",
-                  padding: "30px 25px",
-                  border: "1px solid #E6E6E6",
-                  borderRadius: "10px",
+
                   boxShadow: "1px 2px 6px 0 #d6d6d6",
                   width: "100%",
                 }}
               >
                 <div
                   style={{
-                    padding: "24px 38px",
+                    padding: "44px 38px",
                     backgroundColor: "white",
                   }}
                 >
@@ -651,7 +586,7 @@ function JobPostDescription(props) {
                   </label>
                   <br></br>
                   <br></br>
-                  <label>
+                  <label style={{ padding: "5px 0px" }}>
                     Upload an image :{" "}
                     <span
                       style={{
@@ -672,8 +607,11 @@ function JobPostDescription(props) {
                         },
                       ]}
                     >
-                      <Input type='file' name='uploadImage' onChange={(e) => setSelectedFile(e.target.files[0])} />
-
+                      <Input
+                        type="file"
+                        name="uploadImage"
+                        onChange={(e) => setSelectedFile(e.target.files[0])}
+                      />
                     </Form.Item>
                   </div>
                   <br></br>
@@ -690,17 +628,14 @@ function JobPostDescription(props) {
               marginRight: "20%",
             }}
           >
-            <Button
-              type="primary"
-              htmlType="submit"
-            >
+            <Button type="primary" htmlType="submit">
               Submit
             </Button>
           </div>
         </div>
       </Form>
-    </Container >
+    </Container>
   );
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(JobPostDescription)
+export default connect(mapStateToProps, mapDispatchToProps)(JobPostDescription);
