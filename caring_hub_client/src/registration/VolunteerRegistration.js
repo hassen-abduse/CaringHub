@@ -68,6 +68,7 @@ function VolunteerRegistration(props) {
     volunteer.append("skillSets", JSON.stringify(selectedSkills));
     volunteer.append("causeAreas", JSON.stringify(selectedCauses));
     volunteer.append("password", values.password);
+    volunteer.append('aboutMe', values.background)
     volunteer.append("address", JSON.stringify({ city: values.city }));
     volunteer.append("VolPP", profile);
     volunteer.append("doc", resume);
@@ -502,11 +503,11 @@ function VolunteerRegistration(props) {
                       <br></br>
                       <br></br>
                       <Form.Item
-                        name="description"
+                        name="background"
                         rules={[
                           {
                             required: true,
-                            message: "Please input Job Description!",
+                            message: "Please input description about your skills!",
                           },
                         ]}
                       >

@@ -243,11 +243,8 @@ function VolunteerDashboard(props) {
           <div style={{}} class="col-lg-4">
             <h4 className="teal">Background</h4>
 
-            <p className="">
-              I have worked and am workgin on a lot of projects in different
-              areas of types of projects and scales. I have worked and am
-              workgin on a lot of projects in different areas of types of
-              projects and scales.
+            <p>
+              {volunteer.aboutMe}
             </p>
 
             <h4 className="teal mt-4">Skills</h4>

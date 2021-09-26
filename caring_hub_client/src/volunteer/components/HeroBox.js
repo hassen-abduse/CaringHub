@@ -58,7 +58,7 @@ function HeroBox(props) {
 	useEffect(() => {
 
     setProjects(filterProjects(props.Projects.projects, selectedCauses, selectedSkills))
-}, [selectedCauses, selectedSkills])
+}, [selectedCauses, selectedSkills, props.Projects])
   return (
     <Box>
       <div
