@@ -1,14 +1,15 @@
 import React, { useEffect } from "react";
-import AppBar from "./AppBar";
 import Header from "./Header";
 import ContactUs from "./ContactUs";
 import HowItWorks from "./HowItWorks";
-import { ProjectCard } from "../volunteer/components/ProjectCard";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import jwtDecode from "jwt-decode";
 import { fetchProjects } from "../redux/ActionCreators/projectActions";
 const mapStateToProps = (state) => {
   return {
+    auth: state.auth,
+
     Projects: state.Projects,
   };
 };
@@ -18,11 +19,12 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 function Home(props) {
-
   useEffect(() => {
-    props.fetchProjects()
-  }, [])
-
+    props.fetchProjects();
+  }, []);
+  const decoded = props.auth.token
+    ? jwtDecode(props.auth.token)
+    : { role: "", _id: "" };
   return (
     <div className="App">
       <Header />
@@ -58,47 +60,87 @@ function Home(props) {
           </div>
         </div>
       </div>
-
       <div class="cards-2 bg-gray">
+        <div
+          style={{
+            margin: "30px 0px",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <h2 className="text-center">Some Of Projects That Need Volunteers</h2>
+          <p className="text-center">
+            We think this projects could be a great starter for volunteers{" "}
+          </p>
+        </div>
+
         <div class="container">
           <div class="row">
             <div class="col-lg-12">
-              {
-                props.Projects.projects.map(project => {
-                
-               return <div class="card">
-                <img
-                  style={{ width: "100%", height: "100%" }}
-                  class="img-fluid"
-                  src={project.image}
-                  alt="alternative"
-                />
-                <div class="card-body">
-                  <p style={{ color: "#0092FF" }} class="testimonial-text">
-                    {new Date(project.startDate).toDateString()}
-                  </p>
-                  <div class="testimonial-author">{project.name}</div>
+              {props.Projects.projects.map((project) => {
+                return (
+                  <div class="card">
+                    <img
+                      style={{
+                        padding: "15px",
+                        width: "100%",
+                        height: "220px",
+                      }}
+                      class="img-fluid"
+                      src={project.image}
+                      alt="alternative"
+                    />
+                    <div class="card-body">
+                      <p
+                        style={{ marginBottom: "2px", color: "#0092FF" }}
+                        class="testimonial-text"
+                      >
+                        {new Date(project.startDate).toDateString()}
+                      </p>
+                      <div
+                        style={{
+                          height: "84px",
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                        class="testimonial-author"
+                      >
+                        {project.name}
+                      </div>
 
-                  <p class="testimonial-text">
-                    {project.description.substring(0, 75)+'...'}
-                  </p>
-                  <div>
-                    <span class="nav-item">
-                      <Link to={`volunteer/jobDescription/${project._id}`} class="btn-solid-sm">
-                        Check
-                      </Link>
-                    </span>
+                      <p class="testimonial-text">
+                        {project.description.substring(0, 70) + "..."}
+                      </p>
+                      <div>
+                        <span class="nav-item">
+                          <Link
+                            to={`volunteer/jobDescription/${project._id}`}
+                            class="btn-solid-sm"
+                          >
+                            Check
+                          </Link>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="gradient-floor blue-to-purple"></div>
                   </div>
+                );
+              })}
+              {decoded.role !== "Vol" && (
+                <div style={{ paddingBottom: "20px" }}>
+                  <Link class="btn-outline-sm" to="/login">
+                    Login as Volunteer to Browse All Projects
+                  </Link>
                 </div>
-                <div class="gradient-floor blue-to-purple"></div>
-              </div>
-              })
-            }
-              <div>
-                <Link class="btn-solid-lg" to="/volunteer/findProjects">
-                  Browse All Projects
-                </Link>
-              </div>
+              )}
+              {decoded.role === "Vol" && (
+                <div>
+                  <Link class="btn-solid-lg" to="/volunteer/findProject">
+                    Browse All Projects
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -256,4 +298,4 @@ function Home(props) {
     </div>
   );
 }
-export default connect(mapStateToProps, mapDispatchToProps)(Home)
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

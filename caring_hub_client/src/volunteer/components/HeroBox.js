@@ -6,41 +6,39 @@ import { fetchProjects } from "../../redux/ActionCreators/projectActions";
 import CardHolder from "./CardHolder";
 import { connect } from "react-redux";
 import { Box } from "@material-ui/core";
-import{ Select } from "antd";
-
-
+import { Select } from "antd";
 
 const mapStateToProps = (state) => {
   return {
     Projects: state.Projects,
     Skills: state.Skills,
-    Causes: state.Causes
+    Causes: state.Causes,
   };
 };
 
 function filterProjects(projects, causes, skills) {
-	if (skills.length === 0 && causes.length === 0) return projects
-	
-	var filtered = []
-		for (const project of projects) {
-			for (const causeA of project.causeAreas) {
-				if(causes.indexOf(causeA._id) != -1) {
-					if(filtered.indexOf(project) == -1) {
-						filtered.push(project)
-					}
-				}
-			}
-		}
-		for (const project of projects) {
-			for (const skill of project.skillSets) {
-				if(skills.indexOf(skill._id) != -1) {
-					if(filtered.indexOf(project) == -1) {
-						filtered.push(project)
-					}
-				}
-			}
-		}
-	return filtered.filter(project => project._id)
+  if (skills.length === 0 && causes.length === 0) return projects;
+
+  var filtered = [];
+  for (const project of projects) {
+    for (const causeA of project.causeAreas) {
+      if (causes.indexOf(causeA._id) != -1) {
+        if (filtered.indexOf(project) == -1) {
+          filtered.push(project);
+        }
+      }
+    }
+  }
+  for (const project of projects) {
+    for (const skill of project.skillSets) {
+      if (skills.indexOf(skill._id) != -1) {
+        if (filtered.indexOf(project) == -1) {
+          filtered.push(project);
+        }
+      }
+    }
+  }
+  return filtered.filter((project) => project._id);
 }
 
 const mapDispatchToProps = (dispatch) => ({
@@ -50,15 +48,16 @@ const mapDispatchToProps = (dispatch) => ({
 function HeroBox(props) {
   const [query, setQuery] = useState("");
   const [selectedSkills, setSelectedSkills] = useState([]);
-  const [selectedCauses, setSelectedCauses] = useState([])
-  const [projects, setProjects] = useState([])
+  const [selectedCauses, setSelectedCauses] = useState([]);
+  const [projects, setProjects] = useState([]);
   const filteredProjects = projects.filter((pro) =>
     pro.name.toLowerCase().includes(query.toLowerCase())
   );
-	useEffect(() => {
-
-    setProjects(filterProjects(props.Projects.projects, selectedCauses, selectedSkills))
-}, [selectedCauses, selectedSkills, props.Projects])
+  useEffect(() => {
+    setProjects(
+      filterProjects(props.Projects.projects, selectedCauses, selectedSkills)
+    );
+  }, [selectedCauses, selectedSkills, props.Projects]);
   return (
     <Box>
       <div
@@ -92,58 +91,57 @@ function HeroBox(props) {
             alignItems: "center",
           }}
         >
-          <h2>Your Personalized Recommendations</h2>
+          <h2 className="text-center">Your Personalized Recommendations</h2>
           <p className="text-center">
             We think this projects could be a great suit for you{" "}
           </p>
         </div>
         {/* <SearchPanel onSearch={onSearch} /> */}
         <SearchPanel value={query} onChange={(e) => setQuery(e.target.value)} />
-        
-        <div className='row mb-5 justify-content-center'>
-        <div className='col-12 offset-2'>
-        <h6 style={{textAlign:'start'}}>FILTER BY:</h6>
-        </div>
-        <div className='col-5'>
-        
-        <Select
-          showArrow
-          size='large'
-          mode="multiple"
-          placeholder="SKILL"
-          value={selectedSkills}
-          onChange={setSelectedSkills}
-          style={{ width: "100%" }}
-        >
-          {props.Skills.skills.map((item) => (
-            <Select.Option key={item._id} value={item._id}>
-              {item.name}
-            </Select.Option>
-          ))}
-        </Select>
-        </div>
-        <div className='col-5'>
-        <Select
-          showArrow
-          size='large'
-          mode="multiple"
-          placeholder="CAUSE AREA"
-          value={selectedCauses}
-          onChange={setSelectedCauses}
-          style={{ width: "100%" }}
-        >
-          {props.Causes.causes.map((item) => (
-            <Select.Option key={item._id} value={item._id}>
-              {item.name}
-            </Select.Option>
-          ))}
-        </Select>
-        </div>
+
+        <div className="row mb-5 justify-content-center">
+          <div className="col-10 offset-2">
+            <h6 style={{ textAlign: "start" }}>FILTER BY:</h6>
+          </div>
+          <div className="col-4">
+            <Select
+              showArrow
+              size="large"
+              mode="multiple"
+              placeholder="SKILL"
+              value={selectedSkills}
+              onChange={setSelectedSkills}
+              style={{ width: "100%" }}
+            >
+              {props.Skills.skills.map((item) => (
+                <Select.Option key={item._id} value={item._id}>
+                  {item.name}
+                </Select.Option>
+              ))}
+            </Select>
+          </div>
+          <div className="col-4">
+            <Select
+              showArrow
+              size="large"
+              mode="multiple"
+              placeholder="CAUSE AREA"
+              value={selectedCauses}
+              onChange={setSelectedCauses}
+              style={{ width: "100%" }}
+            >
+              {props.Causes.causes.map((item) => (
+                <Select.Option key={item._id} value={item._id}>
+                  {item.name}
+                </Select.Option>
+              ))}
+            </Select>
+          </div>
         </div>
       </div>
-      
+
       <CardHolder results={filteredProjects} />
-    </Box >
+    </Box>
   );
 }
 export default connect(mapStateToProps, mapDispatchToProps)(HeroBox);

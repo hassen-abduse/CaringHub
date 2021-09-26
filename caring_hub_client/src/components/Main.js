@@ -49,7 +49,7 @@ const mapStateToProps = (state) => {
     Skills: state.Skills,
     Causes: state.Causes,
     Projects: state.Projects,
-    Evals: state.Evals
+    Evals: state.Evals,
   };
 };
 
@@ -64,7 +64,7 @@ const mapDispatchToProps = (dispatch) => ({
   fetchOrgs: () => dispatch(fetchOrgs()),
   fetchVolunteers: () => dispatch(fetchVolunteers()),
   fetchHelps: () => dispatch(fetchHelps()),
-  fetchEvals: () => dispatch(fetchEvals())
+  fetchEvals: () => dispatch(fetchEvals()),
 });
 
 class Main extends Component {
