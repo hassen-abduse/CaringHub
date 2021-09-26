@@ -122,7 +122,7 @@ function AccountMenu(props) {
                     <MenuItem>
                       <Link
                         className="text-decoration-none"
-                        to="/index"
+                        to="/"
                         onClick={() => {
                           props.logoutUser();
                         }}

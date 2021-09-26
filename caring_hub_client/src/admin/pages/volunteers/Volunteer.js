@@ -383,7 +383,7 @@ function Volunteers(props) {
           >
             <Alert style={{ margin: "50px", padding: "50px" }} severity="error">
               <AlertTitle style={{ fontWeight: "bold" }}>Error</AlertTitle>
-              <strong>{props.Organizations.errMess}</strong>
+              <strong>{props.Volunteers.errMess}</strong>
             </Alert>
           </div>
         </div>
@@ -497,7 +497,8 @@ function Volunteers(props) {
                 )}
 
                 <Modal
-                  title="evaluate volunteer"
+                  destroyOnClose
+                  title= 'Volunteer Detail'
                   centered
                   visible={visible}
                   onOk={() => setVisible(false)}
@@ -519,10 +520,10 @@ function Volunteers(props) {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Paper>
-        <FormControlLabel
+        {/* <FormControlLabel
           control={<Switch checked={dense} onChange={handleChangeDense} />}
           label="Dense padding"
-        />
+        /> */}
       </div>
     );
   else
@@ -533,9 +534,9 @@ function Volunteers(props) {
             className="row"
             style={{ display: "flex", justifyContent: "center" }}
           >
-            <Alert style={{ margin: "50px", padding: "50px" }} severity="error">
-              <AlertTitle style={{ fontWeight: "bold" }}>Error</AlertTitle>
-              <strong>No Organizations Found!</strong>
+            <Alert style={{ margin: "50px", padding: "50px" }} severity="info">
+              <AlertTitle style={{ fontWeight: "bold" }}>Oops...!</AlertTitle>
+              <strong>No Volunteers Found!</strong>
             </Alert>
           </div>
         </div>
