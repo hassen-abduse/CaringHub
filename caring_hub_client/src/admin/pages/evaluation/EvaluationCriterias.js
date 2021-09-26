@@ -13,32 +13,24 @@ import TableSortLabel from "@material-ui/core/TableSortLabel";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
-import Divider from "@material-ui/core/Divider";
-import Checkbox from "@material-ui/core/Checkbox";
 import { Button, Grid } from "@material-ui/core";
-import IconButton from "@material-ui/core/IconButton";
-import Tooltip from "@material-ui/core/Tooltip";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
-import DeleteIcon from "@material-ui/icons/Delete";
-import EditIcon from "@material-ui/icons/Edit";
-import FilterListIcon from "@material-ui/icons/FilterList";
 import { Modal } from "antd";
-// import AcceptApplicant from "./AcceptApplicant";
-// import DeclineApplicant from "./DeclineApplicant";
-import ClearIcon from "@material-ui/icons/Clear";
-import DoneAllIcon from "@material-ui/icons/DoneAll";
-
 import AddEvaluation from "./AddEvaluation";
-import { fetchEvals } from "../../../redux/ActionCreators/evalActions";
+import { deleteEval, fetchEvals, postEval } from "../../../redux/ActionCreators/evalActions";
 import { connect } from "react-redux";
 import { useEffect } from "react";
 import { Alert, AlertTitle } from '@material-ui/lab';
 import { CircularProgress, Container, Portal } from "@material-ui/core";
-import { useParams } from "react-router";
-import { Link } from "react-router-dom";
+import TextField from "@material-ui/core/TextField";
+import { Dialog } from '@material-ui/core';
+import { DialogActions } from '@material-ui/core';
+import { DialogContent } from '@material-ui/core';
+import { DialogContentText } from '@material-ui/core';
+import { DialogTitle } from '@material-ui/core';
+import { Slide } from '@material-ui/core';
 
-// import ShowVolunteersDialog from "../volunteers/ShowVolunteersDialog";
 
 function createData(evaluationName, evaluationDescription) {
   return { evaluationName, evaluationDescription };
@@ -180,7 +172,9 @@ const EnhancedTableToolbar = (props) => {
   const classes = useToolbarStyles();
   const { numSelected } = props;
   const [visible, setVisible] = useState(false);
-
+  const [name, setName] = useState()
+  const [description, setDescription] = useState()
+ 
   return (
     <Toolbar
       className={clsx(classes.root, {
@@ -210,18 +204,25 @@ const EnhancedTableToolbar = (props) => {
           Add Evaluation
         </Button>
         <Modal
-          title="add skill set"
+          title="Add Evaluation Criteria"
           centered
+          destroyOnClose
           visible={visible}
           onOk={() => setVisible(false)}
           onCancel={() => setVisible(false)}
-          width={1000}
+          width={700}
           footer={[
             <Button
               key="back"
               size="large"
               color="primary"
-              onClick={() => setVisible(false)}
+              onClick={() => {
+                props.postEval({
+                  name: name,
+                  description: description
+                })
+                setVisible(false)
+              }}
             >
               Add
             </Button>,
@@ -235,7 +236,32 @@ const EnhancedTableToolbar = (props) => {
             </Button>,
           ]}
         >
-          <AddEvaluation />
+          <form style={{
+            display: "flex",
+            flexDirection: "column",
+            "& > *": {
+              margin: '10',
+              width: "100%",
+            },
+          }} noValidate autoComplete="off">
+            <TextField
+              id="outlined-primary"
+              label="Name"
+              //variant="outlined"
+              color="primary"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            <TextField
+              minRows='2'
+              id="outlined-primary"
+              label="Description"
+              //variant="outlined"
+              color="primary"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </form>
         </Modal>
       </Grid>
     </Toolbar>
@@ -279,7 +305,14 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => ({
   fetchEvals: () => dispatch(fetchEvals()),
+  postEval: (data) => dispatch(postEval(data)),
+  deleteEval: (evalId) => dispatch(deleteEval(evalId))
 })
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
 function EvaluationCriterias(props) {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
@@ -287,7 +320,16 @@ function EvaluationCriterias(props) {
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
+  const [open, setOpen] = React.useState(false)
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [selectedRow, setSelectedRow] = React.useState()
+  const handleClickOpen = () => {
+    setOpen(true)
+  }
+
+  const handleClose = () => {
+    setOpen(false)
+  }
   useEffect(() => {
     props.fetchEvals()
   }, [])
@@ -376,33 +418,33 @@ function EvaluationCriterias(props) {
   
   else if(props.Evals.evals.length >= 1) return (
     <div className="container">
-      <Modal
-        title="Applicant Information"
-        centered
-        visible={visible}
-        // mask={false}
-        maskStyle={{
-          backgroundColor: "rgba(0, 0, 0, 0.25)",
-        }}
-        // onOk={() => setVisible(false)}
-        onCancel={() => setVisible(false)}
-        width={1000}
-        footer={[
-          <Button
-            key="back"
-            size="large"
-            color="primary"
-            onClick={() => setVisible(false)}
-          >
-            View Profile
-          </Button>,
-        ]}
-      >
-        {/* <ShowVolunteersDialog /> */}
-      </Modal>
+      {selectedRow &&
+        <Dialog
+          open={open}
+          TransitionComponent={Transition}
+          //keepMounted
+          onClose={handleClose}
+          aria-describedby="alert-dialog-slide-description"
+        >
+          <DialogTitle>{"Remove Item?"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-slide-description">
+              Do you really want to remove this item?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>CANCEL</Button>
+            <Button onClick={() => {
+              props.deleteEval(selectedRow._id)
+              handleClose()
+            }
+            }>REMOVE</Button>
+          </DialogActions>
+        </Dialog>
+      }
       <div className={classes.root}>
         <Paper className={classes.paper}>
-          <EnhancedTableToolbar numSelected={selected.length} />
+          <EnhancedTableToolbar numSelected={selected.length} postEval={props.postEval}/>
           <TableContainer>
             <Table
               className={classes.table}
@@ -463,7 +505,7 @@ function EvaluationCriterias(props) {
                             style={{
                               margin: "10px",
                               alignContent: "center",
-                              justifyContent: "space-between",
+                              justifyContent: "center",
                               width: "200px",
                               marginLeft: "30px",
                             }}
@@ -475,13 +517,13 @@ function EvaluationCriterias(props) {
                                 borderRadius: "10px",
                               }}
                             >
-                              <Button
+                              {/* <Button
                                 variant="contained"
                                 color="primary"
                                 onClick={() => setVisible(true)}
                               >
                                 Edit
-                              </Button>
+                              </Button> */}
                               <Modal
                                 title="add skill set"
                                 centered
@@ -519,7 +561,13 @@ function EvaluationCriterias(props) {
                                 borderRadius: "5px",
                               }}
                             >
-                              <Button variant="contained" color="secondary">
+                              <Button 
+                                variant="contained" 
+                                onClick={() => {
+                                  setSelectedRow(row)
+                                  handleClickOpen()
+                                }}
+                                color="secondary">
                                 Delete
                               </Button>
                             </Grid>

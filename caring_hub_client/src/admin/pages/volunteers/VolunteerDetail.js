@@ -6,8 +6,13 @@ import Avatar from "../../../volunteer/components/Avatars";
 import { Badge, Col } from "antd";
 import { Button } from "@material-ui/core";
 import { connect } from 'react-redux'
-import { deleteProject } from "../../../redux/ActionCreators/projectActions";
-const desc = ["terrible", "bad", "normal", "good", "wonderful"];
+import { deleteVolunteer } from "../../../redux/ActionCreators/volActions";
+import { Dialog } from '@material-ui/core';
+import { DialogActions } from '@material-ui/core';
+import { DialogContent } from '@material-ui/core';
+import { DialogContentText } from '@material-ui/core';
+import { DialogTitle } from '@material-ui/core';
+import { Slide } from '@material-ui/core';
 
 const mapStateToProps = (state) => {
   return {
@@ -15,53 +20,54 @@ const mapStateToProps = (state) => {
   }
 }
 const mapDispatchToProps = (dispatch) => ({
-  deleteProject: (projectId) => dispatch(deleteProject(projectId)),
+  deleteVolunteer: (volId) => dispatch(deleteVolunteer(volId)),
 })
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
 class VolunteerDetail extends Component {
-  state = {
-    value: 0,
-    quality: 0,
-    communication: 0,
-    expertize: 0,
-    proffesionalism: 0,
-    hireAgain: 0,
+  constructor(props) {
+    super(props)
+    this.state = {
+      open:false
+    }
+    this.handleClickOpen = this.handleClickOpen.bind(this)
+    this.handleClose = this.handleClose.bind(this)
+  }
+  handleClickOpen = () => {
+    this.setState({open: true});
   };
 
-  handleRating = () => {
-    const { quality, communication, expertize, proffesionalism, hireAgain } =
-      this.state;
-    let value =
-      (quality + communication + expertize + proffesionalism + hireAgain) / 5;
-    this.setState({ value });
+  handleClose = () => {
+    this.setState({open: false});
   };
-  handleQuality = (quality) => {
-    this.setState({ quality });
-  };
-  handleCommunication = (communication) => {
-    this.setState({ communication });
-  };
-  handleExpertize = (expertize) => {
-    this.setState({ expertize });
-  };
-  handleProffesionalism = (proffesionalism) => {
-    this.setState({ proffesionalism });
-  };
-  handleHireAgain = (hireAgain) => {
-    this.setState({ hireAgain });
-  };
-
   render() {
-    const {
-      value,
-      quality,
-      communication,
-      expertize,
-      proffesionalism,
-      hireAgain,
-    } = this.state;
-    // 
     return (
       <div style={{ justifyContent: "center" }}>
+        <Dialog
+        open={this.state.open}
+        TransitionComponent={Transition}
+        //keepMounted
+        onClose={this.handleClose}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>{"Remove Item?"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            Do you really want to remove this item?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={this.handleClose}>CANCEL</Button>
+          <Button onClick={()=> {
+              this.props.deleteVolunteer(this.props.vol._id)
+              this.handleClose()
+            }
+            }>REMOVE</Button>
+        </DialogActions>
+      </Dialog>
         <Row>
           <Col>
             <div>
@@ -91,44 +97,11 @@ class VolunteerDetail extends Component {
             <div>
               <div
                 style={{
-                  //marginLeft: "3rem",
                   display: "flex",
                   flexDirection: "column",
                 }}
               >
-                {/* <h4 style={{ marginLeft: "0rem", marginBottom: 0 }}>
-                  About The Project
-                </h4> */}
-                {/* <div style={{ display: "flex" }}>
-                  <h6
-                    style={{
-                      marginTop: "10px",
-                      marginRight: "10px",
-                    }}
-                    className=" mb-0 teal"
-                  >
-                    Project Description :
-                  </h6>
-                  <span>
-                    <Typography style={{ marginTop: "10px" }}>
-                      {this.props.project.description.substring(0, 50) + '...'}
-                    </Typography>
-                  </span>
-                </div>
-                <div style={{ display: "flex" }}>
-                  <h6
-                    style={{
-                      marginTop: "3px",
-                      marginRight: "10px",
-                    }}
-                    className=" mb-0 teal"
-                  >
-                    Owner Organization :
-                  </h6>
-                  <span>
-                    <Typography style={{ marginTop: "3px" }}>{this.props.project.ownerOrg.name}</Typography>
-                  </span>
-                </div> */}
+
                 <div style={{ display: "flex" }}>
                   <h6
                     style={{
@@ -231,10 +204,12 @@ class VolunteerDetail extends Component {
                 color="primary"
                 style={{ marginRight: '10px' }}
               >
-                {/* <a style={{textDecoration:'none'}} href={`/volunteer/jobDescription/${this.props.project._id}`}>More Details</a> */}
+                <a style={{ textDecoration: 'none' }} href={`/volunteer/dashboard/${this.props.vol._id}`}>More Details</a>
               </Button>
               <Button
-                //onClick={()=> this.props.deleteProject(this.props.project._id)}
+                //onClick={()=> this.props.deleteVolunteer(this.props.vol._id)}
+                onClick={this.handleClickOpen}
+                
                 variant="contained"
                 color="secondary"
               >

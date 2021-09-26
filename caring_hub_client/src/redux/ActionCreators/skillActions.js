@@ -47,7 +47,8 @@ export const postSkill = (formData) => (dispatch) => {
         method: 'POST',
         body: JSON.stringify(formData),
         headers: {
-            'Authorization': bearer
+            'Authorization': bearer,
+            'Content-Type':'application/json'
         }
 
     })

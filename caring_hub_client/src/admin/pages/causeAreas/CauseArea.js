@@ -35,7 +35,15 @@ import { Alert, AlertTitle } from '@material-ui/lab';
 import { CircularProgress, Container, Portal } from "@material-ui/core";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
-import { fetchCauses } from "../../../redux/ActionCreators/causeActions"
+import TextField from "@material-ui/core/TextField";
+import { Dialog } from '@material-ui/core';
+import { DialogActions } from '@material-ui/core';
+import { DialogContent } from '@material-ui/core';
+import { DialogContentText } from '@material-ui/core';
+import { DialogTitle } from '@material-ui/core';
+import { Slide } from '@material-ui/core';
+
+import { deleteCause, fetchCauses, postCause } from "../../../redux/ActionCreators/causeActions"
 
 // import ShowVolunteersDialog from "../volunteers/ShowVolunteersDialog";
 
@@ -89,13 +97,13 @@ const headCells = [
     id: "Cause-description",
     numeric: true,
     disablePadding: false,
-    label: "skill description ",
+    label: "Cause Description ",
   },
   {
     id: "actions",
     numeric: false,
     disablePadding: false,
-    label: "actions ",
+    label: "Actions ",
   },
 ];
 
@@ -179,7 +187,8 @@ const EnhancedTableToolbar = (props) => {
   const classes = useToolbarStyles();
   const { numSelected } = props;
   const [visible, setVisible] = useState(false);
-
+  const [name, setName] = useState()
+  const [description, setDescription] = useState()
   return (
     <Toolbar
       className={clsx(classes.root, {
@@ -221,7 +230,13 @@ const EnhancedTableToolbar = (props) => {
               key="back"
               size="large"
               color="primary"
-              onClick={() => setVisible(false)}
+              onClick={() => {
+                props.postCause({
+                  name: name,
+                  description: description
+                })
+                setVisible(false)
+              }}
             >
               Add
             </Button>,
@@ -235,7 +250,32 @@ const EnhancedTableToolbar = (props) => {
             </Button>,
           ]}
         >
-          <CauseAreaAdd />
+          <form style={{
+            display: "flex",
+            flexDirection: "column",
+            "& > *": {
+              margin: '10',
+              width: "100%",
+            },
+          }} noValidate autoComplete="off">
+            <TextField
+              id="outlined-primary"
+              label="Name"
+              //variant="outlined"
+              color="primary"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            <TextField
+              minRows='2'
+              id="outlined-primary"
+              label="Description"
+              //variant="outlined"
+              color="primary"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </form>
         </Modal>
       </Grid>
     </Toolbar>
@@ -279,7 +319,13 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => ({
   fetchCauses: () => dispatch(fetchCauses()),
+  postCause: (data) => dispatch(postCause(data)),
+  deleteCause: (causeId) => dispatch(deleteCause(causeId))
 })
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 function CauseAreas(props) {
   const classes = useStyles();
@@ -289,6 +335,15 @@ function CauseAreas(props) {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [open, setOpen] = React.useState(false)
+  const [selectedRow, setSelectedRow] = React.useState()
+  const handleClickOpen = () => {
+    setOpen(true)
+  }
+
+  const handleClose = () => {
+    setOpen(false)
+  }
   useEffect(() => {
     props.fetchCauses()
   }, [])
@@ -346,7 +401,7 @@ function CauseAreas(props) {
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
   const [visible, setVisible] = useState(false);
-  
+
   if (props.Causes.errMess) return (
     <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
       <div className='container'>
@@ -377,33 +432,33 @@ function CauseAreas(props) {
 
   else if (props.Causes.causes.length >= 1) return (
     <div className="container">
-      <Modal
-        title="Applicant Information"
-        centered
-        visible={visible}
-        // mask={false}
-        maskStyle={{
-          backgroundColor: "rgba(0, 0, 0, 0.25)",
-        }}
-        // onOk={() => setVisible(false)}
-        onCancel={() => setVisible(false)}
-        width={1000}
-        footer={[
-          <Button
-            key="back"
-            size="large"
-            color="primary"
-            onClick={() => setVisible(false)}
-          >
-            View Profile
-          </Button>,
-        ]}
-      >
-        {/* <ShowVolunteersDialog /> */}
-      </Modal>
+      {selectedRow &&
+        <Dialog
+          open={open}
+          TransitionComponent={Transition}
+          //keepMounted
+          onClose={handleClose}
+          aria-describedby="alert-dialog-slide-description"
+        >
+          <DialogTitle>{"Remove Item?"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-slide-description">
+              Do you really want to remove this item?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>CANCEL</Button>
+            <Button onClick={() => {
+              props.deleteCause(selectedRow._id)
+              handleClose()
+            }
+            }>REMOVE</Button>
+          </DialogActions>
+        </Dialog>
+      }
       <div className={classes.root}>
         <Paper className={classes.paper}>
-          <EnhancedTableToolbar numSelected={selected.length} />
+          <EnhancedTableToolbar numSelected={selected.length} postCause={props.postCause} />
           <TableContainer>
             <Table
               className={classes.table}
@@ -433,7 +488,7 @@ function CauseAreas(props) {
                         role="checkbox"
                         aria-checked={isItemSelected}
                         tabIndex={-1}
-                        onClick={() => setVisible(true)}
+                        //onClick={() => setVisible(true)}
                         key={index}
                         selected={isItemSelected}
                       >
@@ -464,7 +519,7 @@ function CauseAreas(props) {
                             style={{
                               margin: "10px",
                               alignContent: "center",
-                              justifyContent: "space-between",
+                              justifyContent: "center",
                               width: "200px",
                               marginLeft: "30px",
                             }}
@@ -476,13 +531,13 @@ function CauseAreas(props) {
                                 borderRadius: "10px",
                               }}
                             >
-                              <Button
+                              {/* <Button
                                 variant="contained"
                                 color="primary"
                                 onClick={() => setVisible(true)}
                               >
                                 Edit
-                              </Button>
+                              </Button> */}
                             </Grid>
 
                             <Grid
@@ -492,7 +547,14 @@ function CauseAreas(props) {
                                 borderRadius: "5px",
                               }}
                             >
-                              <Button variant="contained" color="secondary">
+                              <Button
+                                onClick={() => {
+                                  setSelectedRow(row)
+                                  handleClickOpen()
+                                }
+                                }
+                                variant="contained"
+                                color="secondary">
                                 Delete
                               </Button>
                             </Grid>
