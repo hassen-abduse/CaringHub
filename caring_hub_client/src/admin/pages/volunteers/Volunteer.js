@@ -26,8 +26,15 @@ import { Modal } from "antd";
 import { Alert, AlertTitle } from "@material-ui/lab";
 import { CircularProgress, Container, Portal } from "@material-ui/core";
 import VolunteerDetail from "./VolunteerDetail";
-import { fetchVolunteers } from "../../../redux/ActionCreators/volActions";
+import { deleteVolunteer, fetchVolunteers } from "../../../redux/ActionCreators/volActions";
 import { connect } from 'react-redux'
+import { Dialog } from '@material-ui/core';
+import { DialogActions } from '@material-ui/core';
+import { DialogContent } from '@material-ui/core';
+import { DialogContentText } from '@material-ui/core';
+import { DialogTitle } from '@material-ui/core';
+import { Slide } from '@material-ui/core';
+
 function createData(firstName, lastName, phone, email, address, skill, areas) {
   return { firstName, lastName, phone, email, address, skill, areas };
 }
@@ -88,6 +95,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => ({
   fetchVolunteers: () => dispatch(fetchVolunteers()),
+  deleteVolunteer: (volId) => dispatch(deleteVolunteer(volId))
 });
 
 function descendingComparator(a, b, orderBy) {
@@ -214,13 +222,13 @@ const useToolbarStyles = makeStyles((theme) => ({
   highlight:
     theme.palette.type === "light"
       ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        }
+        color: theme.palette.secondary.main,
+        backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+      }
       : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark,
-        },
+        color: theme.palette.text.primary,
+        backgroundColor: theme.palette.secondary.dark,
+      },
   title: {
     flex: "1 1 100%",
   },
@@ -305,6 +313,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
 function Volunteers(props) {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
@@ -314,6 +326,15 @@ function Volunteers(props) {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [selectedRow, setSelectedRow] = React.useState();
+  const [open, setOpen] = React.useState(false)
+  //const [selectedRow, setSelectedRow] = React.useState()
+  const handleClickOpen = () => {
+    setOpen(true)
+  }
+
+  const handleClose = () => {
+    setOpen(false)
+  }
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -420,6 +441,30 @@ function Volunteers(props) {
   else if (props.Volunteers.volunteers.length >= 1)
     return (
       <div className={classes.root}>
+        {selectedRow &&
+          <Dialog
+            open={open}
+            TransitionComponent={Transition}
+            //keepMounted
+            onClose={handleClose}
+            aria-describedby="alert-dialog-slide-description"
+          >
+            <DialogTitle>{"Remove Item?"}</DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-slide-description">
+                Do you really want to remove this item?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose}>CANCEL</Button>
+              <Button onClick={() => {
+                props.deleteVolunteer(selectedRow._id)
+                handleClose()
+              }
+              }>REMOVE</Button>
+            </DialogActions>
+          </Dialog>
+        }
         <Paper className={classes.paper}>
           <EnhancedTableToolbar numSelected={selected.length} />
           <TableContainer>
@@ -448,10 +493,6 @@ function Volunteers(props) {
                     return (
                       <TableRow
                         hover
-                        onClick={() => {
-                          setVisible(true);
-                          setSelectedRow(row);
-                        }}
                         role="checkbox"
                         aria-checked={isItemSelected}
                         tabIndex={-1}
@@ -482,9 +523,25 @@ function Volunteers(props) {
                         <TableCell>
                           <Button
                             type="primary"
-                            onClick={() => setVisible(true)}
+                            onClick={() => {
+                              setVisible(true);
+                              setSelectedRow(row);
+                            }}
                           >
-                            show Volunteers
+                            Detail
+                          </Button>
+                        </TableCell>
+                        <TableCell>
+                          <Button
+
+                            onClick={() => {
+                              setSelectedRow(row)
+                              handleClickOpen()
+                            }
+                            }
+                            variant="contained"
+                            color="secondary">
+                            Delete
                           </Button>
                         </TableCell>
                       </TableRow>
@@ -498,14 +555,14 @@ function Volunteers(props) {
 
                 <Modal
                   destroyOnClose
-                  title= 'Volunteer Detail'
+                  title='Volunteer Detail'
                   centered
                   visible={visible}
                   onOk={() => setVisible(false)}
                   onCancel={() => setVisible(false)}
                   width={1000}
                 >
-                  <VolunteerDetail vol={selectedRow}/>
+                  <VolunteerDetail vol={selectedRow} />
                 </Modal>
               </TableBody>
             </Table>

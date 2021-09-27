@@ -24,11 +24,17 @@ import EditIcon from "@material-ui/icons/Edit";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import { Modal } from "antd";
 import ProjectDetail from "./ProjectDetail";
-import { fetchProjects } from "../../../redux/ActionCreators/projectActions";
+import { deleteProject, fetchProjects } from "../../../redux/ActionCreators/projectActions";
 import { connect } from 'react-redux'
 import { useEffect } from "react";
 import { Alert, AlertTitle } from '@material-ui/lab';
 import { CircularProgress, Container, Portal } from "@material-ui/core";
+import { Dialog } from '@material-ui/core';
+import { DialogActions } from '@material-ui/core';
+import { DialogContent } from '@material-ui/core';
+import { DialogContentText } from '@material-ui/core';
+import { DialogTitle } from '@material-ui/core';
+import { Slide } from '@material-ui/core';
 
 function createData(
   projectName,
@@ -279,8 +285,11 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => ({
   fetchProjects: () => dispatch(fetchProjects()),
+  deleteProject: (projectId) => dispatch(deleteProject(projectId))
 })
-
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 function Projects(props) {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
@@ -290,6 +299,16 @@ function Projects(props) {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [selectedRow, setSelectedRow] = React.useState();
+  const [open, setOpen] = React.useState(false)
+  //const [selectedRow, setSelectedRow] = React.useState()
+  
+  const handleClickOpen = () => {
+    setOpen(true)
+  }
+
+  const handleDialogClose = () => {
+    setOpen(false)
+  }
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -378,6 +397,30 @@ function Projects(props) {
 
   else if (props.Projects.projects.length >= 1) return (
     <div className={classes.root}>
+      {selectedRow &&
+        <Dialog
+          open={open}
+          TransitionComponent={Transition}
+          //keepMounted
+          onClose={handleDialogClose}
+          aria-describedby="alert-dialog-slide-description"
+        >
+          <DialogTitle>{"Remove Item?"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-slide-description">
+              Do you really want to remove this item?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleDialogClose}>CANCEL</Button>
+            <Button onClick={() => {
+              props.deleteProject(selectedRow._id)
+              handleDialogClose()
+            }
+            }>REMOVE</Button>
+          </DialogActions>
+        </Dialog>
+      }
       <Paper className={classes.paper}>
         <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
@@ -405,10 +448,6 @@ function Projects(props) {
 
                   return (
                     <TableRow
-                      onClick={() => {
-                        setVisible(true);
-                        setSelectedRow(row);
-                      }}
                       hover
                       role="checkbox"
                       aria-checked={isItemSelected}
@@ -438,8 +477,28 @@ function Projects(props) {
                       <TableCell align="right">{new Date(row.startDate).toDateString()}</TableCell>
                       <TableCell align="right">{new Date(row.endDate).toDateString()}</TableCell>
                       <TableCell>
-                        <Button type="primary" onClick={() => setVisible(true)}>
-                          show detail
+                      <Button
+                          type="primary"
+                          onClick={() => {
+                            setVisible(true);
+                            setSelectedRow(row);
+                          }}>
+                          detail
+                        </Button>
+
+                      </TableCell>
+                      <TableCell>
+  
+                        <Button
+
+                          onClick={() => {
+                            setSelectedRow(row)
+                            handleClickOpen()
+                          }
+                          }
+                          variant="contained"
+                          color="secondary">
+                          Delete
                         </Button>
 
                       </TableCell>
@@ -464,7 +523,7 @@ function Projects(props) {
         >
           <ProjectDetail project={selectedRow} />
         </Modal>
-}
+        }
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"

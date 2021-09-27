@@ -282,6 +282,7 @@ function VolunteerApplicationTable(props) {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const decoded = props.auth.token ? jwtDecode(props.auth.token) : { role: "" };
+  
   const rows = props.Applications.applications.filter(
     (app) => app.volunteer._id === decoded._id
   );

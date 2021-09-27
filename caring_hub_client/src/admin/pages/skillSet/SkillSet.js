@@ -235,7 +235,7 @@ const EnhancedTableToolbar = (props) => {
           visible={visible}
           onOk={() => setVisible(false)}
           onCancel={() => setVisible(false)}
-          width={1000}
+          width={700}
           footer={[
             <Button
               key="back"

@@ -397,142 +397,141 @@ function Applicants(props) {
         <div className='row'>
           <div style={{ display: 'flex', justifyContent: 'center', marginTop: '100px', marginBottom: '75px' }}>
             <CircularProgress size={'50px'} />
-
           </div>
           <p style={{ textAlign: 'center', fontSize: '25px', fontWeight: 'bold' }}>Loading...</p>
         </div>
       </div>
     </Container>
   )
-  else if (props.Applications.applications.length >= 1) {
+  else if (props.Applications.applications) {
     const applications = props.Applications.applications.filter(app => app.project._id === projectId && !app.accepted)
-    if(applications.length >= 1) 
-    return (
-      <div className="container"
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          marginTop: "100px",
-        }}>
-        {selectedApplicant &&
-          <Modal
-            title="Applicant Information"
-            centered
-            visible={visible}
-            // mask={false}
-            maskStyle={{
-              backgroundColor: "rgba(0, 0, 0, 0.25)",
-            }}
-            // onOk={() => setVisible(false)}
-            onCancel={() => setVisible(false)}
-            width={1000}
-            footer={[
+    if (applications.length >= 1) {
+      return (
+        <div className="container"
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "100px",
+          }}>
+          {selectedApplicant &&
+            <Modal
+              title="Applicant Information"
+              centered
+              visible={visible}
+              // mask={false}
+              maskStyle={{
+                backgroundColor: "rgba(0, 0, 0, 0.25)",
+              }}
+              // onOk={() => setVisible(false)}
+              onCancel={() => setVisible(false)}
+              width={1000}
+              footer={[
 
-              <Link to={`/volunteer/dashboard/${selectedApplicant._id}`}>
-                <Button
-                  key="back"
-                  size="large"
-                  color="primary"
+                <Link to={`/volunteer/dashboard/${selectedApplicant._id}`}>
+                  <Button
+                    key="back"
+                    size="large"
+                    color="primary"
+                  >
+                    View Full Profile
+                  </Button>
+                </Link>
+                ,
+              ]}
+            >
+              <ShowVolunteersDialog applicant={selectedApplicant} />
+            </Modal>
+          }
+          <div className={classes.root}>
+            <Paper className={classes.paper}>
+              <EnhancedTableToolbar numSelected={selected.length} />
+              <TableContainer>
+                <Table
+                  className={classes.table}
+                  aria-labelledby="tableTitle"
+                  size={dense ? "small" : "medium"}
+                  aria-label="enhanced table"
                 >
-                  View Full Profile
-                </Button>
-              </Link>
-              ,
-            ]}
-          >
-            <ShowVolunteersDialog applicant={selectedApplicant} />
-          </Modal>
-        }
-        <div className={classes.root}>
-          <Paper className={classes.paper}>
-            <EnhancedTableToolbar numSelected={selected.length} />
-            <TableContainer>
-              <Table
-                className={classes.table}
-                aria-labelledby="tableTitle"
-                size={dense ? "small" : "medium"}
-                aria-label="enhanced table"
-              >
-                <EnhancedTableHead
-                  classes={classes}
-                  numSelected={selected.length}
-                  order={order}
-                  orderBy={orderBy}
-                  onSelectAllClick={handleSelectAllClick}
-                  onRequestSort={handleRequestSort}
-                  rowCount={rows.length}
-                />
-                <TableBody style={{ paddingLeft: "20px" }}>
-                  {stableSort(applications, getComparator(order, orderBy))
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row, index) => {
-                      const isItemSelected = isSelected(index);
-                      const labelId = `enhanced-table-checkbox-${index}`;
+                  <EnhancedTableHead
+                    classes={classes}
+                    numSelected={selected.length}
+                    order={order}
+                    orderBy={orderBy}
+                    onSelectAllClick={handleSelectAllClick}
+                    onRequestSort={handleRequestSort}
+                    rowCount={rows.length}
+                  />
+                  <TableBody style={{ paddingLeft: "20px" }}>
+                    {stableSort(applications, getComparator(order, orderBy))
+                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      .map((row, index) => {
+                        const isItemSelected = isSelected(index);
+                        const labelId = `enhanced-table-checkbox-${index}`;
 
-                      return (
-                        <TableRow
-                          hover
+                        return (
+                          <TableRow
+                            hover
 
-                          role="checkbox"
-                          aria-checked={isItemSelected}
-                          tabIndex={-1}
-                          // onClick={() => setVisible(true)}
-                          key={index}
-                          selected={isItemSelected}
-                        >
-                          <TableCell
-                            onClick={() => {
-                              setVisible(true)
-                              setSelectedApplicant(row.volunteer)
-                            }
-                            }
-                            style={{
-                              cursor: "pointer",
-                            }}
-                            component="th"
-                            id={labelId}
-                            scope="row"
-
+                            role="checkbox"
+                            aria-checked={isItemSelected}
+                            tabIndex={-1}
+                            // onClick={() => setVisible(true)}
+                            key={index}
+                            selected={isItemSelected}
                           >
-                            {row.volunteer.firstName + " " + row.volunteer.lastName}
-                          </TableCell>
-
-                          <TableCell align="left">{row.volunteer.address.city}</TableCell>
-
-                          <TableCell align="left">{row.project.name}</TableCell>
-                          <TableCell
-                            style={{
-                              display: "flex",
-                              justifyContent: "center",
-                            }}
-                          >
-                            <Grid
-                              container
+                            <TableCell
+                              onClick={() => {
+                                setVisible(true)
+                                setSelectedApplicant(row.volunteer)
+                              }
+                              }
                               style={{
-                                margin: "10px",
-                                alignContent: "center",
+                                cursor: "pointer",
+                              }}
+                              component="th"
+                              id={labelId}
+                              scope="row"
+
+                            >
+                              {row.volunteer.firstName + " " + row.volunteer.lastName}
+                            </TableCell>
+
+                            <TableCell align="left">{row.volunteer.address.city}</TableCell>
+
+                            <TableCell align="left">{row.project.name}</TableCell>
+                            <TableCell
+                              style={{
+                                display: "flex",
                                 justifyContent: "center",
-                                width: "200px",
-                                marginLeft: "30px",
                               }}
                             >
                               <Grid
-                                item
+                                container
                                 style={{
-                                  // backgroundColor: "green",
-                                  borderRadius: "5px",
-
+                                  margin: "10px",
+                                  alignContent: "center",
+                                  justifyContent: "center",
+                                  width: "200px",
+                                  marginLeft: "30px",
                                 }}
                               >
-                                <Button
-                                  variant="contained"
-                                  onClick={()=> props.approveApp({appId: row._id})}
-                                  color="primary">
-                                  Approve
-                                </Button>
-                              </Grid>
+                                <Grid
+                                  item
+                                  style={{
+                                    // backgroundColor: "green",
+                                    borderRadius: "5px",
 
-                              {/* <Grid
+                                  }}
+                                >
+                                  <Button
+                                    variant="contained"
+                                    onClick={() => props.approveApp({ appId: row._id })}
+                                    color="primary">
+                                    Approve
+                                  </Button>
+                                </Grid>
+
+                                {/* <Grid
                                 item
                                 style={{
                                   backgroundColor: "red",
@@ -543,51 +542,54 @@ function Applicants(props) {
                                   Decline
                                 </Button>
                               </Grid> */}
-                            </Grid>
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })}
-                  {emptyRows > 0 && (
-                    <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
-                      <TableCell colSpan={6} />
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            <TablePagination
-              rowsPerPageOptions={[5, 10, 25]}
-              component="div"
-              count={rows.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
+                              </Grid>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    {emptyRows > 0 && (
+                      <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
+                        <TableCell colSpan={6} />
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 25]}
+                component="div"
+                count={rows.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
+            </Paper>
+            <FormControlLabel
+              control={<Switch checked={dense} onChange={handleChangeDense} />}
+              label="Dense padding"
             />
-          </Paper>
-          <FormControlLabel
-            control={<Switch checked={dense} onChange={handleChangeDense} />}
-            label="Dense padding"
-          />
-        </div>
-      </div>
-    );
-    else return (
-      <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
-        <div className='container'>
-          <div className='row' style={{ display: 'flex', justifyContent: 'center', }}>
-            <Alert style={{ margin: '50px', padding: '50px' }} severity="error">
-              <AlertTitle style={{ fontWeight: 'bold' }}>Error</AlertTitle>
-              <strong>No Applicants Found!</strong>
-            </Alert>
           </div>
         </div>
-  
-      </Container >
-    )
+      );
+    }
+    else {
+      return (
+        <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
+          <div className='container'>
+            <div className='row' style={{ display: 'flex', justifyContent: 'center', }}>
+              <Alert style={{ margin: '50px', padding: '50px' }} severity="info">
+                <AlertTitle style={{ fontWeight: 'bold' }}>Oops..!</AlertTitle>
+                <strong>No Applicants Found!</strong>
+              </Alert>
+            </div>
+          </div>
+
+        </Container >
+      )
+    }
   }
-  
+
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Applicants)

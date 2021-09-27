@@ -190,13 +190,6 @@ class OrgDetail extends Component {
                   >
                     <a style={{textDecoration:'none'}} href={`/organization/dashboard/${this.props.org._id}`}>More Details</a>
                   </Button>
-                  <Button
-                    onClick={()=> this.props.deleteOrg(this.props.org._id)}
-                    variant="contained"
-                    color="secondary"
-                  >
-                    remove
-                  </Button>
                 </div>
               </div>
             </div>
