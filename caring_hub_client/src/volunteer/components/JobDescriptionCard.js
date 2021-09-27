@@ -1,5 +1,5 @@
 import React from "react";
-
+import CardHolder from "./CardHolder";
 import { CircularProgress, Container } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -11,6 +11,7 @@ import { postApplication } from "../../redux/ActionCreators/appActions";
 import { connect } from "react-redux";
 import { Alert, AlertTitle } from "@material-ui/lab";
 import { Link } from "react-router-dom";
+import { fetchProjects } from "../../redux/ActionCreators/projectActions";
 const useStyles = makeStyles((theme) => ({
   root: {
     "& > *": {
@@ -30,19 +31,48 @@ const mapStateToProps = (state) => {
   return {
     auth: state.auth,
     NetRequest: state.NetRequest,
+    Projects: state.Projects
   };
 };
 const mapDispatchToProps = (dispatch) => ({
   postApplication: (data) => dispatch(postApplication(data)),
+  fetchProjects: () => dispatch(fetchProjects())
 });
+function filterProjects(projects, causes, skills) {
+  if (skills.length === 0 && causes.length === 0) return projects;
+
+  var filtered = [];
+  for (const project of projects) {
+    for (const causeA of project.causeAreas) {
+      if (causes.indexOf(causeA._id) != -1) {
+        if (filtered.indexOf(project) == -1) {
+          filtered.push(project);
+        }
+      }
+    }
+  }
+  for (const project of projects) {
+    for (const skill of project.skillSets) {
+      if (skills.indexOf(skill._id) != -1) {
+        if (filtered.indexOf(project) == -1) {
+          filtered.push(project);
+        }
+      }
+    }
+  }
+  return filtered.filter((project) => project._id);
+}
+
 function DescriptionCard(props) {
   const classes = useStyles();
   const { id } = useParams();
   const [isLoaded, setIsLoaded] = useState(false);
   const [project, setProject] = useState({});
   const [error, setError] = useState(null);
+  const [postError, setPostError] = useState(null)
+  const [postDone, setPostDone] = useState(false)
+  const [resp, setResp] = useState(null)
   useEffect(() => {
-    props.NetRequest.errMess = null;
     fetch(baseUrl + "projects/" + id)
       .then(
         (response) => {
@@ -70,6 +100,7 @@ function DescriptionCard(props) {
         setError(error.message);
         setIsLoaded(true);
       });
+    props.fetchProjects()
   }, []);
 
   const decoded = props.auth.token
@@ -214,7 +245,7 @@ function DescriptionCard(props) {
                         style={{ margin: "5px" }}
                         class="btn-solid-reg"
                         onClick={() => {
-                          props.NetRequest.errMess = null;
+                          
                           props.postApplication({
                             volunteer: decoded._id,
                             project: project._id,
@@ -265,10 +296,41 @@ function DescriptionCard(props) {
                     and complete it virtually.
                   </p>
                 </div>
+                {
+                  props.Projects.projects &&
+                  <CardHolder results={filterProjects(props.Projects.projects, project.causeAreas.map(cause => cause._id), project.skillSets.map(skill => skill._id))} />
+                }
+                {
+                  props.Projects.errMess &&
+                  <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
+                    <div className='container'>
+                      <div className='row' style={{ display: 'flex', justifyContent: 'center', }}>
+                        <Alert style={{ margin: '50px', padding: '50px' }} severity="error">
+                          <AlertTitle style={{ fontWeight: 'bold' }}>Error</AlertTitle>
+                          <strong>{props.Projects.errMess}</strong>
+                        </Alert>
+                      </div>
+                    </div>
+
+                  </Container >
+                }
+                {props.Projects.isLoading === true ?
+                  <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
+                    <div class='container'>
+                      <div className='row'>
+                        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '100px', marginBottom: '75px' }}>
+                          <CircularProgress size={'50px'} />
+
+                        </div>
+                        <p style={{ textAlign: 'center', fontSize: '25px', fontWeight: 'bold' }}>Loading...</p>
+                      </div>
+                    </div>
+                  </Container>
+                  : null}
               </div>
             </div>
           </div>
-
+              
           {/* <CardHolder /> */}
 
           <div class="cards-2 bg-gray">
@@ -289,12 +351,6 @@ function DescriptionCard(props) {
                 </div>
                 <div class="gradient-floor purple-to-green"></div>
               </div> */}
-
-              <div>
-                <Link class="btn-solid-lg" to="/volunteer/findProject">
-                  Browse All Projects
-                </Link>
-              </div>
             </div>
           </div>
         </div>

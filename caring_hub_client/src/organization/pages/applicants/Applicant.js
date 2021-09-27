@@ -36,6 +36,12 @@ import { Alert, AlertTitle } from '@material-ui/lab';
 import { CircularProgress, Container, Portal } from "@material-ui/core";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
+import { Dialog } from '@material-ui/core';
+import { DialogActions } from '@material-ui/core';
+import { DialogContent } from '@material-ui/core';
+import { DialogContentText } from '@material-ui/core';
+import { DialogTitle } from '@material-ui/core';
+import { Slide } from '@material-ui/core';
 
 function createData(firstName, lastName, phone, email, address, skill, areas) {
   return { firstName, lastName, phone, email, address, skill, areas };
@@ -308,6 +314,11 @@ const mapDispatchToProps = (dispatch) => ({
   fetchApplications: () => dispatch(fetchApplications()),
   approveApp: (app) => dispatch(approveApp(app))
 })
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
 function Applicants(props) {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
@@ -318,6 +329,15 @@ function Applicants(props) {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const { projectId } = useParams()
   const [selectedApplicant, setSelectedApplicant] = React.useState(null)
+  const [open, setOpen] = React.useState(false)
+  //const [selectedRow, setSelectedRow] = React.useState()
+  const handleClickOpen = () => {
+    setOpen(true)
+  }
+
+  const handleClose = () => {
+    setOpen(false)
+  }
 
   useEffect(() => {
     props.fetchApplications()
@@ -442,6 +462,30 @@ function Applicants(props) {
               <ShowVolunteersDialog applicant={selectedApplicant} />
             </Modal>
           }
+          {selectedApplicant &&
+            <Dialog
+              open={open}
+              TransitionComponent={Transition}
+              //keepMounted
+              onClose={handleClose}
+              aria-describedby="alert-dialog-slide-description"
+            >
+              <DialogTitle>{"Approve Applicant?"}</DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-slide-description">
+                  Do you want to approve this applicant?
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleClose}>Cancel</Button>
+                <Button onClick={() => {
+                  props.approveApp({appId: selectedApplicant._id})
+                  handleClose()
+                }
+                }>Approve</Button>
+              </DialogActions>
+            </Dialog>
+          }
           <div className={classes.root}>
             <Paper className={classes.paper}>
               <EnhancedTableToolbar numSelected={selected.length} />
@@ -480,11 +524,7 @@ function Applicants(props) {
                             selected={isItemSelected}
                           >
                             <TableCell
-                              onClick={() => {
-                                setVisible(true)
-                                setSelectedApplicant(row.volunteer)
-                              }
-                              }
+
                               style={{
                                 cursor: "pointer",
                               }}
@@ -519,13 +559,37 @@ function Applicants(props) {
                                   item
                                   style={{
                                     // backgroundColor: "green",
+                                    marginRight: "10px",
+                                    borderRadius: "5px",
+
+                                  }}
+                                >
+                                  <Button
+                                    onClick={() => {
+                                      setSelectedApplicant(row.volunteer)
+                                      setVisible(true)
+                                    }
+                                    }
+                                    variant="contained"
+                                    color="primary">
+                                    dETAILS
+                                  </Button>
+                                </Grid>
+                                <Grid
+                                  item
+                                  style={{
+                                    // backgroundColor: "green",
                                     borderRadius: "5px",
 
                                   }}
                                 >
                                   <Button
                                     variant="contained"
-                                    onClick={() => props.approveApp({ appId: row._id })}
+                                    onClick={() => {
+                                      setSelectedApplicant(row)
+                                      handleClickOpen()
+                                    }
+                                    }
                                     color="primary">
                                     Approve
                                   </Button>

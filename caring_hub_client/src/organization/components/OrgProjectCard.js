@@ -23,15 +23,21 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import { Modal } from "antd";
-
+import jwtDecode from "jwt-decode";
 import ClearIcon from "@material-ui/icons/Clear";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
 import { Link } from "react-router-dom";
-import { fetchProjects } from "../../redux/ActionCreators/projectActions";
+import { deleteProject, fetchProjects } from "../../redux/ActionCreators/projectActions";
 import { connect } from "react-redux";
 import { useEffect } from "react";
 import { Alert, AlertTitle } from "@material-ui/lab";
 import { CircularProgress, Container, Portal } from "@material-ui/core";
+import { Dialog } from '@material-ui/core';
+import { DialogActions } from '@material-ui/core';
+import { DialogContent } from '@material-ui/core';
+import { DialogContentText } from '@material-ui/core';
+import { DialogTitle } from '@material-ui/core';
+import { Slide } from '@material-ui/core';
 
 function createData(title, status, actions) {
   return { title, status, actions };
@@ -155,13 +161,13 @@ const useToolbarStyles = makeStyles((theme) => ({
   highlight:
     theme.palette.type === "light"
       ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        }
+        color: theme.palette.secondary.main,
+        backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+      }
       : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark,
-        },
+        color: theme.palette.text.primary,
+        backgroundColor: theme.palette.secondary.dark,
+      },
   title: {
     flex: "1 1 100%",
   },
@@ -259,12 +265,19 @@ const useStyles = makeStyles((theme) => ({
 const mapStateToProps = (state) => {
   return {
     Projects: state.Projects,
+    auth: state.auth
   };
 };
 
 const mapDispatchToProps = (dispatch) => ({
   fetchProjects: () => dispatch(fetchProjects()),
+  deleteProject: (projectId) => dispatch(deleteProject(projectId))
 });
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
 function OrgProjectCard(props) {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
@@ -274,6 +287,28 @@ function OrgProjectCard(props) {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [selectedRow, setSelectedRow] = React.useState();
+  const [open, setOpen] = React.useState(false)
+  const [myProjects, setMyProjects] = useState([])
+  const decoded = props.auth.token
+    ? jwtDecode(props.auth.token)
+    : { role: "" };
+  //const [selectedRow, setSelectedRow] = React.useState()
+  const handleClickOpen = () => {
+    setOpen(true)
+  }
+
+  const handleClose = () => {
+    setOpen(false)
+  }
+
+  useEffect(() => {
+    props.fetchProjects()
+    console.log(props.Projects.projects)
+    setMyProjects(props.Projects.projects.filter(project =>
+      project.ownerOrg._id == decoded._id
+    ))
+    console.log(myProjects)
+  }, [])
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -375,6 +410,31 @@ function OrgProjectCard(props) {
   else if (props.Projects.projects.length >= 1)
     return (
       <div className={classes.root}>
+        {selectedRow &&
+          <Dialog
+            open={open}
+            TransitionComponent={Transition}
+            //keepMounted
+            onClose={handleClose}
+            aria-describedby="alert-dialog-slide-description"
+          >
+            <DialogTitle>{"Remove Item?"}</DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-slide-description">
+                Do you really want to remove this item?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose}>CANCEL</Button>
+              <Button onClick={() => {
+                props.deleteProject(selectedRow._id)
+                handleClose()
+              }
+              }>REMOVE</Button>
+            </DialogActions>
+          </Dialog>
+        }
+
         <Paper className={classes.paper}>
           <EnhancedTableToolbar numSelected={selected.length} />
           <TableContainer>
@@ -393,127 +453,138 @@ function OrgProjectCard(props) {
                 onRequestSort={handleRequestSort}
                 rowCount={rows.length}
               />
-              <TableBody style={{ paddingLeft: "20px" }}>
-                {stableSort(
-                  props.Projects.projects,
-                  getComparator(order, orderBy)
-                )
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row, index) => {
-                    const isItemSelected = isSelected(index);
-                    const labelId = `enhanced-table-checkbox-${index}`;
+             {myProjects.length >= 1  &&
+                <TableBody style={{ paddingLeft: "20px" }}>
+                  {stableSort(
+                    myProjects,
+                    getComparator(order, orderBy)
+                  )
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row, index) => {
+                      const isItemSelected = isSelected(index);
+                      const labelId = `enhanced-table-checkbox-${index}`;
 
-                    return (
-                      <TableRow
-                        onClick={() => {
-                          setSelectedRow(row);
-                        }}
-                        hover
-                        role="checkbox"
-                        aria-checked={isItemSelected}
-                        tabIndex={-1}
-                        // onClick={() => setVisible(true)}
-                        key={index}
-                        selected={isItemSelected}
-                      >
-                        <TableCell
-                        // style={{
-                        //   cursor: "pointer",
-                        // }}
-                        // component="th"
-                        // id={labelId}
-                        // scope="row"
-                        // onClick={() => setVisible(true)}
-                        >
-                          {row.name}
-                        </TableCell>
-
-                        <TableCell align="left">
-                          {new Date(row.startDate).toDateString()}
-                        </TableCell>
-
-                        <TableCell
-                          style={{
-                            display: "flex",
-                            justifyContent: "center",
+                      return (
+                        <TableRow
+                          onClick={() => {
+                            setSelectedRow(row);
                           }}
+                          hover
+                          role="checkbox"
+                          aria-checked={isItemSelected}
+                          tabIndex={-1}
+                          // onClick={() => setVisible(true)}
+                          key={index}
+                          selected={isItemSelected}
                         >
-                          <Grid
-                            container
+                          <TableCell
+                          // style={{
+                          //   cursor: "pointer",
+                          // }}
+                          // component="th"
+                          // id={labelId}
+                          // scope="row"
+                          // onClick={() => setVisible(true)}
+                          >
+                            {row.name}
+                          </TableCell>
+
+                          <TableCell align="left">
+                            {new Date(row.startDate).toDateString()}
+                          </TableCell>
+
+                          <TableCell
                             style={{
                               display: "flex",
                               justifyContent: "center",
-                              alignItems: "center",
                             }}
                           >
                             <Grid
-                              item
+                              container
                               style={{
-                                // backgroundColor: "green",
-                                borderRadius: "5px",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
                               }}
                             >
-                              <Link
-                                to={`/organization/applicants/${row._id}`}
-                                style={{ textDecoration: "none" }}
+                              <Grid
+                                item
+                                style={{
+                                  // backgroundColor: "green",
+                                  borderRadius: "5px",
+                                }}
                               >
-                                <Button
-                                  style={{ borderRadius: 5 }}
-                                  class="btn-outline-blue-sm"
-                                  variant="contained"
-                                  color="primary"
+                                <Link
+                                  to={`/organization/applicants/${row._id}`}
+                                  style={{ textDecoration: "none" }}
                                 >
-                                  Applicants
-                                </Button>
-                              </Link>
-                            </Grid>
+                                  <Button
+                                    style={{ borderRadius: 5 }}
+                                    class="btn-outline-blue-sm"
+                                    variant="contained"
+                                    color="primary"
+                                  >
+                                    Applicants
+                                  </Button>
+                                </Link>
+                              </Grid>
 
-                            <Grid
-                              item
-                              style={{
-                                borderRadius: "5px",
-                                marginLeft: "5px",
-                              }}
-                            >
-                              <Link
-                                to={`/organization/volunteers/${row._id}`}
-                                style={{ textDecoration: "none" }}
+                              <Grid
+                                item
+                                style={{
+                                  borderRadius: "5px",
+                                  marginLeft: "5px",
+                                }}
                               >
-                                <Button
-                                  style={{ borderRadius: 5 }}
-                                  class="btn-solid-sm"
-                                  variant="contained"
-                                  color="secondary"
+                                <Link
+                                  to={`/organization/volunteers/${row._id}`}
+                                  style={{ textDecoration: "none" }}
                                 >
-                                  Volunteers
-                                </Button>
-                              </Link>
+                                  <Button
+                                    style={{ borderRadius: 5 }}
+                                    class="btn-solid-sm"
+                                    variant="contained"
+                                    color="secondary"
+                                  >
+                                    Volunteers
+                                  </Button>
+                                </Link>
+                              </Grid>
+                              <Grid
+                                item
+                                style={{
+                                  borderRadius: "5px",
+                                  marginLeft: "5px",
+                                }}
+                              >
+                                <span className="m-2">
+                                  <Link to={`/organization/editProject/${row._id}`}>
+                                    <EditIcon
+                                      color="primary" />
+                                  </Link>
+                                </span>
+                                <span style={{ cursor: 'pointer' }} className="m-2">
+                                  <DeleteIcon
+                                    onClick={() => {
+                                      setSelectedRow(row)
+                                      handleClickOpen()
+                                    }
+                                    }
+                                    style={{ color: "orangered" }} />
+                                </span>
+                              </Grid>
                             </Grid>
-                            <Grid
-                              item
-                              style={{
-                                borderRadius: "5px",
-                                marginLeft: "5px",
-                              }}
-                            >
-                              <span className="m-2">
-                                <EditIcon color="primary" />
-                              </span>
-                              <span className="m-2">
-                                <DeleteIcon style={{ color: "orangered" }} />
-                              </span>
-                            </Grid>
-                          </Grid>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-                {emptyRows > 0 && (
-                  <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
-                    <TableCell colSpan={6} />
-                  </TableRow>
-                )}
-              </TableBody>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  {emptyRows > 0 && (
+                    <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
+                      <TableCell colSpan={6} />
+                    </TableRow>
+                  )}
+                </TableBody>
+              }
             </Table>
           </TableContainer>
           <TablePagination
@@ -540,8 +611,8 @@ function OrgProjectCard(props) {
             className="row"
             style={{ display: "flex", justifyContent: "center" }}
           >
-            <Alert style={{ margin: "50px", padding: "50px" }} severity="error">
-              <AlertTitle style={{ fontWeight: "bold" }}>Error</AlertTitle>
+            <Alert style={{ margin: "50px", padding: "50px" }} severity="info">
+              <AlertTitle style={{ fontWeight: "bold" }}>Oops..!</AlertTitle>
               <strong>No Projects Found!</strong>
             </Alert>
           </div>

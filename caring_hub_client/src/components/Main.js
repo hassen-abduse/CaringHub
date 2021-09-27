@@ -37,6 +37,7 @@ import FouroFour from "./FouroFour";
 import AdminDashboard from "../admin/AdminDashboard";
 import MyApplication from "../volunteer/pages/myApplications/MyApplication";
 import { fetchEvals } from "../redux/ActionCreators/evalActions";
+import EditJobDescription from "../organization/components/EditJobDescription";
 
 const mapStateToProps = (state) => {
   return {
@@ -157,6 +158,9 @@ class Main extends Component {
                 </Route>
                 <Route exact path="/organization/applicants/:projectId">
                   <Applicants />
+                </Route>
+                <Route exact path="/organization/editProject/:projectId">
+                  <EditJobDescription />
                 </Route>
               </>
             )}
