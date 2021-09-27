@@ -293,7 +293,7 @@ function VolunteerApplicationTable(props) {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  
+  const decoded = props.auth.token ? jwtDecode(props.auth.token) : { role: "" };
   const [open, setOpen] = React.useState(false)
   const [selectedRow, setSelectedRow] = React.useState()
 
@@ -352,6 +352,10 @@ function VolunteerApplicationTable(props) {
     props.fetchApplications();
   }, []);
 
+  const rows = props.Applications.applications.filter(
+    (app) => app.volunteer._id === decoded._id
+  );
+
   if (props.Applications.errMess)
     return (
       <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
@@ -398,15 +402,9 @@ function VolunteerApplicationTable(props) {
       </Container>
     );
   else if (props.Applications.applications && props.auth.token) {
-    console.log(props.Applications.applications)
-    const decoded = props.auth.token ? jwtDecode(props.auth.token) : { role: "" };
-    if (props.Applications.applications.length >= 1)
+    
+    if (rows.length >= 1)
     {
-      const rows = props.Applications.applications.filter(
-        (app) => app.volunteer._id === decoded._id
-      );
-      
-      console.log(rows)
       return (
         <div className={classes.root}>
           {selectedRow &&

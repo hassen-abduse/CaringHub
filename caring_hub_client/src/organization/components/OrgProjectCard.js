@@ -288,7 +288,7 @@ function OrgProjectCard(props) {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [selectedRow, setSelectedRow] = React.useState();
   const [open, setOpen] = React.useState(false)
-  const [myProjects, setMyProjects] = useState([])
+  // const [myProjects, setMyProjects] = useState([])
   const decoded = props.auth.token
     ? jwtDecode(props.auth.token)
     : { role: "" };
@@ -304,11 +304,17 @@ function OrgProjectCard(props) {
   useEffect(() => {
     props.fetchProjects()
     console.log(props.Projects.projects)
-    setMyProjects(props.Projects.projects.filter(project =>
-      project.ownerOrg._id == decoded._id
-    ))
+    // setMyProjects()
     console.log(myProjects)
   }, [])
+
+  const myProjects = props.Projects.projects.filter(project =>
+    project.ownerOrg._id === decoded._id
+  )
+
+  console.log({myProjects});
+  console.log(props.Projects.projects);
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
