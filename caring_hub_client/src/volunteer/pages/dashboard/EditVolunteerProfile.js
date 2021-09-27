@@ -350,60 +350,6 @@ function EditVolunteerProfile(props) {
                         <Input />
                       </Form.Item>
 
-                      <br></br>
-                    </div>
-                  </div>
-                  <br></br>
-                  {/* location div */}
-                  <div
-                    style={{
-                      // backgroundColor: "#eee",
-                      // padding: "30px 25px",
-                      border: "1px solid #E6E6E6",
-                      borderRadius: "15px",
-                      boxShadow: "1px 2px 6px 0 #d6d6d6",
-                      width: "100%",
-                    }}
-                  >
-                    <div
-                      style={{
-                        padding: "24px 38px",
-                        backgroundColor: "white",
-                      }}
-                    >
-                      <span
-                        style={{
-                          backgroundColor: "#0B697F",
-                        }}
-                      ></span>
-                      <label
-                        style={{
-                          color: "#0B697F",
-                          position: "relative",
-                          top: " -6px",
-                          left: "0",
-                          paddingLeft: "5px",
-                          fontSize: "1em",
-                          textTransform: "uppercase",
-                          letterSpacing: ".09em",
-                        }}
-                      >
-                        Location
-                      </label>
-                      <br></br>
-                      <br></br>
-                      <label>Give your Location:</label>
-                      <br></br>
-                      <br></br>
-                      {/* <label>City</label> &nbsp; */}
-                      <Form.Item
-                        label="City"
-                        name="city"
-                        rules={[
-                          {
-                            required: true,
-                            message: "Please input your city!",
-                          },
                         ]}
                       >
                         <Input />
