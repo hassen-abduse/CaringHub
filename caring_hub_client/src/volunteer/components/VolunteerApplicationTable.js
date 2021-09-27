@@ -79,12 +79,12 @@ const headCells = [
     label: "Project Title",
   },
 
-    {
-      id: "organization",
-      numeric: true,
-      disablePadding: false,
-      label: "Project Owner",
-    },
+  {
+    id: "organization",
+    numeric: true,
+    disablePadding: false,
+    label: "Project Owner",
+  },
 
   // {
   //   id: "areas",
@@ -282,7 +282,7 @@ function VolunteerApplicationTable(props) {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const decoded = props.auth.token ? jwtDecode(props.auth.token) : { role: "" };
-  
+
   const rows = props.Applications.applications.filter(
     (app) => app.volunteer._id === decoded._id
   );
@@ -438,7 +438,9 @@ function VolunteerApplicationTable(props) {
                           {row.project.name}
                         </TableCell>
 
-                        <TableCell align="left">{row.project.ownerOrg.name}</TableCell>
+                        <TableCell align="left">
+                          {row.project.ownerOrg.name}
+                        </TableCell>
                         <TableCell align="left">
                           {row.accepted ? "Accepted" : "Pending"}
                         </TableCell>
@@ -467,7 +469,11 @@ function VolunteerApplicationTable(props) {
                                 to={`/volunteer/jobDescription/${row.project._id}`}
                                 style={{ textDecoration: "none" }}
                               >
-                                <Button variant="contained" color="primary">
+                                <Button
+                                  class="btn-solid-sm"
+                                  variant="contained"
+                                  color="primary"
+                                >
                                   View Detail
                                 </Button>
                               </Link>
@@ -476,16 +482,14 @@ function VolunteerApplicationTable(props) {
                             <Grid
                               item
                               style={{
+                                display: "flex",
+                                alignItems: "center",
                                 borderRadius: "5px",
                                 marginLeft: "5px",
                               }}
                             >
-                              <span className="nav-item m-2">
-                                <Button
-                                  variant="outlined"
-                                  color="secondary"
-                                  startIcon={<DeleteIcon />}
-                                ></Button>
+                              <span style={{ color: "orangered" }}>
+                                <DeleteIcon />
                               </span>
                             </Grid>
                           </Grid>
