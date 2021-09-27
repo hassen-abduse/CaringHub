@@ -28,9 +28,9 @@ import ClearIcon from "@material-ui/icons/Clear";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
 import { Link } from "react-router-dom";
 import { fetchProjects } from "../../redux/ActionCreators/projectActions";
-import { connect } from 'react-redux'
+import { connect } from "react-redux";
 import { useEffect } from "react";
-import { Alert, AlertTitle } from '@material-ui/lab';
+import { Alert, AlertTitle } from "@material-ui/lab";
 import { CircularProgress, Container, Portal } from "@material-ui/core";
 
 function createData(title, status, actions) {
@@ -259,12 +259,12 @@ const useStyles = makeStyles((theme) => ({
 const mapStateToProps = (state) => {
   return {
     Projects: state.Projects,
-  }
-}
+  };
+};
 
 const mapDispatchToProps = (dispatch) => ({
   fetchProjects: () => dispatch(fetchProjects()),
-})
+});
 function OrgProjectCard(props) {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
@@ -273,7 +273,7 @@ function OrgProjectCard(props) {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [selectedRow, setSelectedRow] = React.useState()
+  const [selectedRow, setSelectedRow] = React.useState();
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -328,196 +328,225 @@ function OrgProjectCard(props) {
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
   const [visible, setVisible] = useState(false);
-  if (props.Projects.errMess) return (
-    <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
-      <div className='container'>
-        <div className='row' style={{ display: 'flex', justifyContent: 'center', }}>
-          <Alert style={{ margin: '50px', padding: '50px' }} severity="error">
-            <AlertTitle style={{ fontWeight: 'bold' }}>Error</AlertTitle>
-            <strong>{props.Projects.errMess}</strong>
-          </Alert>
-        </div>
-      </div>
-
-    </Container >
-
-  )
-  else if (props.Projects.isLoading) return (
-    <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
-      <div class='container'>
-        <div className='row'>
-          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '100px', marginBottom: '75px' }}>
-            <CircularProgress size={'50px'} />
-
-          </div>
-          <p style={{ textAlign: 'center', fontSize: '25px', fontWeight: 'bold' }}>Loading...</p>
-        </div>
-      </div>
-    </Container>
-  )
-  else if(props.Projects.projects.length >=1) return (
-    <div className={classes.root}>
-      <Paper className={classes.paper}>
-        <EnhancedTableToolbar numSelected={selected.length} />
-        <TableContainer>
-          <Table
-            className={classes.table}
-            aria-labelledby="tableTitle"
-            size={dense ? "small" : "medium"}
-            aria-label="enhanced table"
+  if (props.Projects.errMess)
+    return (
+      <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
+        <div className="container">
+          <div
+            className="row"
+            style={{ display: "flex", justifyContent: "center" }}
           >
-            <EnhancedTableHead
-              classes={classes}
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={rows.length}
-            />
-            <TableBody style={{ paddingLeft: "20px" }}>
-              {stableSort(props.Projects.projects, getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  const isItemSelected = isSelected(index);
-                  const labelId = `enhanced-table-checkbox-${index}`;
+            <Alert style={{ margin: "50px", padding: "50px" }} severity="error">
+              <AlertTitle style={{ fontWeight: "bold" }}>Error</AlertTitle>
+              <strong>{props.Projects.errMess}</strong>
+            </Alert>
+          </div>
+        </div>
+      </Container>
+    );
+  else if (props.Projects.isLoading)
+    return (
+      <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
+        <div class="container">
+          <div className="row">
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                marginTop: "100px",
+                marginBottom: "75px",
+              }}
+            >
+              <CircularProgress size={"50px"} />
+            </div>
+            <p
+              style={{
+                textAlign: "center",
+                fontSize: "25px",
+                fontWeight: "bold",
+              }}
+            >
+              Loading...
+            </p>
+          </div>
+        </div>
+      </Container>
+    );
+  else if (props.Projects.projects.length >= 1)
+    return (
+      <div className={classes.root}>
+        <Paper className={classes.paper}>
+          <EnhancedTableToolbar numSelected={selected.length} />
+          <TableContainer>
+            <Table
+              className={classes.table}
+              aria-labelledby="tableTitle"
+              size={dense ? "small" : "medium"}
+              aria-label="enhanced table"
+            >
+              <EnhancedTableHead
+                classes={classes}
+                numSelected={selected.length}
+                order={order}
+                orderBy={orderBy}
+                onSelectAllClick={handleSelectAllClick}
+                onRequestSort={handleRequestSort}
+                rowCount={rows.length}
+              />
+              <TableBody style={{ paddingLeft: "20px" }}>
+                {stableSort(
+                  props.Projects.projects,
+                  getComparator(order, orderBy)
+                )
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row, index) => {
+                    const isItemSelected = isSelected(index);
+                    const labelId = `enhanced-table-checkbox-${index}`;
 
-                  return (
-                    <TableRow
-                      onClick={() => {
-                        setSelectedRow(row)
-                      }}
-                      hover
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      // onClick={() => setVisible(true)}
-                      key={index}
-                      selected={isItemSelected}
-                    >
-                      <TableCell
-                      // style={{
-                      //   cursor: "pointer",
-                      // }}
-                      // component="th"
-                      // id={labelId}
-                      // scope="row"
-                      // onClick={() => setVisible(true)}
-                      >
-                        {row.name}
-                      </TableCell>
-
-                      <TableCell align="left">{new Date(row.startDate).toDateString()}</TableCell>
-
-                      <TableCell
-                        style={{
-                          display: "flex",
-                          justifyContent: "center",
+                    return (
+                      <TableRow
+                        onClick={() => {
+                          setSelectedRow(row);
                         }}
+                        hover
+                        role="checkbox"
+                        aria-checked={isItemSelected}
+                        tabIndex={-1}
+                        // onClick={() => setVisible(true)}
+                        key={index}
+                        selected={isItemSelected}
                       >
-                        <Grid
-                          container
+                        <TableCell
+                        // style={{
+                        //   cursor: "pointer",
+                        // }}
+                        // component="th"
+                        // id={labelId}
+                        // scope="row"
+                        // onClick={() => setVisible(true)}
+                        >
+                          {row.name}
+                        </TableCell>
+
+                        <TableCell align="left">
+                          {new Date(row.startDate).toDateString()}
+                        </TableCell>
+
+                        <TableCell
                           style={{
                             display: "flex",
                             justifyContent: "center",
                           }}
                         >
                           <Grid
-                            item
+                            container
                             style={{
-                              // backgroundColor: "green",
-                              borderRadius: "5px",
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
                             }}
                           >
-                            <Link
-                              to={`/organization/applicants/${row._id}`}
-                              style={{ textDecoration: "none" }}
+                            <Grid
+                              item
+                              style={{
+                                // backgroundColor: "green",
+                                borderRadius: "5px",
+                              }}
                             >
-                              <Button variant="contained" color="primary">
-                                Applicants
-                              </Button>
-                            </Link>
-                          </Grid>
+                              <Link
+                                to={`/organization/applicants/${row._id}`}
+                                style={{ textDecoration: "none" }}
+                              >
+                                <Button
+                                  style={{ borderRadius: 5 }}
+                                  class="btn-outline-blue-sm"
+                                  variant="contained"
+                                  color="primary"
+                                >
+                                  Applicants
+                                </Button>
+                              </Link>
+                            </Grid>
 
-                          <Grid
-                            item
-                            style={{
-                              borderRadius: "5px",
-                              marginLeft: "5px",
-                            }}
-                          >
-                            <Link
-                              to={`/organization/volunteers/${row._id}`}
-                              style={{ textDecoration: "none" }}
+                            <Grid
+                              item
+                              style={{
+                                borderRadius: "5px",
+                                marginLeft: "5px",
+                              }}
                             >
-                              <Button variant="contained" color="secondary">
-                                Volunteers
-                              </Button>
-                            </Link>
+                              <Link
+                                to={`/organization/volunteers/${row._id}`}
+                                style={{ textDecoration: "none" }}
+                              >
+                                <Button
+                                  style={{ borderRadius: 5 }}
+                                  class="btn-solid-sm"
+                                  variant="contained"
+                                  color="secondary"
+                                >
+                                  Volunteers
+                                </Button>
+                              </Link>
+                            </Grid>
+                            <Grid
+                              item
+                              style={{
+                                borderRadius: "5px",
+                                marginLeft: "5px",
+                              }}
+                            >
+                              <span className="m-2">
+                                <EditIcon color="primary" />
+                              </span>
+                              <span className="m-2">
+                                <DeleteIcon style={{ color: "orangered" }} />
+                              </span>
+                            </Grid>
                           </Grid>
-                          <Grid
-                            item
-                            style={{
-                              borderRadius: "5px",
-                              marginLeft: "5px",
-                            }}
-                          >
-                            <span className="nav-item m-2">
-                              <Button
-                                variant="outlined"
-                                color="Primary"
-                                startIcon={<EditIcon fontSize="small" />}
-                              ></Button>
-                            </span>
-                            <span className="nav-item m-2">
-                              <Button
-                                variant="outlined"
-                                color="secondary"
-                                startIcon={<DeleteIcon />}
-                              ></Button>
-                            </span>
-                          </Grid>
-                        </Grid>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </Paper>
-      {/* <FormControlLabel
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                {emptyRows > 0 && (
+                  <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
+                    <TableCell colSpan={6} />
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={rows.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </Paper>
+        {/* <FormControlLabel
         control={<Switch checked={dense} onChange={handleChangeDense} />}
         label="Dense padding"
       /> */}
-    </div>
-  );
-  else return (
-    <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
-      <div className='container'>
-        <div className='row' style={{ display: 'flex', justifyContent: 'center', }}>
-          <Alert style={{ margin: '50px', padding: '50px' }} severity="error">
-            <AlertTitle style={{ fontWeight: 'bold' }}>Error</AlertTitle>
-            <strong>No Projects Found!</strong>
-          </Alert>
-        </div>
       </div>
-
-    </Container >
-  )
+    );
+  else
+    return (
+      <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
+        <div className="container">
+          <div
+            className="row"
+            style={{ display: "flex", justifyContent: "center" }}
+          >
+            <Alert style={{ margin: "50px", padding: "50px" }} severity="error">
+              <AlertTitle style={{ fontWeight: "bold" }}>Error</AlertTitle>
+              <strong>No Projects Found!</strong>
+            </Alert>
+          </div>
+        </div>
+      </Container>
+    );
 }
-export default connect(mapStateToProps, mapDispatchToProps)(OrgProjectCard)
+export default connect(mapStateToProps, mapDispatchToProps)(OrgProjectCard);
