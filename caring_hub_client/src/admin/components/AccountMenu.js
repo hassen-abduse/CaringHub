@@ -10,7 +10,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import { logoutUser } from "../../redux/ActionCreators/authActions";
 import { connect } from "react-redux";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
-
 import ProfileImage from ".../../../src/assets/img/profile2.jpg";
 import { Link } from "react-router-dom";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
@@ -83,11 +82,7 @@ function AccountMenu(props) {
           aria-haspopup="false"
           onClick={handleToggle}
         >
-          <img
-            className={classes.ProfileImg}
-            src={ProfileImage}
-            alt="profileImage"
-          />
+         <AccountCircleIcon />
         </Button>
         <Popper
           open={open}

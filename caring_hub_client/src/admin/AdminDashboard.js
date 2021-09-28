@@ -171,13 +171,11 @@ function AdminDashboard(props) {
                     <MessageRounded />
                   </Badge>
                 </ListItem> */}
-                <ListItem>
+                {/* <ListItem>
                   <Link to="/admin/applicants">
-                    <Badge badgeContent={6} color="secondary">
-                      <NotificationImportant />
-                    </Badge>
+                    <NotificationImportant />
                   </Link>
-                </ListItem>
+                </ListItem> */}
                 <ListItem>
                   <AccountMenu />
                 </ListItem>
