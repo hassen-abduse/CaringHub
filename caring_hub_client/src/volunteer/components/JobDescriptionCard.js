@@ -194,7 +194,7 @@ function DescriptionCard(props) {
                     )}
                     {props.NetRequest.success === true ? (
                       // <p>{props.NetRequest.status}</p>
-                      <Alert severity="success">
+                      <Alert severity="success" id="success-id">
                         <AlertTitle>Success</AlertTitle>
                         <strong>
                           Thank you! {project.ownerOrg.name} will contact you
@@ -204,13 +204,14 @@ function DescriptionCard(props) {
                     ) : null}
                     {props.NetRequest.errMess && (
                       // <p>{props.NetRequest.errMess}</p>
-                      <Alert severity="error">
+                      <Alert severity="error" id="error-id">
                         <AlertTitle>Error</AlertTitle>
                         <strong>{props.NetRequest.errMess}</strong>
                       </Alert>
                     )}
                     {decoded._id !== "" && (
                       <button
+                        id="apply-btn"
                         style={{ margin: "5px" }}
                         class="btn-solid-reg"
                         onClick={() => {
@@ -273,23 +274,6 @@ function DescriptionCard(props) {
 
           <div class="cards-2 bg-gray">
             <div class="container">
-              {/* <div class="card">
-                <img
-                  class="quotes"
-                  src="assets/images/quotes.svg"
-                  alt="alternative"
-                />
-                <div class="card-body">
-                  <p class="testimonial-text">
-                    Suspendisse vitae enim arcu. Aliqu convallis risus a felis
-                    blandit, at mollis nisi bibendum aliquam noto ricos
-                  </p>
-                  <div class="testimonial-author">Susane Blake</div>
-                  <div class="occupation">General Manager, Presentop</div>
-                </div>
-                <div class="gradient-floor purple-to-green"></div>
-              </div> */}
-
               <div>
                 <a class="btn-solid-lg" href="#contact">
                   Browse All Projects

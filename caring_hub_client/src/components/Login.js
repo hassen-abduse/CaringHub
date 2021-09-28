@@ -61,7 +61,9 @@ class Login extends React.Component {
                     >
                       <ExitToAppIcon fontSize="large" />
                     </h3>
-                    <p class=" text-center">Log in to your account</p>
+                    <p id="login-id" class=" text-center">
+                      Log in to your account
+                    </p>
                   </div>
                   <div class="row px-3">
                     {" "}
@@ -69,6 +71,7 @@ class Login extends React.Component {
                       <h6 class="mb-0 text-sm">Email Address</h6>
                     </label>{" "}
                     <input
+                      id="email_input"
                       class="mb-4"
                       type="text"
                       name="email"
@@ -85,6 +88,7 @@ class Login extends React.Component {
                       <h6 class="mb-0 text-sm">Password</h6>
                     </label>{" "}
                     <input
+                      id="password_input"
                       type="password"
                       name="password"
                       value={this.state.password}
@@ -98,6 +102,7 @@ class Login extends React.Component {
                   <div class="row mb-3 px-3">
                     {" "}
                     <button
+                      id="login_btn"
                       style={{ width: "100%" }}
                       onClick={this.login}
                       type="submit"
@@ -113,7 +118,10 @@ class Login extends React.Component {
                       )}
                     </button>
                     {this.props.auth.errMess && (
-                      <p style={{ color: "#f00", textAlign: "center" }}>
+                      <p
+                        id="auth_err"
+                        style={{ color: "#f00", textAlign: "center" }}
+                      >
                         {this.props.auth.errMess}
                       </p>
                     )}

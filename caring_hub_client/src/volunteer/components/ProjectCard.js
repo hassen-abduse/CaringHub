@@ -1,6 +1,6 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 const useStyles = makeStyles({
   root: {
@@ -13,6 +13,8 @@ const useStyles = makeStyles({
 
 export default function ProjectCard(props) {
   const { project } = props;
+  const history = useHistory();
+
   return (
     <div class="cards-2 bg-gray">
       <div class="container">
@@ -39,26 +41,41 @@ export default function ProjectCard(props) {
               />
               <div class="card-body">
                 <p style={{ color: "#0092FF" }} class="testimonial-text">
-                {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).format(new Date(project.createdAt))}
+                  {new Intl.DateTimeFormat("en-US", {
+                    year: "numeric",
+                    month: "short",
+                    day: "2-digit",
+                  }).format(new Date(project.createdAt))}
                 </p>
-                <div  style={{minHeight:"110px",display:"flex",alignItems:"center"}} class="testimonial-author">{project.name}</div>
+                <div
+                  style={{
+                    minHeight: "110px",
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                  class="testimonial-author"
+                >
+                  {project.name}
+                </div>
 
                 <p
                   style={{ maxHeight: "180px", overflow: "hidden" }}
                   class="testimonial-text"
                 >
-                  {project.description.length < 90 ? project.description : (project.description.substring(0,90) + "..." )}
+                  {project.description.length < 90
+                    ? project.description
+                    : project.description.substring(0, 90) + "..."}
                 </p>
-                <div>
-                  <span class="nav-item">
-                    <Link
-                      class="btn-solid-sm"
-                      to={`/volunteer/jobDescription/${project._id}`}
-                    >
-                      Check
-                    </Link>
-                  </span>
-                </div>
+
+                <span
+                  className="btn-solid-sm"
+                  id="check-btn"
+                  onClick={() => {
+                    history.push(`/volunteer/jobDescription/${project._id}`);
+                  }}
+                >
+                  Check
+                </span>
               </div>
 
               <div class="gradient-floor blue-to-purple"></div>

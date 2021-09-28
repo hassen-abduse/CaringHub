@@ -8,7 +8,12 @@ import { connect } from "react-redux";
 import Modal from "@material-ui/core/Modal";
 import Fade from "@material-ui/core/Fade";
 import { makeStyles } from "@material-ui/core/styles";
-import { CircularProgress, DialogTitle, Box } from "@material-ui/core";
+import {
+  CircularProgress,
+  DialogTitle,
+  Box,
+  TextField,
+} from "@material-ui/core";
 import { Alert, AlertTitle } from "@material-ui/lab";
 
 import { Redirect } from "react-router-dom";
@@ -135,7 +140,7 @@ function VolunteerRegistration(props) {
               </div>
             ) : null}
             {props.Registration.errMess && (
-              <Alert style={{ padding: "20px" }} severity="error">
+              <Alert id="error-id" style={{ padding: "20px" }} severity="error">
                 <AlertTitle style={{ fontWeight: "bold" }}>Error</AlertTitle>
                 <strong>{props.Registration.errMess}</strong>
               </Alert>
@@ -241,7 +246,7 @@ function VolunteerRegistration(props) {
                         },
                       ]}
                     >
-                      <Input />
+                      <Input id="first-name" />
                     </Form.Item>
 
                     <Form.Item
@@ -254,7 +259,7 @@ function VolunteerRegistration(props) {
                         },
                       ]}
                     >
-                      <Input />
+                      <Input id="last-name" />
                     </Form.Item>
 
                     <Form.Item
@@ -267,7 +272,7 @@ function VolunteerRegistration(props) {
                         },
                       ]}
                     >
-                      <Input />
+                      <Input id="user-name" />
                     </Form.Item>
                     <Form.Item
                       name="phone"
@@ -280,6 +285,7 @@ function VolunteerRegistration(props) {
                       ]}
                     >
                       <Input
+                        id="phone-number"
                         addonBefore={prefixSelector}
                         style={{
                           width: "100%",
@@ -300,7 +306,7 @@ function VolunteerRegistration(props) {
                         },
                       ]}
                     >
-                      <Input />
+                      <Input id="email" />
                     </Form.Item>
 
                     <Form.Item
@@ -314,7 +320,7 @@ function VolunteerRegistration(props) {
                       ]}
                       hasFeedback
                     >
-                      <Input.Password />
+                      <Input.Password id="password" />
                     </Form.Item>
 
                     <Form.Item
@@ -342,7 +348,7 @@ function VolunteerRegistration(props) {
                         }),
                       ]}
                     >
-                      <Input.Password />
+                      <Input.Password id="confirm-pass" />
                     </Form.Item>
 
                     <Form.Item
@@ -410,7 +416,7 @@ function VolunteerRegistration(props) {
                         },
                       ]}
                     >
-                      <Input />
+                      <Input id="city" />
                     </Form.Item>
                   </div>
                 </div>{" "}
@@ -475,6 +481,7 @@ function VolunteerRegistration(props) {
                         ]}
                       >
                         <Select
+                          id="skill"
                           mode="multiple"
                           placeholder="Inserted are removed"
                           value={selectedSkills}
@@ -483,7 +490,7 @@ function VolunteerRegistration(props) {
                         >
                           {props.Skills.skills.map((item) => (
                             <Select.Option key={item._id} value={item._id}>
-                              {item.name}
+                              <span id={item._id}>{item.name}</span>
                             </Select.Option>
                           ))}
                         </Select>
@@ -510,7 +517,7 @@ function VolunteerRegistration(props) {
                           },
                         ]}
                       >
-                        <TextArea rows={4} />
+                        <TextArea rows={4} id="description" />
                       </Form.Item>
                     </div>
                     <br></br>
@@ -578,6 +585,7 @@ function VolunteerRegistration(props) {
                         ]}
                       >
                         <Select
+                          id="cause"
                           mode="multiple"
                           placeholder="Inserted are removed"
                           value={selectedCauses}
@@ -586,7 +594,7 @@ function VolunteerRegistration(props) {
                         >
                           {props.Causes.causes.map((item) => (
                             <Select.Option key={item._id} value={item._id}>
-                              {item.name}
+                              <span id={item._id}>{item.name}</span>
                             </Select.Option>
                           ))}
                         </Select>
@@ -653,6 +661,7 @@ function VolunteerRegistration(props) {
                           <Input
                             type="file"
                             name="volPP"
+                            id="profile-pic"
                             onChange={(e) => setProfile(e.target.files[0])}
                           />
                         </Form.Item>
@@ -698,6 +707,7 @@ function VolunteerRegistration(props) {
               }}
             >
               <Button
+                id="submit-btn"
                 style={{ marginBottom: "2rem" }}
                 type="primary"
                 htmlType="submit"

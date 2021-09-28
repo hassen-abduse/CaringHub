@@ -9,7 +9,9 @@ export default function SelectRegistrationType() {
       <div className="container">
         <div className="row p-5">
           <div className="col-xl-12">
-            <h2 className="text-center h2-heading">Create an Account</h2>
+            <h2 id="create-account-text" className="text-center h2-heading">
+              Create an Account
+            </h2>
             <p className="text-center p-heading ">
               Join a community of people who care as much as you do
             </p>
@@ -37,7 +39,7 @@ export default function SelectRegistrationType() {
                   Which type of account would you like?
                 </h4>
                 <Link className="m-2" to="/volunteerRegistration">
-                  <div class="card">
+                  <div id="vol-card" class="card">
                     <div>
                       <img
                         // style={{ width: "100%", height: "100%" }}
@@ -62,7 +64,7 @@ export default function SelectRegistrationType() {
                   </div>
                 </Link>
                 <Link className="m-2" to="/organizationRegistration">
-                  <div class="card">
+                  <div id="org-card" class="card">
                     <div>
                       <img
                         // style={{ width: "100%", height: "100%" }}

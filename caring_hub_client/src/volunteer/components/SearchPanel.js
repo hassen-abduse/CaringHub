@@ -12,16 +12,17 @@ function Search({ value, onChange }) {
           justifyContent: "center",
         }}
       >
-        <div>
+        <div className="search-div">
           <label
             style={{ width: "450px" }}
             className="search-label mb-5"
             htmlFor="search-input"
           >
             <input
+              id="search-id"
+              className="search-c"
               type="text"
               value={value}
-              id="search-input"
               placeholder="Search..."
               onChange={onChange}
             />

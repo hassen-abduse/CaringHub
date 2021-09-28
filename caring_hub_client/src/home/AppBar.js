@@ -200,6 +200,7 @@ function AppBar(props) {
                   </li>
                   <li class="nav-item">
                     <Link
+                      id="find_project"
                       class={
                         route === "/volunteer/findProject"
                           ? "nav-link active"
