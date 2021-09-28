@@ -11,12 +11,29 @@ import { postApplication } from "../../redux/ActionCreators/appActions";
 import { connect } from "react-redux";
 import { Alert, AlertTitle } from "@material-ui/lab";
 import { Link } from "react-router-dom";
+import { DialogTitle, Box } from "@material-ui/core";
+import Fade from "@material-ui/core/Fade";
+import Modal from "@material-ui/core/Modal";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
 import { fetchProjects } from "../../redux/ActionCreators/projectActions";
 const useStyles = makeStyles((theme) => ({
   root: {
     "& > *": {
       margin: theme.spacing(1),
     },
+  },
+  modal: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  paper: {
+    backgroundColor: theme.palette.background.paper,
+    border: "2px solid #000",
+    boxShadow: theme.shadows[5],
+    width: "50%",
+    padding: theme.spacing(0, 3, 3, 3),
   },
 }));
 function renderItem(item) {
@@ -69,9 +86,15 @@ function DescriptionCard(props) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [project, setProject] = useState({});
   const [error, setError] = useState(null);
-  const [postError, setPostError] = useState(null)
-  const [postDone, setPostDone] = useState(false)
-  const [resp, setResp] = useState(null)
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
   useEffect(() => {
     fetch(baseUrl + "projects/" + id)
       .then(
@@ -152,7 +175,62 @@ function DescriptionCard(props) {
     );
   else
     return (
+      <>
+      <Modal
+      className={classes.modal}
+      open={open}
+      disableBackdropClick
+      keepMounted={false}
+      //disableEscapeKeyDown
+      onClose={handleClose}
+      closeAfterTransition
+      
+    >
+      <Fade in={open}>
+        <div className={classes.paper}>
+          {props.NetRequest.isLoading === false ? (
+            <DialogTitle>
+              <Box display="flex" justifyContent="flex-end">
+                <Box>
+                  <IconButton onClick={handleClose}>
+                    <CloseIcon />
+                  </IconButton>
+                </Box>
+              </Box>
+            </DialogTitle>
+          ) : null}
+          {props.NetRequest.isLoading === true ? (
+            <div
+              style={{
+                padding: "20px",
+                paddingTop: "40px",
+                paddingLeft: "40px",
+              }}
+            >
+              <div>
+                <CircularProgress />
+                <br></br>
+                <strong>Please wait...</strong>
+              </div>
+            </div>
+          ) : null}
+          {props.NetRequest.errMess && !props.NetRequest.isLoading &&(
+            <Alert style={{ padding: "20px" }} severity="error">
+              <AlertTitle style={{ fontWeight: "bold" }}>Error</AlertTitle>
+              <strong>{props.NetRequest.errMess}</strong>
+            </Alert>
+          )}
+          {props.NetRequest.success === true ? (
+            <Alert style={{ padding: "20px" }} severity="success">
+              <AlertTitle style={{ fontWeight: "bold" }}>Success</AlertTitle>
+              <strong>Successfully Applied!</strong>
+            </Alert>
+          ) : null}
+        </div>
+      </Fade>
+    </Modal>
       <Container style={{ marginTop: "100px" }}>
+      
         <div className="container">
           <div>
             <a className="btn-solid-sm mt-3 mb-3" href="/volunteer/findProject">
@@ -216,22 +294,27 @@ function DescriptionCard(props) {
                         }).format(new Date(project.endDate))}
                       </p>
                     </div>
-                    {props.NetRequest.isLoading === true && (
+                    {/* {props.NetRequest.isLoading === true && (
                       //<p>Submitting Application...</p>
-                      <Alert severity="info">
+
+                      <Alert
+                        severity="info">
                         <AlertTitle>Submitting Application..</AlertTitle>
                         <CircularProgress />
                       </Alert>
                     )}
                     {props.NetRequest.success === true ? (
-                      // <p>{props.NetRequest.status}</p>
-                      <Alert severity="success">
-                        <AlertTitle>Success</AlertTitle>
-                        <strong>
-                          Thank you! {project.ownerOrg.name} will contact you
-                          soon!
-                        </strong>
-                      </Alert>
+
+
+                      <Snackbar open={true} onClose={() => { }} autoHideDuration={6000}>
+                        <Alert severity="success">
+                          <AlertTitle>Success</AlertTitle>
+                          <strong>
+                            Thank you! {project.ownerOrg.name} will contact you
+                            soon!
+                          </strong>
+                        </Alert>
+                      </Snackbar>
                     ) : null}
                     {props.NetRequest.errMess && (
                       // <p>{props.NetRequest.errMess}</p>
@@ -239,17 +322,18 @@ function DescriptionCard(props) {
                         <AlertTitle>Error</AlertTitle>
                         <strong>{props.NetRequest.errMess}</strong>
                       </Alert>
-                    )}
+                    )} */}
                     {decoded._id !== "" && (
                       <button
                         style={{ margin: "5px" }}
                         class="btn-solid-reg"
                         onClick={() => {
-                          
+
                           props.postApplication({
                             volunteer: decoded._id,
                             project: project._id,
                           });
+                          handleOpen()
                         }}
                       >
                         Apply
@@ -330,7 +414,7 @@ function DescriptionCard(props) {
               </div>
             </div>
           </div>
-              
+
           {/* <CardHolder /> */}
 
           <div class="cards-2 bg-gray">
@@ -355,6 +439,7 @@ function DescriptionCard(props) {
           </div>
         </div>
       </Container>
+      </>
     );
 }
 
