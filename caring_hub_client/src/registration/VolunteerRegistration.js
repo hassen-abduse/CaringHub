@@ -73,6 +73,7 @@ function VolunteerRegistration(props) {
     volunteer.append("skillSets", JSON.stringify(selectedSkills));
     volunteer.append("causeAreas", JSON.stringify(selectedCauses));
     volunteer.append("password", values.password);
+    volunteer.append("aboutMe", values.background);
     volunteer.append("address", JSON.stringify({ city: values.city }));
     volunteer.append("VolPP", profile);
     volunteer.append("doc", resume);
@@ -189,11 +190,7 @@ function VolunteerRegistration(props) {
                     padding: "3rem",
                   }}
                 >
-                  <h3>
-                    Create a volunteer opportunity so volunteers can find you in
-                    the search results Your Profile and Opportunity will be
-                    visible once your organization has been approved.{" "}
-                  </h3>
+                  <h3>Create Volunteer Account</h3>
                 </div>
                 <div
                   style={{
@@ -509,11 +506,12 @@ function VolunteerRegistration(props) {
                       <br></br>
                       <br></br>
                       <Form.Item
-                        name="description"
+                        name="background"
                         rules={[
                           {
                             required: true,
-                            message: "Please input Job Description!",
+                            message:
+                              "Please input description about your skills!",
                           },
                         ]}
                       >

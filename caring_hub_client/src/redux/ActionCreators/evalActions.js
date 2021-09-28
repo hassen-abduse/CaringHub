@@ -1,28 +1,28 @@
 import * as actionTypes from '../actionTypes'
 import { baseUrl } from '../shared/baseUrl'
 
-export const skillsLoading = () => ({
-    type: actionTypes.SKILLS_LOADING
+export const evalsLoading = () => ({
+    type: actionTypes.EVALS_LOADING
 });
 
-export const skillsFailed = (errmess) => ({
-    type: actionTypes.SKILLS_FAILED,
+export const evalsFailed = (errmess) => ({
+    type: actionTypes.EVALS_FAILED,
     payload: errmess
 });
 
-export const addSkills = (skills) => ({
-    type: actionTypes.ADD_SKILLS,
-    payload: skills
+export const addEvals = (evals) => ({
+    type: actionTypes.ADD_EVALS,
+    payload: evals
 });
 
-export const addSkillItem = (skill) => ({
-    type: actionTypes.ADD_SKILL_ITEM,
-    payload: skill
+export const addEvalItem = (evalItem) => ({
+    type: actionTypes.ADD_EVAL_ITEM,
+    payload: evalItem
 });
 
-export const fetchSkills = () => (dispatch) => {
-    dispatch(skillsLoading(true))
-    return fetch(baseUrl + 'skills')
+export const fetchEvals = () => (dispatch) => {
+    dispatch(evalsLoading(true))
+    return fetch(baseUrl + 'evaluations')
         .then(response => {
             if (response.ok) {
                 return response
@@ -37,18 +37,18 @@ export const fetchSkills = () => (dispatch) => {
                 throw errMess
             })
         .then(response => response.json())
-        .then(skills => dispatch(addSkills(skills)))
-        .catch(error => dispatch(skillsFailed(error.message)))
+        .then(evals => dispatch(addEvals(evals)))
+        .catch(error => dispatch(evalsFailed(error.message)))
 }
 
-export const postSkill = (formData) => (dispatch) => {
+export const postEval = (formData) => (dispatch) => {
     const bearer = 'Bearer ' + localStorage.getItem('token')
-    return fetch(baseUrl + 'skills', {
+    return fetch(baseUrl + 'evaluations', {
         method: 'POST',
         body: JSON.stringify(formData),
         headers: {
             'Authorization': bearer,
-            'Content-Type':'application/json'
+            'Content-Type': 'application/json'
         }
 
     })
@@ -67,13 +67,13 @@ export const postSkill = (formData) => (dispatch) => {
                 throw errMess
             })
         .then(response => response.json())
-        .then(response => dispatch(addSkillItem(response)))
-        .catch(error => alert('SKILL COULD NOT BE POSTED: ' + error))
+        .then(response => dispatch(addEvalItem(response)))
+        .catch(error => alert('EVAL COULD NOT BE POSTED: ' + error))
 }
 
-export const deleteSkill = (skillId) => (dispatch) => {
+export const deleteEval = (evalId) => (dispatch) => {
     const bearer = 'Bearer ' + localStorage.getItem('token')
-    return fetch(baseUrl + 'skills/' + skillId, {
+    return fetch(baseUrl + 'evaluations/' + evalId, {
         method: 'DELETE',
         headers: {
             'Authorization': bearer
@@ -91,6 +91,6 @@ export const deleteSkill = (skillId) => (dispatch) => {
             throw error
         })
         .then(response => response.json())
-        .then(response => dispatch(addSkills(response)))
-        .catch(error => dispatch(skillsFailed(error)))
+        .then(response => dispatch(addEvals(response)))
+        .catch(error => dispatch(evalsFailed(error.message)))
 }

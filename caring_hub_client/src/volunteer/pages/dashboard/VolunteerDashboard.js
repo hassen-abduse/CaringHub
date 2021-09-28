@@ -205,7 +205,7 @@ function VolunteerDashboard(props) {
 
               <Badge
                 // className="site-badge-count-109"
-                count={2}
+                count={volunteer.ratings.length >= 1?volunteer.ratings.length:0}
                 style={{
                   marginLeft: "5px",
                   backgroundColor: "#159197",
@@ -220,7 +220,7 @@ function VolunteerDashboard(props) {
             </div>
             <div style={{ display: "flex" }}>
               <p className="m-0">Rating : </p>
-              <Rate style={{ paddingLeft: "10px" }} disabled defaultValue={2} />
+              <Rate style={{ paddingLeft: "10px" }} disabled value={volunteer.ratings.map(rating=> rating.value).reduce((a, b) => a+b, 0) / volunteer.ratings.length} defaultValue={0} />
             </div>
           </div>
         </div>
@@ -243,11 +243,8 @@ function VolunteerDashboard(props) {
           <div style={{}} class="col-lg-4">
             <h4 className="teal">Background</h4>
 
-            <p className="">
-              I have worked and am workgin on a lot of projects in different
-              areas of types of projects and scales. I have worked and am
-              workgin on a lot of projects in different areas of types of
-              projects and scales.
+            <p>
+              {volunteer.aboutMe}
             </p>
 
             <h4 className="teal mt-4">Skills</h4>

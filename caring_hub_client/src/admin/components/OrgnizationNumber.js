@@ -48,7 +48,7 @@ export default function OrganizationNumber() {
     <Card className={classes.root}>
       <CardContent>
         <Typography variant="h1" className={classes.numbers}>
-          100
+          5
         </Typography>
 
         <Typography variant="h4" className={classes.pos} color="textSecondary">
@@ -61,7 +61,7 @@ export default function OrganizationNumber() {
           size="small"
           style={{ color: "white", fontSize: "1em" }}
         >
-          explore Volunteers
+          explore Organizations
         </Button>
       </CardActions>
     </Card>

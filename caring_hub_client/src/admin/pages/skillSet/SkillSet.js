@@ -30,14 +30,20 @@ import { Alert, AlertTitle } from '@material-ui/lab';
 import { CircularProgress, Container, Portal } from "@material-ui/core";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
-import { fetchSkills } from "../../../redux/ActionCreators/skillActions"
+import { fetchSkills, deleteSkill, postSkill } from "../../../redux/ActionCreators/skillActions"
 // import AcceptApplicant from "./AcceptApplicant";
 // import DeclineApplicant from "./DeclineApplicant";
 import ClearIcon from "@material-ui/icons/Clear";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
 import SkillForm from "./SkillForm";
+import { Dialog } from '@material-ui/core';
+import { DialogActions } from '@material-ui/core';
+import { DialogContent } from '@material-ui/core';
+import { DialogContentText } from '@material-ui/core';
+import { DialogTitle } from '@material-ui/core';
+import { Slide } from '@material-ui/core';
 // import ShowVolunteersDialog from "../volunteers/ShowVolunteersDialog";
-
+import TextField from "@material-ui/core/TextField";
 function createData(skillName, skillDescription) {
   return { skillName, skillDescription };
 }
@@ -193,7 +199,8 @@ const EnhancedTableToolbar = (props) => {
   const classes = useToolbarStyles();
   const { numSelected } = props;
   const [visible, setVisible] = useState(false);
-
+  const [name, setName] = useState()
+  const [description, setDescription] = useState()
   return (
     <Toolbar
       className={clsx(classes.root, {
@@ -228,13 +235,19 @@ const EnhancedTableToolbar = (props) => {
           visible={visible}
           onOk={() => setVisible(false)}
           onCancel={() => setVisible(false)}
-          width={1000}
+          width={700}
           footer={[
             <Button
               key="back"
               size="large"
               color="primary"
-              onClick={() => setVisible(false)}
+              onClick={() => {
+                props.postSkill({
+                  name: name,
+                  description: description
+                })
+                setVisible(false)
+              }}
             >
               Add
             </Button>,
@@ -244,11 +257,36 @@ const EnhancedTableToolbar = (props) => {
               color="primary"
               onClick={() => setVisible(false)}
             >
-              cancel
+              Cancel
             </Button>,
           ]}
         >
-          <SkillForm />
+          <form style={{
+            display: "flex",
+            flexDirection: "column",
+            "& > *": {
+              margin: '10',
+              width: "100%",
+            },
+          }} noValidate autoComplete="off">
+            <TextField
+              id="outlined-primary"
+              label="Name"
+              //variant="outlined"
+              color="primary"
+              value={name}
+              onChange={(e)=> setName(e.target.value)}
+            />
+            <TextField
+              minRows='2'
+              id="outlined-primary"
+              label="Description"
+              //variant="outlined"
+              color="primary"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </form>
         </Modal>
       </Grid>
     </Toolbar>
@@ -292,7 +330,13 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => ({
   fetchSkills: () => dispatch(fetchSkills()),
+  deleteSkill: (skillId) => dispatch(deleteSkill(skillId)),
+  postSkill: (data) => dispatch(postSkill(data))
 })
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 function SkillsSets(props) {
   const classes = useStyles();
@@ -302,10 +346,20 @@ function SkillsSets(props) {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [open, setOpen] = React.useState(false)
+  const [selectedRow, setSelectedRow] = React.useState()
+  const handleClickOpen = () => {
+    setOpen(true)
+  }
+
+  const handleClose = () => {
+    setOpen(false)
+  }
 
   useEffect(() => {
     props.fetchSkills()
   }, [])
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -360,7 +414,7 @@ function SkillsSets(props) {
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
   const [visible, setVisible] = useState(false);
-  
+
   if (props.Skills.errMess) return (
     <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
       <div className='container'>
@@ -391,33 +445,33 @@ function SkillsSets(props) {
 
   else if (props.Skills.skills.length >= 1) return (
     <div className="container">
-      <Modal
-        title="Applicant Information"
-        centered
-        visible={visible}
-        // mask={false}
-        maskStyle={{
-          backgroundColor: "rgba(0, 0, 0, 0.25)",
-        }}
-        // onOk={() => setVisible(false)}
-        onCancel={() => setVisible(false)}
-        width={1000}
-        footer={[
-          <Button
-            key="back"
-            size="large"
-            color="primary"
-            onClick={() => setVisible(false)}
-          >
-            View Profile
-          </Button>,
-        ]}
-      >
-        {/* <ShowVolunteersDialog /> */}
-      </Modal>
+      {selectedRow &&
+        <Dialog
+          open={open}
+          TransitionComponent={Transition}
+          //keepMounted
+          onClose={handleClose}
+          aria-describedby="alert-dialog-slide-description"
+        >
+          <DialogTitle>{"Remove Item?"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-slide-description">
+              Do you really want to remove this item?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>CANCEL</Button>
+            <Button onClick={() => {
+              props.deleteSkill(selectedRow._id)
+              handleClose()
+            }
+            }>REMOVE</Button>
+          </DialogActions>
+        </Dialog>
+      }
       <div className={classes.root}>
         <Paper className={classes.paper}>
-          <EnhancedTableToolbar numSelected={selected.length} />
+          <EnhancedTableToolbar numSelected={selected.length} postSkill={props.postSkill} />
           <TableContainer>
             <Table
               className={classes.table}
@@ -484,59 +538,25 @@ function SkillsSets(props) {
                               marginLeft: "30px",
                             }}
                           >
-                            {/* <Grid
-                              item
-                              style={{
-                                // backgroundColor: "green",
-                                borderRadius: "10px",
-                              }}
-                            >
-                              <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={() => setVisible(true)}
-                              >
-                                Edit
-                              </Button>
-                              <Modal
-                                title="add skill set"
-                                centered
-                                visible={visible}
-                                onOk={() => setVisible(false)}
-                                onCancel={() => setVisible(false)}
-                                width={1000}
-                                footer={[
-                                  <Button
-                                    key="back"
-                                    size="large"
-                                    color="primary"
-                                    onClick={() => setVisible(false)}
-                                  >
-                                    Update
-                                  </Button>,
-                                  <Button
-                                    key="back"
-                                    size="large"
-                                    color="primary"
-                                    onClick={() => setVisible(false)}
-                                  >
-                                    cancel
-                                  </Button>,
-                                ]}
-                              >
-                                <SkillForm />
-                              </Modal>
-                            </Grid> */}
+
 
                             <Grid
                               item
                               style={{
                                 // backgroundColor: "red",
                                 borderRadius: "5px",
-                                justifyContent:'center'
+                                justifyContent: 'center'
                               }}
                             >
-                              <Button variant="contained" color="secondary">
+                              <Button
+
+                                onClick={() => {
+                                  setSelectedRow(row)
+                                  handleClickOpen()
+                                }
+                                }
+                                variant="contained"
+                                color="secondary">
                                 Delete
                               </Button>
                             </Grid>
@@ -574,8 +594,8 @@ function SkillsSets(props) {
     <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
       <div className='container'>
         <div className='row' style={{ display: 'flex', justifyContent: 'center', }}>
-          <Alert style={{ margin: '50px', padding: '50px' }} severity="error">
-            <AlertTitle style={{ fontWeight: 'bold' }}>Error</AlertTitle>
+          <Alert style={{ margin: '50px', padding: '50px' }} severity="info">
+            <AlertTitle style={{ fontWeight: 'bold' }}>Oops!</AlertTitle>
             <strong>No Skills Found!</strong>
           </Alert>
         </div>

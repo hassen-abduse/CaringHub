@@ -249,6 +249,25 @@ a:hover {
   transition: all 0.2s;
 }
 
+.btn-outline-blue-sm {
+  display: inline-block;
+  padding: 1rem 1.5rem 1rem 1.5rem;
+  border: 1px solid #0092ff;
+  border-radius: 10px;
+  background-color: transparent;
+  color: #0092ff;
+  font-weight: 600;
+  font-size: 0.875rem;
+  line-height: 0;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+.btn-outline-blue-sm:hover {
+  background-color: #0092ff;
+  color: #ffffff; /* needs to stay here because of the color property of a tag */
+  text-decoration: none;
+}
+
 .btn-outline-sm:hover {
   background-color: #ef473d;
   color: #ffffff;

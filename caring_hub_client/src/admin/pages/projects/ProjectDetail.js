@@ -233,13 +233,6 @@ class ProjectDetail extends Component {
               >
                 <a style={{textDecoration:'none'}} href={`/volunteer/jobDescription/${this.props.project._id}`}>More Details</a>
               </Button>
-              <Button
-                onClick={()=> this.props.deleteProject(this.props.project._id)}
-                variant="contained"
-                color="secondary"
-              >
-                remove
-              </Button>
             </div>
           </Col>
         </Row>

@@ -8,13 +8,13 @@ export default function HowItWorks() {
           <div class="col-lg-12">
             <h2
               style={{ maxWidth: "25rem", marginBottom: "1.5rem" }}
-              className="h2-heading"
+              className="h2-heading text-center"
             >
               How It Works
             </h2>
             <p
               style={{ maxWidth: "40rem", marginBottom: "30px" }}
-              className="p-heading"
+              className="p-heading text-center"
             >
               Matching with nonprofits has never been easier. Submit a two-step
               application and complete a brief phone interview so that you both
@@ -26,7 +26,7 @@ export default function HowItWorks() {
         <div class="row">
           <div class="col-lg-12">
             <div class="card">
-              <div>
+              <div style={{ display: "flex", justifyContent: "center" }}>
                 <img
                   class="img-fluid"
                   src="assets/images/caringHubPic.svg"
@@ -38,8 +38,8 @@ export default function HowItWorks() {
                 {/* <span class="fas fa-headphones-alt"></span> */}
               </div>
               <div class="card-body">
-                <h5 class="card-title">Post a project</h5>
-                <p>
+                <h5 class="card-title text-center">Post a project</h5>
+                <p className="text-center">
                   Nonprofits post questions and short-term project needs on our
                   marketplace.
                 </p>
@@ -50,7 +50,7 @@ export default function HowItWorks() {
             </div>
 
             <div class="card">
-              <div>
+              <div style={{ display: "flex", justifyContent: "center" }}>
                 <img
                   class="img-fluid"
                   src="assets/images/browse-opportunities.svg"
@@ -62,8 +62,10 @@ export default function HowItWorks() {
                 {/* <span class="far fa-clipboard"></span> */}
               </div>
               <div class="card-body">
-                <h5 class="card-title">Volunteers browse opportunities</h5>
-                <p>
+                <h5 class="card-title text-center">
+                  Volunteers browse opportunities
+                </h5>
+                <p className="text-center">
                   Volunteers browse opportunities based on skills, cause area,
                   and time commitment.
                 </p>
@@ -74,7 +76,7 @@ export default function HowItWorks() {
             </div>
 
             <div class="card">
-              <div>
+              <div style={{ display: "flex", justifyContent: "center" }}>
                 <img
                   class="img-fluid"
                   src="assets/images/submit-applications.svg"
@@ -86,8 +88,10 @@ export default function HowItWorks() {
                 {/* <span class="far fa-comments"></span> */}
               </div>
               <div class="card-body">
-                <h5 class="card-title">Volunteers send application</h5>
-                <p>
+                <h5 class="card-title text-center">
+                  Volunteers send application
+                </h5>
+                <p className="text-center">
                   Volunteers submit applications, and if both parties opt in,
                   it's a match!
                 </p>

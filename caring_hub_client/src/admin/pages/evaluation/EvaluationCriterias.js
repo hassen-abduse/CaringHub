@@ -13,24 +13,24 @@ import TableSortLabel from "@material-ui/core/TableSortLabel";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
-import Divider from "@material-ui/core/Divider";
-import Checkbox from "@material-ui/core/Checkbox";
 import { Button, Grid } from "@material-ui/core";
-import IconButton from "@material-ui/core/IconButton";
-import Tooltip from "@material-ui/core/Tooltip";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
-import DeleteIcon from "@material-ui/icons/Delete";
-import EditIcon from "@material-ui/icons/Edit";
-import FilterListIcon from "@material-ui/icons/FilterList";
 import { Modal } from "antd";
-// import AcceptApplicant from "./AcceptApplicant";
-// import DeclineApplicant from "./DeclineApplicant";
-import ClearIcon from "@material-ui/icons/Clear";
-import DoneAllIcon from "@material-ui/icons/DoneAll";
-
 import AddEvaluation from "./AddEvaluation";
-// import ShowVolunteersDialog from "../volunteers/ShowVolunteersDialog";
+import { deleteEval, fetchEvals, postEval } from "../../../redux/ActionCreators/evalActions";
+import { connect } from "react-redux";
+import { useEffect } from "react";
+import { Alert, AlertTitle } from '@material-ui/lab';
+import { CircularProgress, Container, Portal } from "@material-ui/core";
+import TextField from "@material-ui/core/TextField";
+import { Dialog } from '@material-ui/core';
+import { DialogActions } from '@material-ui/core';
+import { DialogContent } from '@material-ui/core';
+import { DialogContentText } from '@material-ui/core';
+import { DialogTitle } from '@material-ui/core';
+import { Slide } from '@material-ui/core';
+
 
 function createData(evaluationName, evaluationDescription) {
   return { evaluationName, evaluationDescription };
@@ -172,7 +172,9 @@ const EnhancedTableToolbar = (props) => {
   const classes = useToolbarStyles();
   const { numSelected } = props;
   const [visible, setVisible] = useState(false);
-
+  const [name, setName] = useState()
+  const [description, setDescription] = useState()
+ 
   return (
     <Toolbar
       className={clsx(classes.root, {
@@ -202,18 +204,25 @@ const EnhancedTableToolbar = (props) => {
           Add Evaluation
         </Button>
         <Modal
-          title="add skill set"
+          title="Add Evaluation Criteria"
           centered
+          destroyOnClose
           visible={visible}
           onOk={() => setVisible(false)}
           onCancel={() => setVisible(false)}
-          width={1000}
+          width={700}
           footer={[
             <Button
               key="back"
               size="large"
               color="primary"
-              onClick={() => setVisible(false)}
+              onClick={() => {
+                props.postEval({
+                  name: name,
+                  description: description
+                })
+                setVisible(false)
+              }}
             >
               Add
             </Button>,
@@ -227,7 +236,32 @@ const EnhancedTableToolbar = (props) => {
             </Button>,
           ]}
         >
-          <AddEvaluation />
+          <form style={{
+            display: "flex",
+            flexDirection: "column",
+            "& > *": {
+              margin: '10',
+              width: "100%",
+            },
+          }} noValidate autoComplete="off">
+            <TextField
+              id="outlined-primary"
+              label="Name"
+              //variant="outlined"
+              color="primary"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            <TextField
+              minRows='2'
+              id="outlined-primary"
+              label="Description"
+              //variant="outlined"
+              color="primary"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </form>
         </Modal>
       </Grid>
     </Toolbar>
@@ -263,15 +297,42 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function EvaluationCriterias() {
+const mapStateToProps = (state) => {
+  return {
+    Evals: state.Evals
+  }
+}
+
+const mapDispatchToProps = (dispatch) => ({
+  fetchEvals: () => dispatch(fetchEvals()),
+  postEval: (data) => dispatch(postEval(data)),
+  deleteEval: (evalId) => dispatch(deleteEval(evalId))
+})
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
+function EvaluationCriterias(props) {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
+  const [open, setOpen] = React.useState(false)
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [selectedRow, setSelectedRow] = React.useState()
+  const handleClickOpen = () => {
+    setOpen(true)
+  }
 
+  const handleClose = () => {
+    setOpen(false)
+  }
+  useEffect(() => {
+    props.fetchEvals()
+  }, [])
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -326,35 +387,64 @@ export default function EvaluationCriterias() {
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
   const [visible, setVisible] = useState(false);
-  return (
+  if (props.Evals.errMess) return (
+    <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
+      <div className='container'>
+        <div className='row' style={{ display: 'flex', justifyContent: 'center', }}>
+          <Alert style={{ margin: '50px', padding: '50px' }} severity="error">
+            <AlertTitle style={{ fontWeight: 'bold' }}>Error</AlertTitle>
+            <strong>{props.Evals.errMess}</strong>
+          </Alert>
+        </div>
+      </div>
+
+    </Container >
+
+  )
+  else if (props.Evals.isLoading) return (
+    <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
+      <div class='container'>
+        <div className='row'>
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '100px', marginBottom: '75px' }}>
+            <CircularProgress size={'50px'} />
+
+          </div>
+          <p style={{ textAlign: 'center', fontSize: '25px', fontWeight: 'bold' }}>Loading...</p>
+        </div>
+      </div>
+    </Container>
+  )
+
+  
+  else if(props.Evals.evals.length >= 1) return (
     <div className="container">
-      <Modal
-        title="Applicant Information"
-        centered
-        visible={visible}
-        // mask={false}
-        maskStyle={{
-          backgroundColor: "rgba(0, 0, 0, 0.25)",
-        }}
-        // onOk={() => setVisible(false)}
-        onCancel={() => setVisible(false)}
-        width={1000}
-        footer={[
-          <Button
-            key="back"
-            size="large"
-            color="primary"
-            onClick={() => setVisible(false)}
-          >
-            View Profile
-          </Button>,
-        ]}
-      >
-        {/* <ShowVolunteersDialog /> */}
-      </Modal>
+      {selectedRow &&
+        <Dialog
+          open={open}
+          TransitionComponent={Transition}
+          //keepMounted
+          onClose={handleClose}
+          aria-describedby="alert-dialog-slide-description"
+        >
+          <DialogTitle>{"Remove Item?"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-slide-description">
+              Do you really want to remove this item?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>CANCEL</Button>
+            <Button onClick={() => {
+              props.deleteEval(selectedRow._id)
+              handleClose()
+            }
+            }>REMOVE</Button>
+          </DialogActions>
+        </Dialog>
+      }
       <div className={classes.root}>
         <Paper className={classes.paper}>
-          <EnhancedTableToolbar numSelected={selected.length} />
+          <EnhancedTableToolbar numSelected={selected.length} postEval={props.postEval}/>
           <TableContainer>
             <Table
               className={classes.table}
@@ -372,7 +462,7 @@ export default function EvaluationCriterias() {
                 rowCount={rows.length}
               />
               <TableBody style={{ paddingLeft: "20px" }}>
-                {stableSort(rows, getComparator(order, orderBy))
+                {stableSort(props.Evals.evals, getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
                     const isItemSelected = isSelected(index);
@@ -397,11 +487,11 @@ export default function EvaluationCriterias() {
                           scope="row"
                           onClick={() => setVisible(true)}
                         >
-                          {row.evaluationName}
+                          {row.name}
                         </TableCell>
 
                         <TableCell align="left">
-                          {row.evaluationDescription}
+                          {row.description}
                         </TableCell>
 
                         <TableCell
@@ -415,7 +505,7 @@ export default function EvaluationCriterias() {
                             style={{
                               margin: "10px",
                               alignContent: "center",
-                              justifyContent: "space-between",
+                              justifyContent: "center",
                               width: "200px",
                               marginLeft: "30px",
                             }}
@@ -427,13 +517,13 @@ export default function EvaluationCriterias() {
                                 borderRadius: "10px",
                               }}
                             >
-                              <Button
+                              {/* <Button
                                 variant="contained"
                                 color="primary"
                                 onClick={() => setVisible(true)}
                               >
                                 Edit
-                              </Button>
+                              </Button> */}
                               <Modal
                                 title="add skill set"
                                 centered
@@ -471,7 +561,13 @@ export default function EvaluationCriterias() {
                                 borderRadius: "5px",
                               }}
                             >
-                              <Button variant="contained" color="secondary">
+                              <Button 
+                                variant="contained" 
+                                onClick={() => {
+                                  setSelectedRow(row)
+                                  handleClickOpen()
+                                }}
+                                color="secondary">
                                 Delete
                               </Button>
                             </Grid>
@@ -505,4 +601,20 @@ export default function EvaluationCriterias() {
       </div>
     </div>
   );
+  else return (
+    <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
+      <div className='container'>
+        <div className='row' style={{ display: 'flex', justifyContent: 'center', }}>
+          <Alert style={{ margin: '50px', padding: '50px' }} severity="info">
+            <AlertTitle style={{ fontWeight: 'bold' }}>Oops..!</AlertTitle>
+            <strong>No Evaluation Criteria Found!</strong>
+          </Alert>
+        </div>
+      </div>
+
+    </Container >
+  )
 }
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(EvaluationCriterias)

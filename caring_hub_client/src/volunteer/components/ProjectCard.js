@@ -16,31 +16,22 @@ export default function ProjectCard(props) {
   const history = useHistory();
 
   return (
-    <div class="cards-2 bg-gray">
+    <div class="cards-2">
       <div class="container">
-        {/* <div class="row">
-            <div class="col-lg-12">
-              <h2 style={{ marginBottom: 20 }} class="h2-heading">
-                Volunteer the way you want{" "}
-              </h2>
-              <p class="p-heading">
-                We have hundreds of volunteer projects for every skill, time
-                commitment, and cause area. Find the one that excites you – and
-                complete it virtually.
-              </p>
-            </div>
-          </div> */}
         <div class="row">
           <div class="col-lg-12">
             <div class="card">
               <img
-                style={{ width: "100%", height: "300px" }}
+                style={{ padding: "15px", width: "100%", height: "220px" }}
                 class="img-fluid"
                 src={project.image}
                 alt="alternative"
               />
               <div class="card-body">
-                <p style={{ color: "#0092FF" }} class="testimonial-text">
+                <p
+                  style={{ marginBottom: "2px", color: "#0092FF" }}
+                  class="testimonial-text"
+                >
                   {new Intl.DateTimeFormat("en-US", {
                     year: "numeric",
                     month: "short",
@@ -49,7 +40,7 @@ export default function ProjectCard(props) {
                 </p>
                 <div
                   style={{
-                    minHeight: "110px",
+                    minHeight: "85px",
                     display: "flex",
                     alignItems: "center",
                   }}
@@ -62,9 +53,9 @@ export default function ProjectCard(props) {
                   style={{ maxHeight: "180px", overflow: "hidden" }}
                   class="testimonial-text"
                 >
-                  {project.description.length < 90
+                  {project.description.length < 70
                     ? project.description
-                    : project.description.substring(0, 90) + "..."}
+                    : project.description.substring(0, 70) + "..."}
                 </p>
 
                 <span

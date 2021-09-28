@@ -47,7 +47,7 @@ export default function VolunteerNumber() {
     <Card className={classes.root}>
       <CardContent>
         <Typography variant="h1" className={classes.numbers}>
-          100
+          10
         </Typography>
 
         <Typography variant="h4" className={classes.pos} color="textSecondary">

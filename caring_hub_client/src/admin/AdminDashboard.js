@@ -171,13 +171,11 @@ function AdminDashboard(props) {
                     <MessageRounded />
                   </Badge>
                 </ListItem> */}
-                <ListItem>
+                {/* <ListItem>
                   <Link to="/admin/applicants">
-                    <Badge badgeContent={6} color="secondary">
-                      <NotificationImportant />
-                    </Badge>
+                    <NotificationImportant />
                   </Link>
-                </ListItem>
+                </ListItem> */}
                 <ListItem>
                   <AccountMenu />
                 </ListItem>
@@ -225,7 +223,7 @@ function AdminDashboard(props) {
               <ListItemIcon>
                 <InboxIcon />
               </ListItemIcon>
-              <ListItemText>Organizations</ListItemText>
+              <ListItemText>Approved Organizations</ListItemText>
             </ListItem>
           </Link>
           <Link className={classes.decoration} to="/admin/projects">
@@ -241,7 +239,7 @@ function AdminDashboard(props) {
               <ListItemIcon>
                 <InboxIcon />
               </ListItemIcon>
-              <ListItemText>Applicants</ListItemText>
+              <ListItemText>Organizations/Not Approved</ListItemText>
             </ListItem>
           </Link>
           <Link className={classes.decoration} to="/admin/volunteers">
@@ -268,7 +266,7 @@ function AdminDashboard(props) {
               <ListItemIcon>
                 <InboxIcon />
               </ListItemIcon>
-              <ListItemText>Evaluation criaterias</ListItemText>
+              <ListItemText>Evaluation Criterias</ListItemText>
             </ListItem>
           </Link>
           <Link className={classes.decoration} to="/admin/causeAreas">
@@ -276,7 +274,7 @@ function AdminDashboard(props) {
               <ListItemIcon>
                 <InboxIcon />
               </ListItemIcon>
-              <ListItemText>cause areas</ListItemText>
+              <ListItemText>Cause Areas</ListItemText>
             </ListItem>
           </Link>
         </List>

@@ -26,10 +26,16 @@ import { Modal } from "antd";
 import OrgDetail from "./OrgDetail";
 import RemoveOrg from "./RemoveOrg";
 import { connect } from 'react-redux'
-import { fetchOrgs } from "../../../redux/ActionCreators/orgActions";
+import { fetchOrgs, deleteOrg } from "../../../redux/ActionCreators/orgActions";
 import { useEffect } from "react";
 import { Alert, AlertTitle } from '@material-ui/lab';
 import { CircularProgress, Container, Portal } from "@material-ui/core";
+import { Dialog } from '@material-ui/core';
+import { DialogActions } from '@material-ui/core';
+import { DialogContent } from '@material-ui/core';
+import { DialogContentText } from '@material-ui/core';
+import { DialogTitle } from '@material-ui/core';
+import { Slide } from '@material-ui/core';
 
 const mapStateToProps = (state) => {
   return {
@@ -39,6 +45,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => ({
   fetchOrgs: () => dispatch(fetchOrgs()),
+  deleteOrg: (orgId) => dispatch(deleteOrg(orgId))
 })
 
 
@@ -224,7 +231,9 @@ const useStyles = makeStyles((theme) => ({
     width: 1,
   },
 }));
-
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 function Organizations(props) {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
@@ -233,7 +242,17 @@ function Organizations(props) {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [selectedRow, setSelectedRow] = React.useState();
+  //const [selectedRow, setSelectedRow] = React.useState();
+  const [open, setOpen] = React.useState(false)
+  const [selectedRow, setSelectedRow] = React.useState()
+  
+  const handleClickOpen = () => {
+    setOpen(true)
+  }
+
+  const handleDialogClose = () => {
+    setOpen(false)
+  }
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -327,8 +346,33 @@ function Organizations(props) {
     </Container>
   )
 
-  else if (props.Organizations.organizations.filter(org => org.isApproved).length >= 1) return  (
+  else if (props.Organizations.organizations.filter(org => org.isApproved).length >= 1) return (
+    
     <div className={classes.root}>
+       {selectedRow &&
+        <Dialog
+          open={open}
+          TransitionComponent={Transition}
+          //keepMounted
+          onClose={handleDialogClose}
+          aria-describedby="alert-dialog-slide-description"
+        >
+          <DialogTitle>{"Remove Item?"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-slide-description">
+              Do you really want to remove this item?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleDialogClose}>CANCEL</Button>
+            <Button onClick={() => {
+              props.deleteOrg(selectedRow._id)
+              handleDialogClose()
+            }
+            }>REMOVE</Button>
+          </DialogActions>
+        </Dialog>
+      }
       <Paper className={classes.paper}>
         <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
@@ -348,7 +392,7 @@ function Organizations(props) {
               rowCount={props.Organizations.organizations.length}
             />
             <TableBody>
-              {stableSort(props.Organizations.organizations.filter(org=> org.isApproved), getComparator(order, orderBy))
+              {stableSort(props.Organizations.organizations.filter(org => org.isApproved), getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const isItemSelected = isSelected(index);
@@ -358,10 +402,6 @@ function Organizations(props) {
                     <>
                       <TableRow
                         // clicking the row set the modal visible
-                        onClick={() => {
-                          setVisible(true);
-                          setSelectedRow(row);
-                        }}
                         hover
                         role="checkbox"
                         aria-checked={isItemSelected}
@@ -378,7 +418,25 @@ function Organizations(props) {
                           {<a href={row.legalDoc}>Legal Doc</a>}
                         </TableCell>
                         <TableCell display="flex">
-                          <Button type="primary">show details</Button>
+                          <Button
+                            onClick={() => {
+                              setVisible(true);
+                              setSelectedRow(row);
+                            }}
+                            variant="contained"
+                            color="primary"
+                            type="primary">details</Button>
+                        </TableCell>
+                        <TableCell display="flex">
+                          <Button
+                            onClick={() => {
+                              setSelectedRow(row)
+                              handleClickOpen()
+                            }
+                            }
+                            variant="contained"
+                            color="secondary"
+                          >DELETE</Button>
                         </TableCell>
                       </TableRow>
                     </>
@@ -391,7 +449,7 @@ function Organizations(props) {
                     <Modal
                       // closable
                       title="Organization Detail..."
-                      style={{alignSelf:'flex-end'}}
+                      style={{ alignSelf: 'flex-end' }}
                       onClose={handleClose}
                       visible={visible}
                       onOk={() => setVisible(false)}
@@ -429,16 +487,16 @@ function Organizations(props) {
   )
   else return (
     <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
-    <div className='container'>
-      <div className='row' style={{ display: 'flex', justifyContent: 'center', }}>
-        <Alert style={{ margin: '50px', padding: '50px' }} severity="error">
-          <AlertTitle style={{ fontWeight: 'bold' }}>Error</AlertTitle>
-          <strong>No Organizations Found!</strong>
-        </Alert>
+      <div className='container'>
+        <div className='row' style={{ display: 'flex', justifyContent: 'center', }}>
+          <Alert style={{ margin: '50px', padding: '50px' }} severity="error">
+            <AlertTitle style={{ fontWeight: 'bold' }}>Error</AlertTitle>
+            <strong>No Organizations Found!</strong>
+          </Alert>
+        </div>
       </div>
-    </div>
 
-  </Container >
+    </Container >
   )
 }
 

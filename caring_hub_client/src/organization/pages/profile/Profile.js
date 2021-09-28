@@ -3,70 +3,121 @@ import { Badge, Rate } from "antd";
 import { useParams } from "react-router";
 import { useState, useEffect } from "react";
 import { baseUrl } from "../../../redux/shared/baseUrl";
-import { Alert, AlertTitle } from '@material-ui/lab';
+import { Alert, AlertTitle } from "@material-ui/lab";
 import { CircularProgress, Container } from "@material-ui/core";
+import verified from "../../../assets/img/download.jpg";
+import { connect } from "react-redux";
+import { deleteProject, fetchProjects } from "../../../redux/ActionCreators/projectActions";
+import jwtDecode from "jwt-decode";
+const mapStateToProps = (state) => {
+  return {
+    Projects: state.Projects,
+    auth: state.auth
+  };
+};
 
-export default function Profile() {
-  const { orgId } = useParams()
-  const [org, setOrg] = useState({ address: {} })
-  const [isLoaded, setIsLoaded] = useState(false)
-  const [error, setError] = useState(null)
+const mapDispatchToProps = (dispatch) => ({
+  fetchProjects: () => dispatch(fetchProjects()),
+
+});
+
+
+
+function Profile(props) {
+  const { orgId } = useParams();
+  const [org, setOrg] = useState({ address: {} });
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [error, setError] = useState(null);
+  const [numProjects, setNumProjects] = useState(0)
+  const [myProjects, setMyProjects] = useState([])
+  const decoded = props.auth.token
+  ? jwtDecode(props.auth.token)
+  : { role: "" };
   useEffect(async () => {
-    fetch(baseUrl + 'orgs/' + orgId)
-    .then(response => {
-      if (response.ok) {
-        return response
-      }
-      else {
-        const error = new Error('Error ' + response.status + ':' + response.statusText)
-        error.response = response
-        throw error
-      }
-    },
-      error => {
-        const errorM = new Error(error.message)
-        throw errorM
+    fetch(baseUrl + "orgs/" + orgId)
+      .then(
+        (response) => {
+          if (response.ok) {
+            return response;
+          } else {
+            const error = new Error(
+              "Error " + response.status + ":" + response.statusText
+            );
+            error.response = response;
+            throw error;
+          }
+        },
+        (error) => {
+          const errorM = new Error(error.message);
+          throw errorM;
+        }
+      )
+      .then((response) => response.json())
+      .then((response) => {
+        setOrg(response);
+        setIsLoaded(true);
       })
-    .then(response => response.json())
-    .then(response => {
-      setOrg(response)
-      setIsLoaded(true)
-    })
-    .catch(error => {
-      setError(error.message)
-      setIsLoaded(true)
-    })
+      .catch((error) => {
+        setError(error.message);
+        setIsLoaded(true);
+      });
+    
+    props.fetchProjects()
+    const pros = props.Projects.projects.filter(project =>
+      project.ownerOrg._id == decoded._id
+    )
+    setMyProjects(pros)
+    setNumProjects(pros.length)
+}, [numProjects]);
 
-  }, [])
-  if (error) return (
+  const completed = myProjects.filter((project => new Date(project.endDate) < Date.now()))
+  const inprogress = myProjects.length - completed.length
+if (error)
+  return (
     <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
-      <div className='container'>
-        <div className='row' style={{ display:'flex', justifyContent: 'center',}}>
-          <Alert style={{margin: '50px',padding: '50px'}}severity="error">
-            <AlertTitle style={{fontWeight:'bold'}}>Error</AlertTitle>
+      <div className="container">
+        <div
+          className="row"
+          style={{ display: "flex", justifyContent: "center" }}
+        >
+          <Alert style={{ margin: "50px", padding: "50px" }} severity="error">
+            <AlertTitle style={{ fontWeight: "bold" }}>Error</AlertTitle>
             <strong>{error}</strong>
           </Alert>
         </div>
       </div>
-
-    </Container >
-
-  )
-  else if (!isLoaded) return (
+    </Container>
+  );
+else if (!isLoaded)
+  return (
     <Container style={{ marginTop: "100px", backgroundColor: "#FCFAFB" }}>
-      <div class='container'>
-        <div className='row'>
-          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '100px', marginBottom: '75px' }}>
-            <CircularProgress size={'50px'} />
-
+      <div class="container">
+        <div className="row">
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginTop: "100px",
+              marginBottom: "75px",
+            }}
+          >
+            <CircularProgress size={"50px"} />
           </div>
-          <p style={{ textAlign: 'center', fontSize: '25px', fontWeight: 'bold' }}>Loading...</p>
+          <p
+            style={{
+              textAlign: "center",
+              fontSize: "25px",
+              fontWeight: "bold",
+            }}
+          >
+            Loading...
+          </p>
         </div>
       </div>
     </Container>
-  )
-
-  else return (
+  );
+else
+  return (
     <div style={{ marginTop: "100px" }} className="container">
       <div style={{}} className="row">
         <div
@@ -97,7 +148,7 @@ export default function Profile() {
           }}
           className="col-lg-3"
         >
-          <a style={{ textDecoration: "none" }} href="">
+          {/* <a style={{ textDecoration: "none" }} href="">
             <div className="m-2">
               <p
                 style={{
@@ -116,7 +167,7 @@ export default function Profile() {
                 New Project
               </p>
             </div>
-          </a>
+          </a> */}
           <a style={{ textDecoration: "none" }} href="">
             <div className="m-2">
               <p
@@ -127,7 +178,7 @@ export default function Profile() {
                 }}
                 className="mb-1 teal mt-1 text-center"
               >
-                3
+                {inprogress}
               </p>
               <p
                 style={{ fontSize: "0.7rem" }}
@@ -147,7 +198,7 @@ export default function Profile() {
                 }}
                 className="mb-1 teal mt-1 text-center"
               >
-                4
+                {completed.length}
               </p>
               <p
                 style={{ fontSize: "0.7rem" }}
@@ -158,9 +209,24 @@ export default function Profile() {
             </div>
           </a>
         </div>
+        {org.isApproved === true ? (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+            className="col-lg-3"
+          >
+            <img
+              style={{ padding: "5px", height: "112px" }}
+              src={verified}
+            ></img>
+          </div>
+        ) : null}
       </div>
       <div className="row mt-5">
-        <div style={{}} class="col-lg-4">
+        <div class="col-lg-4">
           <h4 className="teal ">Essentials</h4>
           <h6 className="mt-4 mb-0 teal">Email</h6>
           <p>{org.emailAddress}</p>
@@ -173,9 +239,7 @@ export default function Profile() {
         <div style={{}} class="col-lg-4">
           <h4 className="teal">Organization Mission</h4>
 
-          <p className="">
-              {org.mission}
-          </p>
+          <p className="">{org.mission}</p>
         </div>
         <div style={{}} class="col-lg-4">
           <h4 className="teal">Location</h4>
@@ -184,10 +248,10 @@ export default function Profile() {
           <p className="m-0">George VI street</p>
           <p className="m-0">{org.address.city}</p>
           <p className="m-0">Ethiopia</p>
-
         </div>
       </div>
     </div>
   );
 }
 
+export default connect(mapStateToProps, mapDispatchToProps)(Profile)

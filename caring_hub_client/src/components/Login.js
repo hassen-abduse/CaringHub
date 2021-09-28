@@ -6,6 +6,8 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import { Link, Redirect } from "react-router-dom";
 import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
 import { CircularProgress } from "@material-ui/core";
+import jwtDecode from "jwt-decode";
+
 const mapStateToProps = (state) => {
   return {
     auth: state.auth,
@@ -32,7 +34,12 @@ class Login extends React.Component {
     });
   }
   render() {
-    if (this.props.auth.isAuthenticated) {
+    const decoded = this.props.auth.token
+      ? jwtDecode(this.props.auth.token)
+      : { role: "", _id: "" };
+    if (this.props.auth.isAuthenticated && decoded.role === "Admin") {
+      return <Redirect to="/admin/dashboard" />;
+    } else if (this.props.auth.isAuthenticated) {
       return <Redirect to="/" />;
     }
 
@@ -45,7 +52,7 @@ class Login extends React.Component {
           <div class="card card0 border-0" style={{ paddingBottom: "50px" }}>
             {" "}
             <div style={{ padding: "10px", marginBottom: "25px" }}>
-              <Link to="/index">
+              <Link to="/">
                 <KeyboardBackspaceIcon />
               </Link>
             </div>

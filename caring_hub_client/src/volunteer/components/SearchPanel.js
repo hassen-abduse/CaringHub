@@ -15,7 +15,7 @@ function Search({ value, onChange }) {
         <div className="search-div">
           <label
             style={{ width: "450px" }}
-            className="search-label mb-5"
+            className="search-label mb-2"
             htmlFor="search-input"
           >
             <input

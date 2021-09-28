@@ -47,7 +47,7 @@ export default function ProjectNumberCard() {
       <CardContent>
         <Divider />
         <Typography variant="h1" className={classes.numbers}>
-          100
+          8
         </Typography>
 
         <Typography variant="h4" className={classes.pos} color="textSecondary">

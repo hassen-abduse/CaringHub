@@ -12,7 +12,8 @@ export const NetRequest = (state = {
         ...state,
         isLoading: true,
         data: action.data,
-        success: false
+        success: false,
+        errMess:null
       }
     case actionTypes.NET_REQUEST_SUCCESS:
       return {
