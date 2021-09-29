@@ -18,7 +18,7 @@ export default function Project() {
       <div style={{ display: "flex", flexDirection: "column" }}>
         <div style={{ display: "flex", flexDirection: "column" }}>
           <div style={{ marginTop: "10%" }}>
-            <h5>My Job Posts</h5>
+            <h5 id="job-posts">My Job Posts</h5>
           </div>
           <div>
             <OrgProjectCard />

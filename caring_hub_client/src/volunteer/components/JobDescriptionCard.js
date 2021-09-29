@@ -220,7 +220,11 @@ function DescriptionCard(props) {
                 </Alert>
               )}
               {props.NetRequest.success === true ? (
-                <Alert style={{ padding: "20px" }} severity="success">
+                <Alert
+                  id="success"
+                  style={{ padding: "20px" }}
+                  severity="success"
+                >
                   <AlertTitle style={{ fontWeight: "bold" }}>
                     Success
                   </AlertTitle>

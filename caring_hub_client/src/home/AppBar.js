@@ -129,6 +129,7 @@ function AppBar(props) {
                   </li>
                   <li class="nav-item">
                     <Link
+                      id="my-applications"
                       class={
                         route === "/volunteer/myApplications"
                           ? "nav-link active"
@@ -167,6 +168,7 @@ function AppBar(props) {
                   </li>
                   <li class="nav-item">
                     <Link
+                      id="my-projects"
                       class={
                         route === "/organization/projects"
                           ? "nav-link active"

@@ -14,7 +14,7 @@ export default function MyApplication() {
       <div style={{ display: "flex", flexDirection: "column" }}>
         <div style={{ display: "flex", flexDirection: "column" }}>
           <div style={{ marginTop: "10%" }}>
-            <h5>My Applications</h5>
+            <h5 id="dashboard">My Applications</h5>
           </div>
           <div>
             <VolunteerApplicationTable />
